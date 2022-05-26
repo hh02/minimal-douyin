@@ -1,0 +1,64 @@
+syntax = "proto3";
+package douyin.core;
+
+option go_package = "douyin/core";
+
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  int64 follow_count = 3;
+  int64 follower_count = 4;
+  bool is_follow = 5;
+}
+
+message UserRequest {
+  int64 user_id = 1;
+  string token = 2;
+}
+
+message UserResponse {
+  int32 status_code = 1;
+  string status_msg = 2;
+  User user = 3;
+}
+
+/*
+  /douyin/user/login/ - 用户登录接口
+  接口类型 POST
+*/
+
+message UserLoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message UserLoginResponse {
+  int32 status_code = 1;
+  string status_msg = 2;
+  int64 user_id = 3;
+  string token = 4;
+}
+
+// /douyin/user/register/ 用户注册接口
+// 接口类型 POST
+
+message UserRegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message UserRegisterResponse {
+  int32 status_code = 1;
+  string status_msg = 2;
+  int64 user_id = 3;
+  string token = 4;
+}
+
+service UserService {
+  rpc UserRegister(UserRegisterRequest)
+      returns (UserRegisterResponse) {}
+  rpc UserLogin(UserLoginRequest)
+      returns (UserLoginResponse) {}
+  rpc User(UserRequest) returns (UserResponse) {}
+}
