@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/hh02/minimal-douyin/cmd/publish/kitex_gen/douyin/core"
+	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
 )
 
 // PublishServiceImpl implements the last service interface defined in the IDL.

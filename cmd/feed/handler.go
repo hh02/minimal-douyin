@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/hh02/minimal-douyin/cmd/feed/kitex_gen/douyin/core"
+	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
 )
 
 // FeedServiceImpl implements the last service interface defined in the IDL.

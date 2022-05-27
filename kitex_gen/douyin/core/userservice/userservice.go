@@ -8,7 +8,7 @@ import (
 	"github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
 	"github.com/cloudwego/kitex/pkg/streaming"
-	"github.com/hh02/minimal-douyin/cmd/user/kitex_gen/douyin/core"
+	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
 	"google.golang.org/protobuf/proto"
 )
 

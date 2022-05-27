@@ -3,7 +3,7 @@ package userservice
 
 import (
 	"github.com/cloudwego/kitex/server"
-	"github.com/hh02/minimal-douyin/cmd/user/kitex_gen/douyin/core"
+	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
 )
 
 // NewServer creates a server.Server with the given handler and options.
