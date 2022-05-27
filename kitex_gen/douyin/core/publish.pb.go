@@ -257,187 +257,188 @@ func (x *PublishListResponse) GetVideoList() *Video {
 	return nil
 }
 
-type Video struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+//type Video struct {
+//	state         protoimpl.MessageState
+//	sizeCache     protoimpl.SizeCache
+//	unknownFields protoimpl.UnknownFields
+//
+//	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+//	Author        *User  `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
+//	PlayUrl       string `protobuf:"bytes,3,opt,name=play_url,json=playUrl,proto3" json:"play_url,omitempty"`
+//	CoverUrl      string `protobuf:"bytes,4,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url,omitempty"`
+//	FavoriteCount int64  `protobuf:"varint,5,opt,name=favorite_count,json=favoriteCount,proto3" json:"favorite_count,omitempty"`
+//	CommentCount  int64  `protobuf:"varint,6,opt,name=comment_count,json=commentCount,proto3" json:"comment_count,omitempty"`
+//	IsFavorite    bool   `protobuf:"varint,7,opt,name=is_favorite,json=isFavorite,proto3" json:"is_favorite,omitempty"`
+//	Title         string `protobuf:"bytes,8,opt,name=title,proto3" json:"title,omitempty"`
+//}
+//
+//func (x *Video) Reset() {
+//	*x = Video{}
+//	if protoimpl.UnsafeEnabled {
+//		mi := &file_publish_proto_msgTypes[4]
+//		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+//		ms.StoreMessageInfo(mi)
+//	}
+//}
+//
+//func (x *Video) String() string {
+//	return protoimpl.X.MessageStringOf(x)
+//}
+//
+//func (*Video) ProtoMessage() {}
+//
+//func (x *Video) ProtoReflect() protoreflect.Message {
+//	mi := &file_publish_proto_msgTypes[4]
+//	if protoimpl.UnsafeEnabled && x != nil {
+//		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+//		if ms.LoadMessageInfo() == nil {
+//			ms.StoreMessageInfo(mi)
+//		}
+//		return ms
+//	}
+//	return mi.MessageOf(x)
+//}
+//
+//// Deprecated: Use Video.ProtoReflect.Descriptor instead.
+//func (*Video) Descriptor() ([]byte, []int) {
+//	return file_publish_proto_rawDescGZIP(), []int{4}
+//}
+//
+//func (x *Video) GetId() int64 {
+//	if x != nil {
+//		return x.Id
+//	}
+//	return 0
+//}
+//
+//func (x *Video) GetAuthor() *User {
+//	if x != nil {
+//		return x.Author
+//	}
+//	return nil
+//}
+//
+//func (x *Video) GetPlayUrl() string {
+//	if x != nil {
+//		return x.PlayUrl
+//	}
+//	return ""
+//}
+//
+//func (x *Video) GetCoverUrl() string {
+//	if x != nil {
+//		return x.CoverUrl
+//	}
+//	return ""
+//}
+//
+//func (x *Video) GetFavoriteCount() int64 {
+//	if x != nil {
+//		return x.FavoriteCount
+//	}
+//	return 0
+//}
+//
+//func (x *Video) GetCommentCount() int64 {
+//	if x != nil {
+//		return x.CommentCount
+//	}
+//	return 0
+//}
+//
+//func (x *Video) GetIsFavorite() bool {
+//	if x != nil {
+//		return x.IsFavorite
+//	}
+//	return false
+//}
+//
+//func (x *Video) GetTitle() string {
+//	if x != nil {
+//		return x.Title
+//	}
+//	return ""
+//}
 
-	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Author        *User  `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
-	PlayUrl       string `protobuf:"bytes,3,opt,name=play_url,json=playUrl,proto3" json:"play_url,omitempty"`
-	CoverUrl      string `protobuf:"bytes,4,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url,omitempty"`
-	FavoriteCount int64  `protobuf:"varint,5,opt,name=favorite_count,json=favoriteCount,proto3" json:"favorite_count,omitempty"`
-	CommentCount  int64  `protobuf:"varint,6,opt,name=comment_count,json=commentCount,proto3" json:"comment_count,omitempty"`
-	IsFavorite    bool   `protobuf:"varint,7,opt,name=is_favorite,json=isFavorite,proto3" json:"is_favorite,omitempty"`
-	Title         string `protobuf:"bytes,8,opt,name=title,proto3" json:"title,omitempty"`
-}
-
-func (x *Video) Reset() {
-	*x = Video{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_publish_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Video) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Video) ProtoMessage() {}
-
-func (x *Video) ProtoReflect() protoreflect.Message {
-	mi := &file_publish_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Video.ProtoReflect.Descriptor instead.
-func (*Video) Descriptor() ([]byte, []int) {
-	return file_publish_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *Video) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *Video) GetAuthor() *User {
-	if x != nil {
-		return x.Author
-	}
-	return nil
-}
-
-func (x *Video) GetPlayUrl() string {
-	if x != nil {
-		return x.PlayUrl
-	}
-	return ""
-}
-
-func (x *Video) GetCoverUrl() string {
-	if x != nil {
-		return x.CoverUrl
-	}
-	return ""
-}
-
-func (x *Video) GetFavoriteCount() int64 {
-	if x != nil {
-		return x.FavoriteCount
-	}
-	return 0
-}
-
-func (x *Video) GetCommentCount() int64 {
-	if x != nil {
-		return x.CommentCount
-	}
-	return 0
-}
-
-func (x *Video) GetIsFavorite() bool {
-	if x != nil {
-		return x.IsFavorite
-	}
-	return false
-}
-
-func (x *Video) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-type User struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	FollowCount   int64  `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3" json:"follow_count,omitempty"`
-	FollowerCount int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3" json:"follower_count,omitempty"`
-	IsFollow      bool   `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`
-}
-
-func (x *User) Reset() {
-	*x = User{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_publish_proto_msgTypes[5]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *User) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*User) ProtoMessage() {}
-
-func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_publish_proto_msgTypes[5]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use User.ProtoReflect.Descriptor instead.
-func (*User) Descriptor() ([]byte, []int) {
-	return file_publish_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *User) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *User) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *User) GetFollowCount() int64 {
-	if x != nil {
-		return x.FollowCount
-	}
-	return 0
-}
-
-func (x *User) GetFollowerCount() int64 {
-	if x != nil {
-		return x.FollowerCount
-	}
-	return 0
-}
-
-func (x *User) GetIsFollow() bool {
-	if x != nil {
-		return x.IsFollow
-	}
-	return false
-}
+//
+//type User struct {
+//	state         protoimpl.MessageState
+//	sizeCache     protoimpl.SizeCache
+//	unknownFields protoimpl.UnknownFields
+//
+//	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+//	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+//	FollowCount   int64  `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3" json:"follow_count,omitempty"`
+//	FollowerCount int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3" json:"follower_count,omitempty"`
+//	IsFollow      bool   `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`
+//}
+//
+//func (x *User) Reset() {
+//	*x = User{}
+//	if protoimpl.UnsafeEnabled {
+//		mi := &file_publish_proto_msgTypes[5]
+//		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+//		ms.StoreMessageInfo(mi)
+//	}
+//}
+//
+//func (x *User) String() string {
+//	return protoimpl.X.MessageStringOf(x)
+//}
+//
+//func (*User) ProtoMessage() {}
+//
+//func (x *User) ProtoReflect() protoreflect.Message {
+//	mi := &file_publish_proto_msgTypes[5]
+//	if protoimpl.UnsafeEnabled && x != nil {
+//		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+//		if ms.LoadMessageInfo() == nil {
+//			ms.StoreMessageInfo(mi)
+//		}
+//		return ms
+//	}
+//	return mi.MessageOf(x)
+//}
+//
+//// Deprecated: Use User.ProtoReflect.Descriptor instead.
+//func (*User) Descriptor() ([]byte, []int) {
+//	return file_publish_proto_rawDescGZIP(), []int{5}
+//}
+//
+//func (x *User) GetId() int64 {
+//	if x != nil {
+//		return x.Id
+//	}
+//	return 0
+//}
+//
+//func (x *User) GetName() string {
+//	if x != nil {
+//		return x.Name
+//	}
+//	return ""
+//}
+//
+//func (x *User) GetFollowCount() int64 {
+//	if x != nil {
+//		return x.FollowCount
+//	}
+//	return 0
+//}
+//
+//func (x *User) GetFollowerCount() int64 {
+//	if x != nil {
+//		return x.FollowerCount
+//	}
+//	return 0
+//}
+//
+//func (x *User) GetIsFollow() bool {
+//	if x != nil {
+//		return x.IsFollow
+//	}
+//	return false
+//}
 
 var File_publish_proto protoreflect.FileDescriptor
 

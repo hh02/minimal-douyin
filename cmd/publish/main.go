@@ -1,7 +1,7 @@
 package main
 
 import (
-	core "github.com/hh02/minimal-douyin/cmd/publish/kitex_gen/douyin/core/publishservice"
+	core "github.com/hh02/minimal-douyin/kitex_gen/douyin/core/publishservice"
 	"log"
 )
 

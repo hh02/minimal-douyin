@@ -250,84 +250,85 @@ func (x *Video) GetTitle() string {
 	return ""
 }
 
-type User struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	FollowCount   int64  `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3" json:"follow_count,omitempty"`
-	FollowerCount int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3" json:"follower_count,omitempty"`
-	IsFollow      bool   `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`
-}
-
-func (x *User) Reset() {
-	*x = User{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_feed_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *User) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*User) ProtoMessage() {}
-
-func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_feed_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use User.ProtoReflect.Descriptor instead.
-func (*User) Descriptor() ([]byte, []int) {
-	return file_feed_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *User) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *User) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *User) GetFollowCount() int64 {
-	if x != nil {
-		return x.FollowCount
-	}
-	return 0
-}
-
-func (x *User) GetFollowerCount() int64 {
-	if x != nil {
-		return x.FollowerCount
-	}
-	return 0
-}
-
-func (x *User) GetIsFollow() bool {
-	if x != nil {
-		return x.IsFollow
-	}
-	return false
-}
+//
+//type User struct {
+//	state         protoimpl.MessageState
+//	sizeCache     protoimpl.SizeCache
+//	unknownFields protoimpl.UnknownFields
+//
+//	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+//	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+//	FollowCount   int64  `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3" json:"follow_count,omitempty"`
+//	FollowerCount int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3" json:"follower_count,omitempty"`
+//	IsFollow      bool   `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`
+//}
+//
+//func (x *User) Reset() {
+//	*x = User{}
+//	if protoimpl.UnsafeEnabled {
+//		mi := &file_feed_proto_msgTypes[3]
+//		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+//		ms.StoreMessageInfo(mi)
+//	}
+//}
+//
+//func (x *User) String() string {
+//	return protoimpl.X.MessageStringOf(x)
+//}
+//
+//func (*User) ProtoMessage() {}
+//
+//func (x *User) ProtoReflect() protoreflect.Message {
+//	mi := &file_feed_proto_msgTypes[3]
+//	if protoimpl.UnsafeEnabled && x != nil {
+//		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+//		if ms.LoadMessageInfo() == nil {
+//			ms.StoreMessageInfo(mi)
+//		}
+//		return ms
+//	}
+//	return mi.MessageOf(x)
+//}
+//
+//// Deprecated: Use User.ProtoReflect.Descriptor instead.
+//func (*User) Descriptor() ([]byte, []int) {
+//	return file_feed_proto_rawDescGZIP(), []int{3}
+//}
+//
+//func (x *User) GetId() int64 {
+//	if x != nil {
+//		return x.Id
+//	}
+//	return 0
+//}
+//
+//func (x *User) GetName() string {
+//	if x != nil {
+//		return x.Name
+//	}
+//	return ""
+//}
+//
+//func (x *User) GetFollowCount() int64 {
+//	if x != nil {
+//		return x.FollowCount
+//	}
+//	return 0
+//}
+//
+//func (x *User) GetFollowerCount() int64 {
+//	if x != nil {
+//		return x.FollowerCount
+//	}
+//	return 0
+//}
+//
+//func (x *User) GetIsFollow() bool {
+//	if x != nil {
+//		return x.IsFollow
+//	}
+//	return false
+//}
 
 var File_feed_proto protoreflect.FileDescriptor
 
