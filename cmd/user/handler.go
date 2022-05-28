@@ -11,6 +11,21 @@ type UserServiceImpl struct{}
 // UserRegister implements the UserServiceImpl interface.
 func (s *UserServiceImpl) UserRegister(ctx context.Context, req *core.UserRegisterRequest) (resp *core.UserRegisterResponse, err error) {
 	// TODO: Your code here...
+	resp = new(core.UserRegisterResponse)
+
+	//当用户名密码长度都为 0 时，返回
+	if len(req.Username) == 0 || len(req.Password) == 0 {
+		resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
+		return resp, nil
+	}
+
+	err = service.NewCreateUserService(ctx).CreateUser(req)
+	if err != nil {
+		resp.BaseResp = pack.BuildBaseResp(err)
+		return resp, nil
+	}
+	resp.BaseResp = pack.BuildBaseResp(errno.Success)
+	return resp, nil
 	return
 }
 
