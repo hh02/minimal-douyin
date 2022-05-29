@@ -1,6 +1,6 @@
 syntax = "proto3";
 package video;
-option go_package = "videoservice";
+option go_package = "video_rpc";
 
 message BaseResp {
     int64 status_code = 1;
@@ -11,17 +11,20 @@ message BaseResp {
 message Video {
     int64 video_id = 1;
     int64 user_id = 2;
-    string play_url = 3;
-    string cover_url = 4;
-    string title_url = 5;
-    string user_name = 6;
-    
-
-
+    string user_name = 3;
+    int64 follow_count = 4; // 关注
+    int64 follower_count = 5; // 粉丝
+    bool is_follow = 6;
+    string play_url = 7;
+    string cover_url = 8;
+    int64 favorite_count = 9;
+    int64 comment_count = 10;
+    bool is_favorite = 11;
+    string title = 12;
 }
 
 message CreateVideoRequest {
-    int64 author_id = 1;
+    int64 user_id = 1;
     string play_url = 2;
     string cover_url = 3;
     string title = 4;
@@ -36,12 +39,12 @@ message GetVideoByUserIdRequest {
 }
 
 message GetVideoByUserIdResponse {
-    repeated Video = 1;
-    BaseResp base_resp = 1;
+    repeated Video videos = 1;
+    BaseResp base_resp = 2;
 }
-
 
 
 service VideoService {
     rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
+    rpc GetVideoByUserId (GetVideoByUserIdRequest) returns (GetVideoByUserIdResponse) {}
 }
