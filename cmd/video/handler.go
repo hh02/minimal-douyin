@@ -14,8 +14,8 @@ func (s *VideoServiceImpl) CreateVideo(ctx context.Context, req *videorpc.Create
 	return
 }
 
-// GetVideoByUserId implements the VideoServiceImpl interface.
-func (s *VideoServiceImpl) GetVideoByUserId(ctx context.Context, req *videorpc.GetVideoByUserIdRequest) (resp *videorpc.GetVideoByUserIdResponse, err error) {
+// QueryVideoByUserId implements the VideoServiceImpl interface.
+func (s *VideoServiceImpl) QueryVideoByUserId(ctx context.Context, req *videorpc.QueryVideoByUserIdRequest) (resp *videorpc.QueryVideoByUserIdResponse, err error) {
 	// TODO: Your code here...
 	return
 }

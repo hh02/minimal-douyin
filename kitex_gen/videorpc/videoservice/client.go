@@ -12,7 +12,7 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest, callOptions ...callopt.Option) (r *videorpc.CreateVideoResponse, err error)
-	GetVideoByUserId(ctx context.Context, Req *videorpc.GetVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.GetVideoByUserIdResponse, err error)
+	QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -49,7 +49,7 @@ func (p *kVideoServiceClient) CreateVideo(ctx context.Context, Req *videorpc.Cre
 	return p.kClient.CreateVideo(ctx, Req)
 }
 
-func (p *kVideoServiceClient) GetVideoByUserId(ctx context.Context, Req *videorpc.GetVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.GetVideoByUserIdResponse, err error) {
+func (p *kVideoServiceClient) QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.GetVideoByUserId(ctx, Req)
+	return p.kClient.QueryVideoByUserId(ctx, Req)
 }

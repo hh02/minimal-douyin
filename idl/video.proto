@@ -34,11 +34,11 @@ message CreateVideoResponse {
     BaseResp base_resp = 1;
 }
 
-message GetVideoByUserIdRequest {
+message QueryVideoByUserIdRequest {
     int64 user_id = 1;
 }
 
-message GetVideoByUserIdResponse {
+message QueryVideoByUserIdResponse {
     repeated Video videos = 1;
     BaseResp base_resp = 2;
 }
@@ -46,5 +46,5 @@ message GetVideoByUserIdResponse {
 
 service VideoService {
     rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
-    rpc GetVideoByUserId (GetVideoByUserIdRequest) returns (GetVideoByUserIdResponse) {}
+    rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
 }

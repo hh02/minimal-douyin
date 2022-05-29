@@ -22,8 +22,8 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "VideoService"
 	handlerType := (*videorpc.VideoService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"CreateVideo":      kitex.NewMethodInfo(createVideoHandler, newCreateVideoArgs, newCreateVideoResult, false),
-		"GetVideoByUserId": kitex.NewMethodInfo(getVideoByUserIdHandler, newGetVideoByUserIdArgs, newGetVideoByUserIdResult, false),
+		"CreateVideo":        kitex.NewMethodInfo(createVideoHandler, newCreateVideoArgs, newCreateVideoResult, false),
+		"QueryVideoByUserId": kitex.NewMethodInfo(queryVideoByUserIdHandler, newQueryVideoByUserIdArgs, newQueryVideoByUserIdResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "video",
@@ -142,52 +142,52 @@ func (p *CreateVideoResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func getVideoByUserIdHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func queryVideoByUserIdHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(videorpc.GetVideoByUserIdRequest)
+		req := new(videorpc.QueryVideoByUserIdRequest)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(videorpc.VideoService).GetVideoByUserId(ctx, req)
+		resp, err := handler.(videorpc.VideoService).QueryVideoByUserId(ctx, req)
 		if err != nil {
 			return err
 		}
 		if err := st.SendMsg(resp); err != nil {
 			return err
 		}
-	case *GetVideoByUserIdArgs:
-		success, err := handler.(videorpc.VideoService).GetVideoByUserId(ctx, s.Req)
+	case *QueryVideoByUserIdArgs:
+		success, err := handler.(videorpc.VideoService).QueryVideoByUserId(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*GetVideoByUserIdResult)
+		realResult := result.(*QueryVideoByUserIdResult)
 		realResult.Success = success
 	}
 	return nil
 }
-func newGetVideoByUserIdArgs() interface{} {
-	return &GetVideoByUserIdArgs{}
+func newQueryVideoByUserIdArgs() interface{} {
+	return &QueryVideoByUserIdArgs{}
 }
 
-func newGetVideoByUserIdResult() interface{} {
-	return &GetVideoByUserIdResult{}
+func newQueryVideoByUserIdResult() interface{} {
+	return &QueryVideoByUserIdResult{}
 }
 
-type GetVideoByUserIdArgs struct {
-	Req *videorpc.GetVideoByUserIdRequest
+type QueryVideoByUserIdArgs struct {
+	Req *videorpc.QueryVideoByUserIdRequest
 }
 
-func (p *GetVideoByUserIdArgs) Marshal(out []byte) ([]byte, error) {
+func (p *QueryVideoByUserIdArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
-		return out, fmt.Errorf("No req in GetVideoByUserIdArgs")
+		return out, fmt.Errorf("No req in QueryVideoByUserIdArgs")
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *GetVideoByUserIdArgs) Unmarshal(in []byte) error {
-	msg := new(videorpc.GetVideoByUserIdRequest)
+func (p *QueryVideoByUserIdArgs) Unmarshal(in []byte) error {
+	msg := new(videorpc.QueryVideoByUserIdRequest)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -195,34 +195,34 @@ func (p *GetVideoByUserIdArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var GetVideoByUserIdArgs_Req_DEFAULT *videorpc.GetVideoByUserIdRequest
+var QueryVideoByUserIdArgs_Req_DEFAULT *videorpc.QueryVideoByUserIdRequest
 
-func (p *GetVideoByUserIdArgs) GetReq() *videorpc.GetVideoByUserIdRequest {
+func (p *QueryVideoByUserIdArgs) GetReq() *videorpc.QueryVideoByUserIdRequest {
 	if !p.IsSetReq() {
-		return GetVideoByUserIdArgs_Req_DEFAULT
+		return QueryVideoByUserIdArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *GetVideoByUserIdArgs) IsSetReq() bool {
+func (p *QueryVideoByUserIdArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-type GetVideoByUserIdResult struct {
-	Success *videorpc.GetVideoByUserIdResponse
+type QueryVideoByUserIdResult struct {
+	Success *videorpc.QueryVideoByUserIdResponse
 }
 
-var GetVideoByUserIdResult_Success_DEFAULT *videorpc.GetVideoByUserIdResponse
+var QueryVideoByUserIdResult_Success_DEFAULT *videorpc.QueryVideoByUserIdResponse
 
-func (p *GetVideoByUserIdResult) Marshal(out []byte) ([]byte, error) {
+func (p *QueryVideoByUserIdResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
-		return out, fmt.Errorf("No req in GetVideoByUserIdResult")
+		return out, fmt.Errorf("No req in QueryVideoByUserIdResult")
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *GetVideoByUserIdResult) Unmarshal(in []byte) error {
-	msg := new(videorpc.GetVideoByUserIdResponse)
+func (p *QueryVideoByUserIdResult) Unmarshal(in []byte) error {
+	msg := new(videorpc.QueryVideoByUserIdResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -230,18 +230,18 @@ func (p *GetVideoByUserIdResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *GetVideoByUserIdResult) GetSuccess() *videorpc.GetVideoByUserIdResponse {
+func (p *QueryVideoByUserIdResult) GetSuccess() *videorpc.QueryVideoByUserIdResponse {
 	if !p.IsSetSuccess() {
-		return GetVideoByUserIdResult_Success_DEFAULT
+		return QueryVideoByUserIdResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *GetVideoByUserIdResult) SetSuccess(x interface{}) {
-	p.Success = x.(*videorpc.GetVideoByUserIdResponse)
+func (p *QueryVideoByUserIdResult) SetSuccess(x interface{}) {
+	p.Success = x.(*videorpc.QueryVideoByUserIdResponse)
 }
 
-func (p *GetVideoByUserIdResult) IsSetSuccess() bool {
+func (p *QueryVideoByUserIdResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
@@ -265,11 +265,11 @@ func (p *kClient) CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequ
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetVideoByUserId(ctx context.Context, Req *videorpc.GetVideoByUserIdRequest) (r *videorpc.GetVideoByUserIdResponse, err error) {
-	var _args GetVideoByUserIdArgs
+func (p *kClient) QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest) (r *videorpc.QueryVideoByUserIdResponse, err error) {
+	var _args QueryVideoByUserIdArgs
 	_args.Req = Req
-	var _result GetVideoByUserIdResult
-	if err = p.c.Call(ctx, "GetVideoByUserId", &_args, &_result); err != nil {
+	var _result QueryVideoByUserIdResult
+	if err = p.c.Call(ctx, "QueryVideoByUserId", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
