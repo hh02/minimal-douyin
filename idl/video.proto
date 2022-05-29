@@ -1,0 +1,47 @@
+syntax = "proto3";
+package video;
+option go_package = "videoservice";
+
+message BaseResp {
+    int64 status_code = 1;
+    string status_message = 2;
+    int64 service_time = 3;
+}
+
+message Video {
+    int64 video_id = 1;
+    int64 user_id = 2;
+    string play_url = 3;
+    string cover_url = 4;
+    string title_url = 5;
+    string user_name = 6;
+    
+
+
+}
+
+message CreateVideoRequest {
+    int64 author_id = 1;
+    string play_url = 2;
+    string cover_url = 3;
+    string title = 4;
+}
+
+message CreateVideoResponse {
+    BaseResp base_resp = 1;
+}
+
+message GetVideoByUserIdRequest {
+    int64 user_id = 1;
+}
+
+message GetVideoByUserIdResponse {
+    repeated Video = 1;
+    BaseResp base_resp = 1;
+}
+
+
+
+service VideoService {
+    rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
+}
