@@ -24,8 +24,8 @@ func (v *Video) TableName() string {
 	return constants.VideoTableName
 }
 
-func CreateVideo(ctx context.Context, videos []*Video) error {
-	return DB.WithContext(ctx).Create(videos).Error
+func CreateVideo(ctx context.Context, video *Video) error {
+	return DB.WithContext(ctx).Create(video).Error
 }
 
 func QueryVideoByUserId(ctx context.Context, userId int64) ([]*Video, error) {
