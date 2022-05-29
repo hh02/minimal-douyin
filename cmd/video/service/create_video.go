@@ -1,6 +1,9 @@
 package service
 
-import "context"
+import (
+	"context"
+	"github.com/hh02/minimal-douyin/kitex_gen/video_rpc/"
+)
 
 type CreateVideoService struct {
 	ctx context.Context

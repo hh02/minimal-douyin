@@ -8,7 +8,7 @@ import (
 	"github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
 	"github.com/cloudwego/kitex/pkg/streaming"
-	"github.com/hh02/minimal-douyin/kitex_gen/video_rpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -20,7 +20,7 @@ var videoServiceServiceInfo = NewServiceInfo()
 
 func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "VideoService"
-	handlerType := (*video_rpc.VideoService)(nil)
+	handlerType := (*videorpc.VideoService)(nil)
 	methods := map[string]kitex.MethodInfo{
 		"CreateVideo":      kitex.NewMethodInfo(createVideoHandler, newCreateVideoArgs, newCreateVideoResult, false),
 		"GetVideoByUserId": kitex.NewMethodInfo(getVideoByUserIdHandler, newGetVideoByUserIdArgs, newGetVideoByUserIdResult, false),
@@ -43,11 +43,11 @@ func createVideoHandler(ctx context.Context, handler interface{}, arg, result in
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(video_rpc.CreateVideoRequest)
+		req := new(videorpc.CreateVideoRequest)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(video_rpc.VideoService).CreateVideo(ctx, req)
+		resp, err := handler.(videorpc.VideoService).CreateVideo(ctx, req)
 		if err != nil {
 			return err
 		}
@@ -55,7 +55,7 @@ func createVideoHandler(ctx context.Context, handler interface{}, arg, result in
 			return err
 		}
 	case *CreateVideoArgs:
-		success, err := handler.(video_rpc.VideoService).CreateVideo(ctx, s.Req)
+		success, err := handler.(videorpc.VideoService).CreateVideo(ctx, s.Req)
 		if err != nil {
 			return err
 		}
@@ -73,7 +73,7 @@ func newCreateVideoResult() interface{} {
 }
 
 type CreateVideoArgs struct {
-	Req *video_rpc.CreateVideoRequest
+	Req *videorpc.CreateVideoRequest
 }
 
 func (p *CreateVideoArgs) Marshal(out []byte) ([]byte, error) {
@@ -84,7 +84,7 @@ func (p *CreateVideoArgs) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *CreateVideoArgs) Unmarshal(in []byte) error {
-	msg := new(video_rpc.CreateVideoRequest)
+	msg := new(videorpc.CreateVideoRequest)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -92,9 +92,9 @@ func (p *CreateVideoArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var CreateVideoArgs_Req_DEFAULT *video_rpc.CreateVideoRequest
+var CreateVideoArgs_Req_DEFAULT *videorpc.CreateVideoRequest
 
-func (p *CreateVideoArgs) GetReq() *video_rpc.CreateVideoRequest {
+func (p *CreateVideoArgs) GetReq() *videorpc.CreateVideoRequest {
 	if !p.IsSetReq() {
 		return CreateVideoArgs_Req_DEFAULT
 	}
@@ -106,10 +106,10 @@ func (p *CreateVideoArgs) IsSetReq() bool {
 }
 
 type CreateVideoResult struct {
-	Success *video_rpc.CreateVideoResponse
+	Success *videorpc.CreateVideoResponse
 }
 
-var CreateVideoResult_Success_DEFAULT *video_rpc.CreateVideoResponse
+var CreateVideoResult_Success_DEFAULT *videorpc.CreateVideoResponse
 
 func (p *CreateVideoResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
@@ -119,7 +119,7 @@ func (p *CreateVideoResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *CreateVideoResult) Unmarshal(in []byte) error {
-	msg := new(video_rpc.CreateVideoResponse)
+	msg := new(videorpc.CreateVideoResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (p *CreateVideoResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *CreateVideoResult) GetSuccess() *video_rpc.CreateVideoResponse {
+func (p *CreateVideoResult) GetSuccess() *videorpc.CreateVideoResponse {
 	if !p.IsSetSuccess() {
 		return CreateVideoResult_Success_DEFAULT
 	}
@@ -135,7 +135,7 @@ func (p *CreateVideoResult) GetSuccess() *video_rpc.CreateVideoResponse {
 }
 
 func (p *CreateVideoResult) SetSuccess(x interface{}) {
-	p.Success = x.(*video_rpc.CreateVideoResponse)
+	p.Success = x.(*videorpc.CreateVideoResponse)
 }
 
 func (p *CreateVideoResult) IsSetSuccess() bool {
@@ -146,11 +146,11 @@ func getVideoByUserIdHandler(ctx context.Context, handler interface{}, arg, resu
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(video_rpc.GetVideoByUserIdRequest)
+		req := new(videorpc.GetVideoByUserIdRequest)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(video_rpc.VideoService).GetVideoByUserId(ctx, req)
+		resp, err := handler.(videorpc.VideoService).GetVideoByUserId(ctx, req)
 		if err != nil {
 			return err
 		}
@@ -158,7 +158,7 @@ func getVideoByUserIdHandler(ctx context.Context, handler interface{}, arg, resu
 			return err
 		}
 	case *GetVideoByUserIdArgs:
-		success, err := handler.(video_rpc.VideoService).GetVideoByUserId(ctx, s.Req)
+		success, err := handler.(videorpc.VideoService).GetVideoByUserId(ctx, s.Req)
 		if err != nil {
 			return err
 		}
@@ -176,7 +176,7 @@ func newGetVideoByUserIdResult() interface{} {
 }
 
 type GetVideoByUserIdArgs struct {
-	Req *video_rpc.GetVideoByUserIdRequest
+	Req *videorpc.GetVideoByUserIdRequest
 }
 
 func (p *GetVideoByUserIdArgs) Marshal(out []byte) ([]byte, error) {
@@ -187,7 +187,7 @@ func (p *GetVideoByUserIdArgs) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *GetVideoByUserIdArgs) Unmarshal(in []byte) error {
-	msg := new(video_rpc.GetVideoByUserIdRequest)
+	msg := new(videorpc.GetVideoByUserIdRequest)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -195,9 +195,9 @@ func (p *GetVideoByUserIdArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var GetVideoByUserIdArgs_Req_DEFAULT *video_rpc.GetVideoByUserIdRequest
+var GetVideoByUserIdArgs_Req_DEFAULT *videorpc.GetVideoByUserIdRequest
 
-func (p *GetVideoByUserIdArgs) GetReq() *video_rpc.GetVideoByUserIdRequest {
+func (p *GetVideoByUserIdArgs) GetReq() *videorpc.GetVideoByUserIdRequest {
 	if !p.IsSetReq() {
 		return GetVideoByUserIdArgs_Req_DEFAULT
 	}
@@ -209,10 +209,10 @@ func (p *GetVideoByUserIdArgs) IsSetReq() bool {
 }
 
 type GetVideoByUserIdResult struct {
-	Success *video_rpc.GetVideoByUserIdResponse
+	Success *videorpc.GetVideoByUserIdResponse
 }
 
-var GetVideoByUserIdResult_Success_DEFAULT *video_rpc.GetVideoByUserIdResponse
+var GetVideoByUserIdResult_Success_DEFAULT *videorpc.GetVideoByUserIdResponse
 
 func (p *GetVideoByUserIdResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
@@ -222,7 +222,7 @@ func (p *GetVideoByUserIdResult) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *GetVideoByUserIdResult) Unmarshal(in []byte) error {
-	msg := new(video_rpc.GetVideoByUserIdResponse)
+	msg := new(videorpc.GetVideoByUserIdResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -230,7 +230,7 @@ func (p *GetVideoByUserIdResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *GetVideoByUserIdResult) GetSuccess() *video_rpc.GetVideoByUserIdResponse {
+func (p *GetVideoByUserIdResult) GetSuccess() *videorpc.GetVideoByUserIdResponse {
 	if !p.IsSetSuccess() {
 		return GetVideoByUserIdResult_Success_DEFAULT
 	}
@@ -238,7 +238,7 @@ func (p *GetVideoByUserIdResult) GetSuccess() *video_rpc.GetVideoByUserIdRespons
 }
 
 func (p *GetVideoByUserIdResult) SetSuccess(x interface{}) {
-	p.Success = x.(*video_rpc.GetVideoByUserIdResponse)
+	p.Success = x.(*videorpc.GetVideoByUserIdResponse)
 }
 
 func (p *GetVideoByUserIdResult) IsSetSuccess() bool {
@@ -255,7 +255,7 @@ func newServiceClient(c client.Client) *kClient {
 	}
 }
 
-func (p *kClient) CreateVideo(ctx context.Context, Req *video_rpc.CreateVideoRequest) (r *video_rpc.CreateVideoResponse, err error) {
+func (p *kClient) CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest) (r *videorpc.CreateVideoResponse, err error) {
 	var _args CreateVideoArgs
 	_args.Req = Req
 	var _result CreateVideoResult
@@ -265,7 +265,7 @@ func (p *kClient) CreateVideo(ctx context.Context, Req *video_rpc.CreateVideoReq
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetVideoByUserId(ctx context.Context, Req *video_rpc.GetVideoByUserIdRequest) (r *video_rpc.GetVideoByUserIdResponse, err error) {
+func (p *kClient) GetVideoByUserId(ctx context.Context, Req *videorpc.GetVideoByUserIdRequest) (r *videorpc.GetVideoByUserIdResponse, err error) {
 	var _args GetVideoByUserIdArgs
 	_args.Req = Req
 	var _result GetVideoByUserIdResult

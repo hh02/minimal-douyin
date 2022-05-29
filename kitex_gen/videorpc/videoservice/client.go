@@ -6,13 +6,13 @@ import (
 	"context"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/callopt"
-	"github.com/hh02/minimal-douyin/kitex_gen/video_rpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 )
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
-	CreateVideo(ctx context.Context, Req *video_rpc.CreateVideoRequest, callOptions ...callopt.Option) (r *video_rpc.CreateVideoResponse, err error)
-	GetVideoByUserId(ctx context.Context, Req *video_rpc.GetVideoByUserIdRequest, callOptions ...callopt.Option) (r *video_rpc.GetVideoByUserIdResponse, err error)
+	CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest, callOptions ...callopt.Option) (r *videorpc.CreateVideoResponse, err error)
+	GetVideoByUserId(ctx context.Context, Req *videorpc.GetVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.GetVideoByUserIdResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -44,12 +44,12 @@ type kVideoServiceClient struct {
 	*kClient
 }
 
-func (p *kVideoServiceClient) CreateVideo(ctx context.Context, Req *video_rpc.CreateVideoRequest, callOptions ...callopt.Option) (r *video_rpc.CreateVideoResponse, err error) {
+func (p *kVideoServiceClient) CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest, callOptions ...callopt.Option) (r *videorpc.CreateVideoResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CreateVideo(ctx, Req)
 }
 
-func (p *kVideoServiceClient) GetVideoByUserId(ctx context.Context, Req *video_rpc.GetVideoByUserIdRequest, callOptions ...callopt.Option) (r *video_rpc.GetVideoByUserIdResponse, err error) {
+func (p *kVideoServiceClient) GetVideoByUserId(ctx context.Context, Req *videorpc.GetVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.GetVideoByUserIdResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetVideoByUserId(ctx, Req)
 }

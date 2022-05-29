@@ -1,12 +1,12 @@
 package main
 
 import (
-	video_rpc "github.com/hh02/minimal-douyin/kitex_gen/video_rpc/videoservice"
+	videorpc "github.com/hh02/minimal-douyin/kitex_gen/videorpc/videoservice"
 	"log"
 )
 
 func main() {
-	svr := video_rpc.NewServer(new(VideoServiceImpl))
+	svr := videorpc.NewServer(new(VideoServiceImpl))
 
 	err := svr.Run()
 

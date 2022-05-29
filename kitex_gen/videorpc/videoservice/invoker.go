@@ -4,11 +4,11 @@ package videoservice
 
 import (
 	"github.com/cloudwego/kitex/server"
-	"github.com/hh02/minimal-douyin/kitex_gen/video_rpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 )
 
 // NewInvoker creates a server.Invoker with the given handler and options.
-func NewInvoker(handler video_rpc.VideoService, opts ...server.Option) server.Invoker {
+func NewInvoker(handler videorpc.VideoService, opts ...server.Option) server.Invoker {
 	var options []server.Option
 
 	options = append(options, opts...)
