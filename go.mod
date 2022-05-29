@@ -8,6 +8,14 @@ require (
 )
 
 require (
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
+	github.com/opentracing/opentracing-go v1.2.0 // indirect
+	gorm.io/gorm v1.23.5 // indirect
+)
+
+require (
 	github.com/apache/thrift v0.13.0 // indirect
 	github.com/bytedance/gopkg v0.0.0-20220413063733-65bf48ffb3a7 // indirect
 	github.com/choleraehyq/pid v0.0.13 // indirect
@@ -26,4 +34,6 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/genproto v0.0.0-20210513213006-bf773b8c8384 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gorm.io/driver/mysql v1.3.4
+	gorm.io/plugin/opentracing v0.0.0-20211220013347-7d2b2af23560
 )
