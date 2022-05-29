@@ -19,4 +19,14 @@ func (v *Video) TableName() string {
 	return constants.VideoTableName
 }
 
-func 
+func CreateVideo(ctx context.Context, videos []*Video) error {
+	return DB.WithContext(ctx).Create(videos).Error
+}
+
+func QueryVideoByUserId(ctx context.Context, userId int64) ([]*Video, error){
+	res := make([]*Video, 0)
+	if err := DB.WithContext(ctx).Where("author_id = ?", userId).Find(&res).Error; err != nil {
+		return nil, err
+	}
+	return res, nil
+}
