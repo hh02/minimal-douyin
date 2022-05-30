@@ -1,0 +1,9 @@
+syntax = "proto3";
+package follow;
+option go_package = "followrpc";
+
+message BaseResp {
+    int32 status_code = 1;
+    string status_message = 2;
+}
+
