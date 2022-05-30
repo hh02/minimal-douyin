@@ -3,7 +3,7 @@ package video;
 option go_package = "videorpc";
 
 message BaseResp {
-    int64 status_code = 1;
+    int32 status_code = 1;
     string status_message = 2;
 }
 
