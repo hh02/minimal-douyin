@@ -14,5 +14,6 @@ const (
 	DefaultLimit            = 10
 	VideoTableName          = "videos"
 	UserTableName           = "users"
+	FollowTableName         = "follows"
 	SecretKey               = "secret key"
 )
