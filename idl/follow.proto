@@ -51,12 +51,12 @@ message QueryFollowerResponse {
     repeated User users = 3;
 }
 
-message GetFollowRequest {
+message CheckFollowRequest {
     int64 user_id = 1;
     int64 follow_id = 2;
 }
 
-message GetFollowResponse {
+message CheckFollowResponse {
     int32 status_code = 1;
     string status_message = 2;
 }
@@ -66,6 +66,6 @@ service FollowService {
     rpc DeleteFollow(DeleteFollowRequest) returns (DeleteFollowResponse) {}
     rpc QueryFollow(QueryFollowRequest) returns (QueryFollowResponse) {}
     rpc QueryFollower(QueryFollowerRequest) returns (QueryFollowerResponse) {}
-    rpc GetFollow(GetFollowRequest) returns (GetFollowResponse) {}
+    rpc CheckFollow(CheckFollowRequest) returns (CheckFollowResponse) {}
 }
 
