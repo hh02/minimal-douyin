@@ -12,6 +12,7 @@ const (
 	LoginErrCode            = 10003
 	UserNotExistErrCode     = 10004
 	UserAlreadyExistErrCode = 10005
+	FollowNotExistErrCode   = 10006
 )
 
 type ErrNo struct {
@@ -39,6 +40,7 @@ var (
 	LoginErr            = NewErrNo(LoginErrCode, "Wrong username or password")
 	UserNotExistErr     = NewErrNo(UserNotExistErrCode, "User does not exists")
 	UserAlreadyExistErr = NewErrNo(UserAlreadyExistErrCode, "User already exists")
+	FollowNotExistErr   = NewErrNo(FollowNotExistErrCode, "Follow does not exist")
 )
 
 // ConvertErr convert error to Errno

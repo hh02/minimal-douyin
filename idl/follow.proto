@@ -2,8 +2,70 @@ syntax = "proto3";
 package follow;
 option go_package = "followrpc";
 
-message BaseResp {
+message User {
+    int64 user_id = 1;
+    string username = 2;
+    int64 follow_count = 3;
+    int64 follower_count = 4;
+    bool is_follow = 5;
+}
+
+
+message CreateFollowRequest {
+    int64 user_id = 1; // 用户id
+    int64 follow_id = 2; // 关注用户的id
+}
+
+message CreateFollowResponse {
     int32 status_code = 1;
     string status_message = 2;
+}
+
+message DeleteFollowRequest {
+    int64 user_id = 1;
+    int64 follow_id = 2;
+}
+
+message DeleteFollowResponse {
+    int32 status_code = 1;
+    string status_message = 2;
+}
+
+message QueryFollowRequest {
+    int64 user_id = 1;
+}
+
+message QueryFollowResponse {
+    int32 status_code = 1;
+    string status_message = 2;
+    repeated User users = 3;
+}
+
+message QueryFollowerRequest {
+    int64 user_id = 1;
+}
+
+message QueryFollowerResponse {
+    int32 status_code = 1;
+    string status_message = 2;
+    repeated User users = 3;
+}
+
+message GetFollowRequest {
+    int64 user_id = 1;
+    int64 follow_id = 2;
+}
+
+message GetFollowResponse {
+    int32 status_code = 1;
+    string status_message = 2;
+}
+
+service FollowService {
+    rpc CreateFollow(CreateFollowRequest) returns (CreateFollowResponse) {}
+    rpc DeleteFollow(DeleteFollowRequest) returns (DeleteFollowResponse) {}
+    rpc QueryFollow(QueryFollowRequest) returns (QueryFollowResponse) {}
+    rpc QueryFollower(QueryFollowerRequest) returns (QueryFollowerResponse) {}
+    rpc GetFollow(GetFollowRequest) returns (GetFollowResponse) {}
 }
 
