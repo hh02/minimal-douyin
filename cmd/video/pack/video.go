@@ -13,7 +13,6 @@ func VideoModel2RpcMessage(m *db.Video) *videorpc.Video {
 
 	return &videorpc.Video{
 		VideoId: m.VideoId,
-		UserId: m.VideoId,
 		PlayUrl: m.PlayUrl,
 		CoverUrl: m.CoverUrl,
 		Title: m.Title,

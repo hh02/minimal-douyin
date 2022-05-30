@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/remote/trans/nphttp2/status"
 	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
 	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core/userservice"

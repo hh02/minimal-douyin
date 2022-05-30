@@ -29,7 +29,7 @@ func CreateVideo(ctx context.Context, video *Video) error {
 }
 
 func QueryVideoByUserId(ctx context.Context, userId int64) ([]*Video, error) {
-	res := make([]*Video, 0)
+	var res []*Video
 	if err := DB.WithContext(ctx).Where("user_id = ?", userId).Find(&res).Error; err != nil {
 		return nil, err
 	}

@@ -32,8 +32,7 @@ func (s *QueryVideoService) QueryVideoByUserId(req *videorpc.QueryVideoByUserIdR
 	videos := pack.VideoModels2RpcMessages(videoModels)
 
 	for i := 0; i < len(videos); i++ {
-		videos[i].UserName = user.Name
-		videos[i].
+		videos[i].Author = user
 	}
 
 
