@@ -2,11 +2,6 @@ syntax = "proto3";
 package video;
 option go_package = "videorpc";
 
-message BaseResp {
-    int64 status_code = 1;
-    string status_message = 2;
-}
-
 message User {
     int64 user_id = 1;
     string username = 2;
@@ -34,7 +29,8 @@ message CreateVideoRequest {
 }
 
 message CreateVideoResponse {
-    BaseResp base_resp = 1;
+    int32 status_code = 1;
+    string status_message = 2;
 }
 
 message QueryVideoByUserIdRequest {
@@ -42,8 +38,9 @@ message QueryVideoByUserIdRequest {
 }
 
 message QueryVideoByUserIdResponse {
-    repeated Video videos = 1;
-    BaseResp base_resp = 2;
+    int32 status_code = 1;
+    string status_message = 2;
+    repeated Video videos = 3;
 }
 
 
