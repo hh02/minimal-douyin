@@ -15,7 +15,7 @@ type Client interface {
 	DeleteFollow(ctx context.Context, Req *followrpc.DeleteFollowRequest, callOptions ...callopt.Option) (r *followrpc.DeleteFollowResponse, err error)
 	QueryFollow(ctx context.Context, Req *followrpc.QueryFollowRequest, callOptions ...callopt.Option) (r *followrpc.QueryFollowResponse, err error)
 	QueryFollower(ctx context.Context, Req *followrpc.QueryFollowerRequest, callOptions ...callopt.Option) (r *followrpc.QueryFollowerResponse, err error)
-	GetFollow(ctx context.Context, Req *followrpc.GetFollowRequest, callOptions ...callopt.Option) (r *followrpc.GetFollowResponse, err error)
+	CheckFollow(ctx context.Context, Req *followrpc.CheckFollowRequest, callOptions ...callopt.Option) (r *followrpc.CheckFollowResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -67,7 +67,7 @@ func (p *kFollowServiceClient) QueryFollower(ctx context.Context, Req *followrpc
 	return p.kClient.QueryFollower(ctx, Req)
 }
 
-func (p *kFollowServiceClient) GetFollow(ctx context.Context, Req *followrpc.GetFollowRequest, callOptions ...callopt.Option) (r *followrpc.GetFollowResponse, err error) {
+func (p *kFollowServiceClient) CheckFollow(ctx context.Context, Req *followrpc.CheckFollowRequest, callOptions ...callopt.Option) (r *followrpc.CheckFollowResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.GetFollow(ctx, Req)
+	return p.kClient.CheckFollow(ctx, Req)
 }

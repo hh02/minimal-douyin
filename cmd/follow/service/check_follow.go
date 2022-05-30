@@ -8,15 +8,15 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
-type GetFollowService struct {
+type CheckFollowService struct {
 	ctx context.Context
 }
 
-func NewGetFollowService(ctx context.Context) *GetFollowService {
-	return &GetFollowService{ctx: ctx}
+func NewCheckFollowService(ctx context.Context) *CheckFollowService {
+	return &CheckFollowService{ctx: ctx}
 }
 
-func (s *GetFollowService) GetFollow(req *followrpc.GetFollowRequest) *followrpc.GetFollowResponse {
+func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) *followrpc.CheckFollowResponse {
 	followModel := &db.Follow{
 		UserId:   req.UserId,
 		FollowId: req.FollowId,
@@ -24,12 +24,12 @@ func (s *GetFollowService) GetFollow(req *followrpc.GetFollowRequest) *followrpc
 
 	_, err := db.GetFollow(s.ctx, followModel)
 	if err != nil {
-		return &followrpc.GetFollowResponse{
+		return &followrpc.CheckFollowResponse{
 			StatusCode:    errno.FollowNotExistErrCode,
 			StatusMessage: err.Error(),
 		}
 	}
-	return &followrpc.GetFollowResponse{
+	return &followrpc.CheckFollowResponse{
 		StatusCode: errno.SuccessCode,
 	}
 }
