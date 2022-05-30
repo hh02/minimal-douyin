@@ -1,0 +1,53 @@
+syntax = "proto3";
+package video;
+option go_package = "videorpc";
+
+message BaseResp {
+    int64 status_code = 1;
+    string status_message = 2;
+}
+
+message User {
+    int64 user_id = 1;
+    string username = 2;
+    int64 follow_count = 3;
+    int64 follower_count = 4;
+    bool is_follow = 5;
+}
+
+message Video {
+    int64 video_id = 1;
+    User author = 2;
+    string play_url = 3;
+    string cover_url = 4;
+    int64 favorite_count = 5;
+    int64 comment_count = 6;
+    bool is_favorite = 7;
+    string title = 8;
+}
+
+message CreateVideoRequest {
+    int64 user_id = 1;
+    string play_url = 2;
+    string cover_url = 3;
+    string title = 4;
+}
+
+message CreateVideoResponse {
+    BaseResp base_resp = 1;
+}
+
+message QueryVideoByUserIdRequest {
+    int64 user_id = 1;
+}
+
+message QueryVideoByUserIdResponse {
+    repeated Video videos = 1;
+    BaseResp base_resp = 2;
+}
+
+
+service VideoService {
+    rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
+    rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
+}
