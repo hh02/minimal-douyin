@@ -3,6 +3,8 @@ package errno
 import (
 	"errors"
 	"fmt"
+
+	"github.com/hh02/minimal-douyin/kitex_gen/common"
 )
 
 const (
@@ -43,14 +45,32 @@ var (
 	FollowNotExistErr   = NewErrNo(FollowNotExistErrCode, "Follow does not exist")
 )
 
-// ConvertErr convert error to Errno
-func ConvertErr(err error) ErrNo {
-	Err := ErrNo{}
-	if errors.As(err, &Err) {
-		return Err
+
+// BuildBaseResp build baseResp from error
+func BuildStatus(err error) *common.Status {
+	if err == nil {
+		return ErrorNo2Status(Success)
 	}
 
-	s := ServiceErr
-	s.ErrMsg = err.Error()
-	return s
+	e := ErrNo{}
+
+	// 如果为ErrNo类型
+	if errors.As(err, &e) {
+		return ErrorNo2Status(e)
+	}
+
+	s := ServiceErr.WithMessage(err.Error())
+	return ErrorNo2Status(s)
+
+}
+
+func ErrorNo2Status(err ErrNo) *common.Status {
+	return &common.Status{StatusCode: err.ErrCode, StatusMessage: err.ErrMsg}
+}
+
+func Status2ErrorNo(status *common.Status) ErrNo {
+	return ErrNo{
+		ErrCode: status.StatusCode,
+		ErrMsg:  status.StatusMessage,
+	}
 }
