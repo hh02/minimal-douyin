@@ -41,7 +41,7 @@ func initUserRpc() {
 	userClient = c
 }
 
-func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*userrpc.User, error) {
+func MGetUserMap(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*userrpc.User, error) {
 	resp, err := userClient.MGetUser(ctx, req)
 	if err != nil {
 		return nil, err
@@ -55,4 +55,4 @@ func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*use
 		res[user.UserId] = user
 	}
 	return res, nil
-} 
+}

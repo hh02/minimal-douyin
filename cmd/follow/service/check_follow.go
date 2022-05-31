@@ -15,15 +15,18 @@ func NewCheckFollowService(ctx context.Context) *CheckFollowService {
 	return &CheckFollowService{ctx: ctx}
 }
 
-func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) error {
+func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) (bool, error) {
 	followModel := &db.Follow{
 		UserId:   req.UserId,
 		FollowId: req.FollowId,
 	}
 
-	_, err := db.GetFollow(s.ctx, followModel)
+	isFollow, err := db.GetFollow(s.ctx, followModel)
 	if err != nil {
-		return err
+		return false, err
 	}
-	return nil
+	if isFollow == nil {
+		return false, nil
+	}
+	return true, nil
 }

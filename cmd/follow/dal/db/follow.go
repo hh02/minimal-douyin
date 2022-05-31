@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"gorm.io/gorm"
@@ -55,6 +56,9 @@ func GetFollow(ctx context.Context, follow *Follow) (*Follow, error) {
 		"user_id":   follow.UserId,
 		"follow_id": follow.FollowId,
 	}).First(&res).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &res, nil

@@ -28,7 +28,7 @@ func (s *MGetVideoService) MGetVideoService(req *videorpc.MGetVideoRequest) ([]*
 	// 提取出所有用户ID并去重
 	userIds := pack.UserIds(videoModels)
 
-	userMap, err := rpc.MGetUser(s.ctx, &userrpc.MGetUserRequest{UserIds: userIds})
+	userMap, err := rpc.MGetUserMap(s.ctx, &userrpc.MGetUserRequest{UserIds: userIds})
 	if err != nil {
 		return nil, err
 	}
