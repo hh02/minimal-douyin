@@ -1,12 +1,12 @@
 package main
 
 import (
-	core "github.com/hh02/minimal-douyin/kitex_gen/douyin/core/userservice"
+	userrpc "github.com/hh02/minimal-douyin/kitex_gen/userrpc/userservice"
 	"log"
 )
 
 func main() {
-	svr := core.NewServer(new(UserServiceImpl))
+	svr := userrpc.NewServer(new(UserServiceImpl))
 
 	err := svr.Run()
 
