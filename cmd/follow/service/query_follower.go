@@ -10,16 +10,16 @@ import (
 )
 
 // 查询关注列表
-type QueryFollowService struct {
+type QueryFollowerService struct {
 	ctx context.Context
 }
 
-func NewQueryFollowService(ctx context.Context) *QueryFollowService {
-	return &QueryFollowService{ctx: ctx}
+func NewQueryFollowerService(ctx context.Context) *QueryFollowerService {
+	return &QueryFollowerService{ctx: ctx}
 }
 
-func (s *QueryFollowService) QueryFollow(req *followrpc.QueryFollowRequest) ([]*userrpc.User, error) {
-	userIds, err := db.QueryFollow(s.ctx, req.UserId)
+func (s *QueryFollowerService) QueryFollower(req *followrpc.QueryFollowerRequest) ([]*userrpc.User, error) {
+	userIds, err := db.QueryFollower(s.ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}

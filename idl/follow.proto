@@ -2,14 +2,8 @@ syntax = "proto3";
 package follow;
 option go_package = "followrpc";
 
-message User {
-    int64 user_id = 1;
-    string username = 2;
-    int64 follow_count = 3;
-    int64 follower_count = 4;
-    bool is_follow = 5;
-}
-
+import "user.proto";
+import "common.proto";
 
 message CreateFollowRequest {
     int64 user_id = 1; // 用户id
@@ -17,8 +11,7 @@ message CreateFollowRequest {
 }
 
 message CreateFollowResponse {
-    int32 status_code = 1;
-    string status_message = 2;
+    common.Status status = 1;
 }
 
 message DeleteFollowRequest {
@@ -27,8 +20,7 @@ message DeleteFollowRequest {
 }
 
 message DeleteFollowResponse {
-    int32 status_code = 1;
-    string status_message = 2;
+    common.Status status = 1;
 }
 
 message QueryFollowRequest {
@@ -36,9 +28,8 @@ message QueryFollowRequest {
 }
 
 message QueryFollowResponse {
-    int32 status_code = 1;
-    string status_message = 2;
-    repeated User users = 3;
+    common.Status status = 1;
+    repeated user.User users = 2;
 }
 
 message QueryFollowerRequest {
@@ -46,9 +37,8 @@ message QueryFollowerRequest {
 }
 
 message QueryFollowerResponse {
-    int32 status_code = 1;
-    string status_message = 2;
-    repeated User users = 3;
+    common.Status status = 1;
+    repeated user.User users = 2;
 }
 
 message CheckFollowRequest {
@@ -57,8 +47,8 @@ message CheckFollowRequest {
 }
 
 message CheckFollowResponse {
-    int32 status_code = 1;
-    string status_message = 2;
+    common.Status status = 1;
+    bool is_follow = 2;
 }
 
 service FollowService {
