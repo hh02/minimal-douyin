@@ -5,7 +5,6 @@ import (
 
 	"github.com/hh02/minimal-douyin/cmd/follow/dal/db"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
-	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
 type CheckFollowService struct {
@@ -16,20 +15,18 @@ func NewCheckFollowService(ctx context.Context) *CheckFollowService {
 	return &CheckFollowService{ctx: ctx}
 }
 
-func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) *followrpc.CheckFollowResponse {
+func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) (bool, error) {
 	followModel := &db.Follow{
 		UserId:   req.UserId,
 		FollowId: req.FollowId,
 	}
 
-	_, err := db.GetFollow(s.ctx, followModel)
+	isFollow, err := db.GetFollow(s.ctx, followModel)
 	if err != nil {
-		return &followrpc.CheckFollowResponse{
-			StatusCode:    errno.FollowNotExistErrCode,
-			StatusMessage: err.Error(),
-		}
+		return false, err
 	}
-	return &followrpc.CheckFollowResponse{
-		StatusCode: errno.SuccessCode,
+	if isFollow == nil {
+		return false, nil
 	}
+	return true, nil
 }
