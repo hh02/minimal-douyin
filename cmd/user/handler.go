@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/cloudwego/kitex-examples/bizdemo/easy_note/kitex_gen/userdemo"
-	"github.com/hh02/minimal-douyin/cmd/user/pack"
 	"github.com/hh02/minimal-douyin/cmd/user/service"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
@@ -18,16 +17,16 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *userrpc.CreateUse
 	resp = new(userrpc.CreateUserResponse)
 
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		resp.Status = pack.BuildBaseResp(errno.ParamErr)
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
 	err, Id := service.NewCreateUserService(ctx).CreateUser(req)
 	if err != nil {
-		resp.StatusCode, resp.StatusMessage = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
-	resp.StatusCode, resp.StatusMessage = pack.BuildBaseResp(errno.Success)
+	resp.Status = errno.BuildStatus(errno.Success)
 	resp.UserId = Id
 	return resp, nil
 }
@@ -35,23 +34,21 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *userrpc.CreateUse
 // GetUser implements the UserServiceImpl interface.
 func (s *UserServiceImpl) GetUser(ctx context.Context, req *userrpc.GetUserRequest) (resp *userrpc.GetUserResponse, err error) {
 	// TODO: Your code here...
-	resp := new(userrpc.GetUserResponse)
+	resp = new(userrpc.GetUserResponse)
 
-	if len(req.UserId) == 0 {
-		resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
+	if req.UserId == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
-	users, err := service.NewMGetUserService(ctx).MGetUser(req)
+	user, err := service.NewGetUserService(ctx).GetUser(req)
 	if err != nil {
-		resp.BaseResp = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
-	resp.BaseResp = pack.BuildBaseResp(errno.Success)
-	resp.Users = users
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.User = user
 	return resp, nil
-
-	return
 }
 
 // MGetUser implements the UserServiceImpl interface.

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
+	"github.com/hh02/minimal-douyin/cmd/user/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
@@ -17,7 +18,7 @@ func NewGetUserService(ctx context.Context) *GetUserService {
 }
 
 // UserRegister 用户服务,返回用户信息，错误
-func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*db.User, error) {
+func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, error) {
 	// 查询用户是否存在
 	user, err := db.QueryUserById(s.ctx, req.UserId)
 	if err != nil {
@@ -27,5 +28,9 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*db.User, error) 
 	if user == nil {
 		return nil, errno.UserNotExistErr
 	}
-	return user, err
+	return &userrpc.User{
+		UserId:      int64(user.ID),
+		Username:    user.Username,
+		FollowCount: rpc.QueryFollow(ctx),
+	}, err
 }
