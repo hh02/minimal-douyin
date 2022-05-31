@@ -22,10 +22,12 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "UserService"
 	handlerType := (*userrpc.UserService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"CreateUser": kitex.NewMethodInfo(createUserHandler, newCreateUserArgs, newCreateUserResult, false),
-		"GetUser":    kitex.NewMethodInfo(getUserHandler, newGetUserArgs, newGetUserResult, false),
-		"MGetUser":   kitex.NewMethodInfo(mGetUserHandler, newMGetUserArgs, newMGetUserResult, false),
-		"CheckUser":  kitex.NewMethodInfo(checkUserHandler, newCheckUserArgs, newCheckUserResult, false),
+		"CreateUser":       kitex.NewMethodInfo(createUserHandler, newCreateUserArgs, newCreateUserResult, false),
+		"GetUser":          kitex.NewMethodInfo(getUserHandler, newGetUserArgs, newGetUserResult, false),
+		"MGetUser":         kitex.NewMethodInfo(mGetUserHandler, newMGetUserArgs, newMGetUserResult, false),
+		"CheckUser":        kitex.NewMethodInfo(checkUserHandler, newCheckUserArgs, newCheckUserResult, false),
+		"AddFollowCount":   kitex.NewMethodInfo(addFollowCountHandler, newAddFollowCountArgs, newAddFollowCountResult, false),
+		"AddFollowerCount": kitex.NewMethodInfo(addFollowerCountHandler, newAddFollowerCountArgs, newAddFollowerCountResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "user",
@@ -453,6 +455,212 @@ func (p *CheckUserResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
+func addFollowCountHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(userrpc.AddFollowCountRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(userrpc.UserService).AddFollowCount(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *AddFollowCountArgs:
+		success, err := handler.(userrpc.UserService).AddFollowCount(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*AddFollowCountResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newAddFollowCountArgs() interface{} {
+	return &AddFollowCountArgs{}
+}
+
+func newAddFollowCountResult() interface{} {
+	return &AddFollowCountResult{}
+}
+
+type AddFollowCountArgs struct {
+	Req *userrpc.AddFollowCountRequest
+}
+
+func (p *AddFollowCountArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in AddFollowCountArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *AddFollowCountArgs) Unmarshal(in []byte) error {
+	msg := new(userrpc.AddFollowCountRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var AddFollowCountArgs_Req_DEFAULT *userrpc.AddFollowCountRequest
+
+func (p *AddFollowCountArgs) GetReq() *userrpc.AddFollowCountRequest {
+	if !p.IsSetReq() {
+		return AddFollowCountArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *AddFollowCountArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type AddFollowCountResult struct {
+	Success *userrpc.AddFollowCountResponse
+}
+
+var AddFollowCountResult_Success_DEFAULT *userrpc.AddFollowCountResponse
+
+func (p *AddFollowCountResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in AddFollowCountResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *AddFollowCountResult) Unmarshal(in []byte) error {
+	msg := new(userrpc.AddFollowCountResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *AddFollowCountResult) GetSuccess() *userrpc.AddFollowCountResponse {
+	if !p.IsSetSuccess() {
+		return AddFollowCountResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *AddFollowCountResult) SetSuccess(x interface{}) {
+	p.Success = x.(*userrpc.AddFollowCountResponse)
+}
+
+func (p *AddFollowCountResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func addFollowerCountHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(userrpc.AddFollowerCountRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(userrpc.UserService).AddFollowerCount(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *AddFollowerCountArgs:
+		success, err := handler.(userrpc.UserService).AddFollowerCount(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*AddFollowerCountResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newAddFollowerCountArgs() interface{} {
+	return &AddFollowerCountArgs{}
+}
+
+func newAddFollowerCountResult() interface{} {
+	return &AddFollowerCountResult{}
+}
+
+type AddFollowerCountArgs struct {
+	Req *userrpc.AddFollowerCountRequest
+}
+
+func (p *AddFollowerCountArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in AddFollowerCountArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *AddFollowerCountArgs) Unmarshal(in []byte) error {
+	msg := new(userrpc.AddFollowerCountRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var AddFollowerCountArgs_Req_DEFAULT *userrpc.AddFollowerCountRequest
+
+func (p *AddFollowerCountArgs) GetReq() *userrpc.AddFollowerCountRequest {
+	if !p.IsSetReq() {
+		return AddFollowerCountArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *AddFollowerCountArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type AddFollowerCountResult struct {
+	Success *userrpc.AddFollowerCountResponse
+}
+
+var AddFollowerCountResult_Success_DEFAULT *userrpc.AddFollowerCountResponse
+
+func (p *AddFollowerCountResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in AddFollowerCountResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *AddFollowerCountResult) Unmarshal(in []byte) error {
+	msg := new(userrpc.AddFollowerCountResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *AddFollowerCountResult) GetSuccess() *userrpc.AddFollowerCountResponse {
+	if !p.IsSetSuccess() {
+		return AddFollowerCountResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *AddFollowerCountResult) SetSuccess(x interface{}) {
+	p.Success = x.(*userrpc.AddFollowerCountResponse)
+}
+
+func (p *AddFollowerCountResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -498,6 +706,26 @@ func (p *kClient) CheckUser(ctx context.Context, Req *userrpc.CheckUserRequest) 
 	_args.Req = Req
 	var _result CheckUserResult
 	if err = p.c.Call(ctx, "CheckUser", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) AddFollowCount(ctx context.Context, Req *userrpc.AddFollowCountRequest) (r *userrpc.AddFollowCountResponse, err error) {
+	var _args AddFollowCountArgs
+	_args.Req = Req
+	var _result AddFollowCountResult
+	if err = p.c.Call(ctx, "AddFollowCount", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) AddFollowerCount(ctx context.Context, Req *userrpc.AddFollowerCountRequest) (r *userrpc.AddFollowerCountResponse, err error) {
+	var _args AddFollowerCountArgs
+	_args.Req = Req
+	var _result AddFollowerCountResult
+	if err = p.c.Call(ctx, "AddFollowerCount", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -54,9 +54,31 @@ message CheckUserResponse {
     int64 user_id = 2;
 }
 
+message AddFollowCountRequest {
+    int64 user_id = 1;
+    // 可以Add负数
+    sint32 count = 2;
+}
+
+message AddFollowCountResponse {
+    common.Status status = 1;
+}
+
+message AddFollowerCountRequest {
+    int64 user_id = 1;
+    // 可以Add负数
+    sint32 count = 2;
+}
+
+message AddFollowerCountResponse {
+    common.Status status = 1;
+}
+
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
     rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
     rpc MGetUser(MGetUserRequest) returns (MGetUserResponse) {}
     rpc CheckUser(CheckUserRequest) returns (CheckUserResponse) {}
+    rpc AddFollowCount(AddFollowCountRequest) returns (AddFollowCountResponse) {}
+    rpc AddFollowerCount(AddFollowerCountRequest) returns (AddFollowerCountResponse) {}
 }
