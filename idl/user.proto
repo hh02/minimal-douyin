@@ -14,6 +14,8 @@ message User {
 
 message GetUserRequest {
     int64 user_id = 1;
+    // get from token: the currently logged in user's id
+    int64 token_user_id = 2;
 }
 
 message GetUserResponse {
@@ -23,6 +25,8 @@ message GetUserResponse {
 
 message MGetUserRequest {
     repeated int64 user_ids = 1;
+    // get from token: the currently logged in user's id
+    int64 token_user_id = 2;
 }
 
 message MGetUserResponse {
@@ -50,9 +54,31 @@ message CheckUserResponse {
     int64 user_id = 2;
 }
 
+message AddFollowCountRequest {
+    int64 user_id = 1;
+    // 可以Add负数
+    sint32 count = 2;
+}
+
+message AddFollowCountResponse {
+    common.Status status = 1;
+}
+
+message AddFollowerCountRequest {
+    int64 user_id = 1;
+    // 可以Add负数
+    sint32 count = 2;
+}
+
+message AddFollowerCountResponse {
+    common.Status status = 1;
+}
+
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
     rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
     rpc MGetUser(MGetUserRequest) returns (MGetUserResponse) {}
     rpc CheckUser(CheckUserRequest) returns (CheckUserResponse) {}
+    rpc AddFollowCount(AddFollowCountRequest) returns (AddFollowCountResponse) {}
+    rpc AddFollowerCount(AddFollowerCountRequest) returns (AddFollowerCountResponse) {}
 }

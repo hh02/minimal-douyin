@@ -15,6 +15,8 @@ type Client interface {
 	GetUser(ctx context.Context, Req *userrpc.GetUserRequest, callOptions ...callopt.Option) (r *userrpc.GetUserResponse, err error)
 	MGetUser(ctx context.Context, Req *userrpc.MGetUserRequest, callOptions ...callopt.Option) (r *userrpc.MGetUserResponse, err error)
 	CheckUser(ctx context.Context, Req *userrpc.CheckUserRequest, callOptions ...callopt.Option) (r *userrpc.CheckUserResponse, err error)
+	AddFollowCount(ctx context.Context, Req *userrpc.AddFollowCountRequest, callOptions ...callopt.Option) (r *userrpc.AddFollowCountResponse, err error)
+	AddFollowerCount(ctx context.Context, Req *userrpc.AddFollowerCountRequest, callOptions ...callopt.Option) (r *userrpc.AddFollowerCountResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -64,4 +66,14 @@ func (p *kUserServiceClient) MGetUser(ctx context.Context, Req *userrpc.MGetUser
 func (p *kUserServiceClient) CheckUser(ctx context.Context, Req *userrpc.CheckUserRequest, callOptions ...callopt.Option) (r *userrpc.CheckUserResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CheckUser(ctx, Req)
+}
+
+func (p *kUserServiceClient) AddFollowCount(ctx context.Context, Req *userrpc.AddFollowCountRequest, callOptions ...callopt.Option) (r *userrpc.AddFollowCountResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.AddFollowCount(ctx, Req)
+}
+
+func (p *kUserServiceClient) AddFollowerCount(ctx context.Context, Req *userrpc.AddFollowerCountRequest, callOptions ...callopt.Option) (r *userrpc.AddFollowerCountResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.AddFollowerCount(ctx, Req)
 }
