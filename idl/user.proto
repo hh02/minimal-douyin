@@ -7,7 +7,7 @@ message User {
   string username = 2;
   int64 follow_count = 3;
   int64 follower_count = 4;
-  bool is_follow = 5; // reqired
+  bool is_follow = 5;
 }
 
 message GetUserRequest {
