@@ -18,7 +18,7 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *userrpc.CreateUse
 	resp = new(userrpc.CreateUserResponse)
 
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		resp.StatusCode, resp.StatusMessage = pack.BuildBaseResp(errno.ParamErr)
+		resp.Status = pack.BuildBaseResp(errno.ParamErr)
 		return resp, nil
 	}
 
