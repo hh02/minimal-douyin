@@ -3,6 +3,7 @@ package video;
 option go_package = "videorpc";
 
 import "user.proto";
+import "status.proto";
 
 message Video {
   int64 video_id = 1;
@@ -23,8 +24,7 @@ message CreateVideoRequest {
 }
 
 message CreateVideoResponse {
-  int32 status_code = 1;
-  string status_message = 2;
+  status.Status status = 1;
 }
 
 message QueryVideoByUserIdRequest {
@@ -32,9 +32,8 @@ message QueryVideoByUserIdRequest {
 }
 
 message QueryVideoByUserIdResponse {
-  int32 status_code = 1;
-  string status_message = 2;
-  repeated Video videos = 3;
+  status.Status status = 1;
+  repeated Video videos = 2;
 }
 
 
