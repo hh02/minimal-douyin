@@ -91,6 +91,7 @@ func (s *UserServiceImpl) User(ctx context.Context, req *core.UserRequest) (resp
 		return resp, nil
 	}
 	// 登录成功
+	resp.StatusCode, resp.StatusMsg = pack.BuildBaseResp(errno.Success)
 	resp.User = pack.User(user)
 	return resp, nil
 }

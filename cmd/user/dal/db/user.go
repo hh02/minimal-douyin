@@ -6,11 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// 用户服务
 type User struct {
 	gorm.Model
-
-	Name     string `json:"name,omitempty"`
-	Password string `json:"password"`
+	// username's maxlen is 64
+	Username string `gorm:"type:varchar(64);not null"`
+	// md5's length is 128
+	Password string `gorm:"type:char(128);not null"`
 }
 
 func (u *User) TableName() string {
