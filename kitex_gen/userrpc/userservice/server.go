@@ -3,11 +3,11 @@ package userservice
 
 import (
 	"github.com/cloudwego/kitex/server"
-	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
+	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 )
 
 // NewServer creates a server.Server with the given handler and options.
-func NewServer(handler core.UserService, opts ...server.Option) server.Server {
+func NewServer(handler userrpc.UserService, opts ...server.Option) server.Server {
 	var options []server.Option
 
 	options = append(options, opts...)

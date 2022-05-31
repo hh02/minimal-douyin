@@ -1,7 +1,7 @@
-package_name = followrpc
-service_name = followservice
+package_name = userrpc
+service_name = userservice
 import_path = github.com/hh02/minimal-douyin
-idl_file = follow.proto
+idl_file = user.proto
 
 server:
 	rm -rf ./script ./build.sh ./handler.go ./main.go && kitex -module $(import_path) -I ../../idl/ -type protobuf -service $(service_name) -use $(import_path)/kitex_gen $(idl_file)

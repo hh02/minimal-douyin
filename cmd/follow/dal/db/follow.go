@@ -4,14 +4,16 @@ import (
 	"context"
 
 	"github.com/hh02/minimal-douyin/pkg/constants"
+	"gorm.io/gorm"
 )
 
 type Follow struct {
 	// 粉丝ID
 	UserId int64 `gorm:"primaryKey;autoIncrement:false"`
 	// 关注ID(联合主键的第二个键需要添加索引)
-	FollowId   int64 `gorm:"primaryKey;index;autoIncrement:false"`
-	CreateTime int64 `gorm:"autoCreateTime:nano"`
+	FollowId   int64          `gorm:"primaryKey;index;autoIncrement:false"`
+	CreateTime int64          `gorm:"autoCreateTime:nano"`
+	DeletedAt  gorm.DeletedAt `gorm:"index"`
 }
 
 func (f *Follow) TableName() string {
@@ -50,12 +52,10 @@ func QueryFollower(ctx context.Context, userId int64) ([]int64, error) {
 func GetFollow(ctx context.Context, follow *Follow) (*Follow, error) {
 	var res Follow
 	if err := DB.WithContext(ctx).Where(map[string]interface{}{
-		"user_id": follow.UserId,
+		"user_id":   follow.UserId,
 		"follow_id": follow.FollowId,
 	}).First(&res).Error; err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
-
-
