@@ -7,17 +7,17 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
-type UserService struct {
+type GetUserService struct {
 	ctx context.Context
 }
 
 // NewCreateUserService new CreateUserService
-func NewUserService(ctx context.Context) *UserService {
-	return &UserService{ctx: ctx}
+func NewGetUserService(ctx context.Context) *GetUserService {
+	return &GetUserService{ctx: ctx}
 }
 
 // UserRegister 用户服务,返回用户信息，错误
-func (s *UserService) User(req *userrpc.UserRequest) (*db.User, error) {
+func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*db.User, error) {
 	// 查询用户是否存在
 	user, err := db.QueryUserById(s.ctx, req.UserId)
 	if err != nil {
