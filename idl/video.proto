@@ -3,7 +3,7 @@ package video;
 option go_package = "videorpc";
 
 import "user.proto";
-import "status.proto";
+import "common.proto";
 
 message Video {
     int64 video_id = 1;
@@ -24,21 +24,40 @@ message CreateVideoRequest {
 }
 
 message CreateVideoResponse {
-  status.Status status = 1;
+    common.Status status = 1;
+}
+
+message GetVideoRequest {
+    int64 video_id = 1;
+}
+
+message GetVideoResponse {
+    common.Status status = 1;
+    Video video = 2;
+}
+
+message MGetVideoRequest {
+    repeated int64 video_ids = 1;
+}
+
+message MGetVideoResponse {
+    common.Status status = 1;
+    repeated Video videos = 2;
 }
 
 message QueryVideoByUserIdRequest {
     int64 user_id = 1;
+
 }
 
 message QueryVideoByUserIdResponse {
-  status.Status status = 1;
-  repeated Video videos = 2;
+    common.Status status = 1;
+    repeated Video videos = 2;
 }
 
 
 service VideoService {
     rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
-    rpc MGetVideo(MGetVideoRequest) returns (MGetVideoResponse) {}
+    rpc MGetVideo( MGetVideoRequest) returns (MGetVideoResponse) {}
     rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
 }

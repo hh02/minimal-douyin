@@ -1,6 +1,6 @@
 syntax = "proto3";
-package status;
-option go_package = "status";
+package common;
+option go_package = "common";
 
 message Status {
     int32 status_code = 1;

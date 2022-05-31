@@ -3,7 +3,7 @@ package like;
 option go_package = "likerpc";
 
 import "video.proto";
-import "status.proto";
+import "common.proto";
 
 message CreateLikeRequest {
     int64 user_id = 1;
@@ -11,7 +11,7 @@ message CreateLikeRequest {
 }
 
 message CreateLikeResponse {
-    status.Status status = 1;
+    common.Status status = 1;
 }
 
 message DeleteLikeRequest {
@@ -20,7 +20,7 @@ message DeleteLikeRequest {
 }
 
 message DeleteLikeResponse {
-    status.Status status = 1;
+    common.Status status = 1;
 }
 
 message QueryLikeByUserIdRequest {
@@ -28,7 +28,7 @@ message QueryLikeByUserIdRequest {
 }
 
 message QueryLikeByUserIdResponse {
-    status.Status status = 1;
+    common.Status status = 1;
     repeated video.Video videos = 2;
 }
 
