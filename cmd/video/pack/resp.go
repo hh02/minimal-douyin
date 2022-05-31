@@ -3,12 +3,11 @@ package pack
 import (
 	"errors"
 
-	"github.com/hh02/minimal-douyin/kitex_gen/resp"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
 // BuildBaseResp build baseResp from error
-func BuildBaseResp(err error) *resp.BaseResp {
+func BuildBaseResp(err error) (int32, string) {
 	if err == nil {
 		return baseResp(errno.Success)
 	}
@@ -24,6 +23,6 @@ func BuildBaseResp(err error) *resp.BaseResp {
 
 }
 
-func baseResp(err errno.ErrNo) *resp.BaseResp {
-	return &resp.BaseResp{StatusCode: err.ErrCode, StatusMessage: err.ErrMsg}
+func baseResp(err errno.ErrNo) (int32, string) {
+	return err.ErrCode, err.ErrMsg
 }
