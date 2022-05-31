@@ -16,6 +16,8 @@ message GetUserRequest {
     int64 user_id = 1;
     // get from token: the currently logged in user's id
     int64 token_user_id = 2;
+    // 是否要查询 is_follow字段（会调用follow服务）
+    bool return_is_follow = 3;
 }
 
 message GetUserResponse {
@@ -27,6 +29,8 @@ message MGetUserRequest {
     repeated int64 user_ids = 1;
     // get from token: the currently logged in user's id
     int64 token_user_id = 2;
+    // 是否要查询 is_follow字段（会调用follow服务）
+    bool return_is_follow = 3;
 }
 
 message MGetUserResponse {
