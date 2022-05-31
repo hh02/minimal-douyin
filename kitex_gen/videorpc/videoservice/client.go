@@ -12,6 +12,7 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest, callOptions ...callopt.Option) (r *videorpc.CreateVideoResponse, err error)
+	MGetVideo(ctx context.Context, Req *videorpc.MGetVideoRequest, callOptions ...callopt.Option) (r *videorpc.MGetVideoResponse, err error)
 	QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error)
 }
 
@@ -47,6 +48,11 @@ type kVideoServiceClient struct {
 func (p *kVideoServiceClient) CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest, callOptions ...callopt.Option) (r *videorpc.CreateVideoResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CreateVideo(ctx, Req)
+}
+
+func (p *kVideoServiceClient) MGetVideo(ctx context.Context, Req *videorpc.MGetVideoRequest, callOptions ...callopt.Option) (r *videorpc.MGetVideoResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.MGetVideo(ctx, Req)
 }
 
 func (p *kVideoServiceClient) QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error) {

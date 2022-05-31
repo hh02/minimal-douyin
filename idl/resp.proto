@@ -1,0 +1,9 @@
+syntax = "proto3";
+package resp;
+option go_package = "resp";
+
+
+message BaseResp {
+    int32 StatusCode = 1;
+    string StatusMessage = 2;
+}

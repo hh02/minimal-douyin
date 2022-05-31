@@ -23,6 +23,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	handlerType := (*videorpc.VideoService)(nil)
 	methods := map[string]kitex.MethodInfo{
 		"CreateVideo":        kitex.NewMethodInfo(createVideoHandler, newCreateVideoArgs, newCreateVideoResult, false),
+		"MGetVideo":          kitex.NewMethodInfo(mGetVideoHandler, newMGetVideoArgs, newMGetVideoResult, false),
 		"QueryVideoByUserId": kitex.NewMethodInfo(queryVideoByUserIdHandler, newQueryVideoByUserIdArgs, newQueryVideoByUserIdResult, false),
 	}
 	extra := map[string]interface{}{
@@ -139,6 +140,109 @@ func (p *CreateVideoResult) SetSuccess(x interface{}) {
 }
 
 func (p *CreateVideoResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func mGetVideoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(videorpc.MGetVideoRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(videorpc.VideoService).MGetVideo(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *MGetVideoArgs:
+		success, err := handler.(videorpc.VideoService).MGetVideo(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*MGetVideoResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newMGetVideoArgs() interface{} {
+	return &MGetVideoArgs{}
+}
+
+func newMGetVideoResult() interface{} {
+	return &MGetVideoResult{}
+}
+
+type MGetVideoArgs struct {
+	Req *videorpc.MGetVideoRequest
+}
+
+func (p *MGetVideoArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in MGetVideoArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *MGetVideoArgs) Unmarshal(in []byte) error {
+	msg := new(videorpc.MGetVideoRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var MGetVideoArgs_Req_DEFAULT *videorpc.MGetVideoRequest
+
+func (p *MGetVideoArgs) GetReq() *videorpc.MGetVideoRequest {
+	if !p.IsSetReq() {
+		return MGetVideoArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *MGetVideoArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type MGetVideoResult struct {
+	Success *videorpc.MGetVideoResponse
+}
+
+var MGetVideoResult_Success_DEFAULT *videorpc.MGetVideoResponse
+
+func (p *MGetVideoResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in MGetVideoResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *MGetVideoResult) Unmarshal(in []byte) error {
+	msg := new(videorpc.MGetVideoResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *MGetVideoResult) GetSuccess() *videorpc.MGetVideoResponse {
+	if !p.IsSetSuccess() {
+		return MGetVideoResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *MGetVideoResult) SetSuccess(x interface{}) {
+	p.Success = x.(*videorpc.MGetVideoResponse)
+}
+
+func (p *MGetVideoResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
@@ -260,6 +364,16 @@ func (p *kClient) CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequ
 	_args.Req = Req
 	var _result CreateVideoResult
 	if err = p.c.Call(ctx, "CreateVideo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) MGetVideo(ctx context.Context, Req *videorpc.MGetVideoRequest) (r *videorpc.MGetVideoResponse, err error) {
+	var _args MGetVideoArgs
+	_args.Req = Req
+	var _result MGetVideoResult
+	if err = p.c.Call(ctx, "MGetVideo", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
