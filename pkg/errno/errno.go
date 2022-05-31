@@ -49,22 +49,22 @@ var (
 // BuildBaseResp build baseResp from error
 func BuildStatus(err error) *common.Status {
 	if err == nil {
-		return ErrorNo2Status(Success)
+		return ErrNo2Status(Success)
 	}
 
 	e := ErrNo{}
 
 	// 如果为ErrNo类型
 	if errors.As(err, &e) {
-		return ErrorNo2Status(e)
+		return ErrNo2Status(e)
 	}
 
 	s := ServiceErr.WithMessage(err.Error())
-	return ErrorNo2Status(s)
+	return ErrNo2Status(s)
 
 }
 
-func ErrorNo2Status(err ErrNo) *common.Status {
+func ErrNo2Status(err ErrNo) *common.Status {
 	return &common.Status{StatusCode: err.ErrCode, StatusMessage: err.ErrMsg}
 }
 
