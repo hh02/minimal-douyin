@@ -6,8 +6,8 @@ import (
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/retry"
-	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
-	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core/userservice"
+	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/userrpc/userservice"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	etcd "github.com/kitex-contrib/registry-etcd"
@@ -41,7 +41,22 @@ func initUserRpc() {
 	userClient = c
 }
 
-func GetUser(ctx context.Context, req *core.UserRequest) (*core.User, error) {
+func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*userrpc.User, error) {
+	resp, err := userClient.MGetUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != errno.SuccessCode {
+		return nil, errno.NewErrNo(resp.StatusCode, resp.StatusMessage)
+	}
+	res := make(map[int64]*userrpc.User)
+	for _, user := range resp.Users {
+		res[user.Id] = 
+	}
+} 
+
+func GetUser(ctx context.Context, req *userrpc.UserRequest) (*core.User, error) {
 	resp, err := userClient.User(ctx, req)
 
 	if err != nil {
