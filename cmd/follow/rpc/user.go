@@ -47,8 +47,8 @@ func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) ([]*userrpc.Use
 		return nil, err
 	}
 
-	if resp.StatusCode != errno.SuccessCode {
-		return nil, errno.NewErrNo(resp.StatusCode, resp.StatusMessage)
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
 	}
 
 	return resp.Users, nil
