@@ -3,42 +3,61 @@ package video;
 option go_package = "videorpc";
 
 import "user.proto";
+import "resp.proto";
 
 message Video {
-  int64 video_id = 1;
-  user.User author = 2;
-  string play_url = 3;
-  string cover_url = 4;
-  int64 favorite_count = 5;
-  int64 comment_count = 6;
-  bool is_favorite = 7;
-  string title = 8;
+    int64 video_id = 1;
+    user.User author = 2;
+    string play_url = 3;
+    string cover_url = 4;
+    int64 favorite_count = 5;
+    int64 comment_count = 6;
+    bool is_favorite = 7;
+    string title = 8;
 }
 
 message CreateVideoRequest {
-  int64 user_id = 1;
-  string play_url = 2;
-  string cover_url = 3;
-  string title = 4;
+    int64 user_id = 1;
+    string play_url = 2;
+    string cover_url = 3;
+    string title = 4;
 }
 
 message CreateVideoResponse {
-  int32 status_code = 1;
-  string status_message = 2;
+    resp.BaseResp base_resp = 1;
+}
+
+message GetVideoRequest {
+    int64 video_id = 1;
+}
+
+message GetVideoResponse {
+    resp.BaseResp base_resp = 1;
+    Video video = 2;
+}
+
+message MGetVideoRequest {
+    repeated int64 video_ids = 1;
+}
+
+message MGetVideoResponse {
+    resp.BaseResp base_resp = 1;
+    repeated Video videos = 2;
 }
 
 message QueryVideoByUserIdRequest {
-  int64 user_id = 1;
+    int64 user_id = 1;
+
 }
 
 message QueryVideoByUserIdResponse {
-  int32 status_code = 1;
-  string status_message = 2;
-  repeated Video videos = 3;
+    resp.BaseResp base_resp = 1;
+    repeated Video videos = 2;
 }
 
 
 service VideoService {
-  rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
-  rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
+    rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
+    rpc MGetVideo( MGetVideoRequest) returns (MGetVideoResponse) {}
+    rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
 }

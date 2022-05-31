@@ -52,21 +52,7 @@ func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*use
 	}
 	res := make(map[int64]*userrpc.User)
 	for _, user := range resp.Users {
-		res[user.Id] = 
+		res[user.UserId] = user
 	}
+	return res, nil
 } 
-
-func GetUser(ctx context.Context, req *userrpc.UserRequest) (*core.User, error) {
-	resp, err := userClient.User(ctx, req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 0 {
-		return nil, errno.NewErrNo(resp.StatusCode, resp.StatusMsg)
-	}
-
-	return resp.User, nil
-} 
-
