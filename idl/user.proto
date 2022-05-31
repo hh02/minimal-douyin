@@ -1,0 +1,60 @@
+syntax = "proto3";
+package user;
+option go_package = "userrpc";
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  int64 follow_count = 3;
+  int64 follower_count = 4;
+  bool is_follow = 5; // reqired
+}
+
+message GetUserRequest {
+  int64 user_id = 1;
+}
+
+message GetUserResponse {
+  int32 status_code = 1;
+  string status_message = 2;
+  User user = 3;
+}
+
+message MGetUserRequest {
+  repeated int64 user_ids = 1;
+}
+
+message MGetUserResponse {
+  int32 status_code = 1;
+  string status_message = 2;
+  repeated User users = 3;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message CreateUserResponse {
+  int32 status_code = 1;
+  string status_message = 2;
+  int64 user_id = 3;
+}
+
+message CheckUserRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message CheckUserResponse {
+  int32 status_code = 1;
+  string status_message = 2;
+  int64 user_id = 3;
+}
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+  rpc MGetUser(MGetUserRequest) returns (MGetUserResponse) {}
+  rpc CheckUser(CheckUserRequest) returns (CheckUserResponse) {}
+}

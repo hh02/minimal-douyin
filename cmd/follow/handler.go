@@ -32,8 +32,8 @@ func (s *FollowServiceImpl) QueryFollower(ctx context.Context, req *followrpc.Qu
 	return
 }
 
-// GetFollow implements the FollowServiceImpl interface.
-func (s *FollowServiceImpl) GetFollow(ctx context.Context, req *followrpc.GetFollowRequest) (resp *followrpc.GetFollowResponse, err error) {
+// CheckFollow implements the FollowServiceImpl interface.
+func (s *FollowServiceImpl) CheckFollow(ctx context.Context, req *followrpc.CheckFollowRequest) (resp *followrpc.CheckFollowResponse, err error) {
 	// TODO: Your code here...
 	return
 }

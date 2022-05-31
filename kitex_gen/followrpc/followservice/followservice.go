@@ -26,7 +26,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"DeleteFollow":  kitex.NewMethodInfo(deleteFollowHandler, newDeleteFollowArgs, newDeleteFollowResult, false),
 		"QueryFollow":   kitex.NewMethodInfo(queryFollowHandler, newQueryFollowArgs, newQueryFollowResult, false),
 		"QueryFollower": kitex.NewMethodInfo(queryFollowerHandler, newQueryFollowerArgs, newQueryFollowerResult, false),
-		"GetFollow":     kitex.NewMethodInfo(getFollowHandler, newGetFollowArgs, newGetFollowResult, false),
+		"CheckFollow":   kitex.NewMethodInfo(checkFollowHandler, newCheckFollowArgs, newCheckFollowResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "follow",
@@ -454,52 +454,52 @@ func (p *QueryFollowerResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func getFollowHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func checkFollowHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(followrpc.GetFollowRequest)
+		req := new(followrpc.CheckFollowRequest)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(followrpc.FollowService).GetFollow(ctx, req)
+		resp, err := handler.(followrpc.FollowService).CheckFollow(ctx, req)
 		if err != nil {
 			return err
 		}
 		if err := st.SendMsg(resp); err != nil {
 			return err
 		}
-	case *GetFollowArgs:
-		success, err := handler.(followrpc.FollowService).GetFollow(ctx, s.Req)
+	case *CheckFollowArgs:
+		success, err := handler.(followrpc.FollowService).CheckFollow(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*GetFollowResult)
+		realResult := result.(*CheckFollowResult)
 		realResult.Success = success
 	}
 	return nil
 }
-func newGetFollowArgs() interface{} {
-	return &GetFollowArgs{}
+func newCheckFollowArgs() interface{} {
+	return &CheckFollowArgs{}
 }
 
-func newGetFollowResult() interface{} {
-	return &GetFollowResult{}
+func newCheckFollowResult() interface{} {
+	return &CheckFollowResult{}
 }
 
-type GetFollowArgs struct {
-	Req *followrpc.GetFollowRequest
+type CheckFollowArgs struct {
+	Req *followrpc.CheckFollowRequest
 }
 
-func (p *GetFollowArgs) Marshal(out []byte) ([]byte, error) {
+func (p *CheckFollowArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
-		return out, fmt.Errorf("No req in GetFollowArgs")
+		return out, fmt.Errorf("No req in CheckFollowArgs")
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *GetFollowArgs) Unmarshal(in []byte) error {
-	msg := new(followrpc.GetFollowRequest)
+func (p *CheckFollowArgs) Unmarshal(in []byte) error {
+	msg := new(followrpc.CheckFollowRequest)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -507,34 +507,34 @@ func (p *GetFollowArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var GetFollowArgs_Req_DEFAULT *followrpc.GetFollowRequest
+var CheckFollowArgs_Req_DEFAULT *followrpc.CheckFollowRequest
 
-func (p *GetFollowArgs) GetReq() *followrpc.GetFollowRequest {
+func (p *CheckFollowArgs) GetReq() *followrpc.CheckFollowRequest {
 	if !p.IsSetReq() {
-		return GetFollowArgs_Req_DEFAULT
+		return CheckFollowArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *GetFollowArgs) IsSetReq() bool {
+func (p *CheckFollowArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-type GetFollowResult struct {
-	Success *followrpc.GetFollowResponse
+type CheckFollowResult struct {
+	Success *followrpc.CheckFollowResponse
 }
 
-var GetFollowResult_Success_DEFAULT *followrpc.GetFollowResponse
+var CheckFollowResult_Success_DEFAULT *followrpc.CheckFollowResponse
 
-func (p *GetFollowResult) Marshal(out []byte) ([]byte, error) {
+func (p *CheckFollowResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
-		return out, fmt.Errorf("No req in GetFollowResult")
+		return out, fmt.Errorf("No req in CheckFollowResult")
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *GetFollowResult) Unmarshal(in []byte) error {
-	msg := new(followrpc.GetFollowResponse)
+func (p *CheckFollowResult) Unmarshal(in []byte) error {
+	msg := new(followrpc.CheckFollowResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -542,18 +542,18 @@ func (p *GetFollowResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *GetFollowResult) GetSuccess() *followrpc.GetFollowResponse {
+func (p *CheckFollowResult) GetSuccess() *followrpc.CheckFollowResponse {
 	if !p.IsSetSuccess() {
-		return GetFollowResult_Success_DEFAULT
+		return CheckFollowResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *GetFollowResult) SetSuccess(x interface{}) {
-	p.Success = x.(*followrpc.GetFollowResponse)
+func (p *CheckFollowResult) SetSuccess(x interface{}) {
+	p.Success = x.(*followrpc.CheckFollowResponse)
 }
 
-func (p *GetFollowResult) IsSetSuccess() bool {
+func (p *CheckFollowResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
@@ -607,11 +607,11 @@ func (p *kClient) QueryFollower(ctx context.Context, Req *followrpc.QueryFollowe
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetFollow(ctx context.Context, Req *followrpc.GetFollowRequest) (r *followrpc.GetFollowResponse, err error) {
-	var _args GetFollowArgs
+func (p *kClient) CheckFollow(ctx context.Context, Req *followrpc.CheckFollowRequest) (r *followrpc.CheckFollowResponse, err error) {
+	var _args CheckFollowArgs
 	_args.Req = Req
-	var _result GetFollowResult
-	if err = p.c.Call(ctx, "GetFollow", &_args, &_result); err != nil {
+	var _result CheckFollowResult
+	if err = p.c.Call(ctx, "CheckFollow", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
