@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/user/rpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
@@ -28,9 +29,14 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, er
 	if user == nil {
 		return nil, errno.UserNotExistErr
 	}
+
+	followCount, err := rpc.QueryFollow(s.ctx, &followrpc.QueryFollowRequest{
+		UserId: int64(user.ID),
+	})
 	return &userrpc.User{
-		UserId:      int64(user.ID),
-		Username:    user.Username,
-		FollowCount: rpc.QueryFollow(ctx),
+		UserId:   int64(user.ID),
+		Username: user.Username,
+		// 远程调用 follow 查相关属性
+		FollowCount: int64(followCount),
 	}, err
 }
