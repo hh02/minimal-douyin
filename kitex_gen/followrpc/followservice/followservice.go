@@ -27,6 +27,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"QueryFollow":   kitex.NewMethodInfo(queryFollowHandler, newQueryFollowArgs, newQueryFollowResult, false),
 		"QueryFollower": kitex.NewMethodInfo(queryFollowerHandler, newQueryFollowerArgs, newQueryFollowerResult, false),
 		"CheckFollow":   kitex.NewMethodInfo(checkFollowHandler, newCheckFollowArgs, newCheckFollowResult, false),
+		"MCheckFollow":  kitex.NewMethodInfo(mCheckFollowHandler, newMCheckFollowArgs, newMCheckFollowResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "follow",
@@ -557,6 +558,109 @@ func (p *CheckFollowResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
+func mCheckFollowHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(followrpc.MCheckFollowRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(followrpc.FollowService).MCheckFollow(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *MCheckFollowArgs:
+		success, err := handler.(followrpc.FollowService).MCheckFollow(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*MCheckFollowResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newMCheckFollowArgs() interface{} {
+	return &MCheckFollowArgs{}
+}
+
+func newMCheckFollowResult() interface{} {
+	return &MCheckFollowResult{}
+}
+
+type MCheckFollowArgs struct {
+	Req *followrpc.MCheckFollowRequest
+}
+
+func (p *MCheckFollowArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in MCheckFollowArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *MCheckFollowArgs) Unmarshal(in []byte) error {
+	msg := new(followrpc.MCheckFollowRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var MCheckFollowArgs_Req_DEFAULT *followrpc.MCheckFollowRequest
+
+func (p *MCheckFollowArgs) GetReq() *followrpc.MCheckFollowRequest {
+	if !p.IsSetReq() {
+		return MCheckFollowArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *MCheckFollowArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type MCheckFollowResult struct {
+	Success *followrpc.MCheckFollowResponse
+}
+
+var MCheckFollowResult_Success_DEFAULT *followrpc.MCheckFollowResponse
+
+func (p *MCheckFollowResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in MCheckFollowResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *MCheckFollowResult) Unmarshal(in []byte) error {
+	msg := new(followrpc.MCheckFollowResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *MCheckFollowResult) GetSuccess() *followrpc.MCheckFollowResponse {
+	if !p.IsSetSuccess() {
+		return MCheckFollowResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *MCheckFollowResult) SetSuccess(x interface{}) {
+	p.Success = x.(*followrpc.MCheckFollowResponse)
+}
+
+func (p *MCheckFollowResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -612,6 +716,16 @@ func (p *kClient) CheckFollow(ctx context.Context, Req *followrpc.CheckFollowReq
 	_args.Req = Req
 	var _result CheckFollowResult
 	if err = p.c.Call(ctx, "CheckFollow", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) MCheckFollow(ctx context.Context, Req *followrpc.MCheckFollowRequest) (r *followrpc.MCheckFollowResponse, err error) {
+	var _args MCheckFollowArgs
+	_args.Req = Req
+	var _result MCheckFollowResult
+	if err = p.c.Call(ctx, "MCheckFollow", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
