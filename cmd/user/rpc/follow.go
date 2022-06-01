@@ -54,3 +54,17 @@ func IsFollow(ctx context.Context, req *followrpc.CheckFollowRequest) (bool, err
 
 	return resp.IsFollow, nil
 }
+
+// 调用 follow 中查询多个是否关注
+func BatchIsFollow(ctx context.Context, req *followrpc.MCheckFollowRequest) ([]bool, error) {
+	resp, err := userClient.MCheckFollow(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
+	}
+
+	return resp.IsFollows, nil
+}

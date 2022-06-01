@@ -16,6 +16,7 @@ func main() {
 	svr := userrpc.NewServer(new(UserServiceImpl))
 
 	Init()
+
 	err := svr.Run()
 
 	if err != nil {

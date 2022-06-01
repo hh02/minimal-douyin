@@ -31,22 +31,29 @@ func (s *MGetUserService) MGetUser(req *userrpc.MGetUserRequest) ([]*userrpc.Use
 		return nil, errno.UserNotExistErr
 	}
 	us := make([]*userrpc.User, 0)
-	for _, u := range users {
+
+	var isFollows []bool
+
+	// 如果需要调用 isfollow 函数，则调用。
+	// 如果不需要 则设置为 true
+	if req.ReturnIsFollow {
+		isFollows, err = rpc.BatchIsFollow(s.ctx, &followrpc.MCheckFollowRequest{
+			UserId:    req.TokenUserId,
+			FollowIds: req.UserIds,
+		})
+		if err != nil {
+			return nil, errno.FollowNotExistErr
+		}
+	}
+
+	for i, u := range users {
 		if user2 := pack.User(u); user2 != nil {
-			// 判断是否需要关注，需要则查询。不需要直接设为 true
 			if req.ReturnIsFollow {
-				user2.IsFollow, err = rpc.IsFollow(s.ctx, &followrpc.CheckFollowRequest{
-					UserId:   req.TokenUserId,
-					FollowId: user2.UserId,
-				})
-				if err != nil {
-					return nil, errno.FollowNotExistErr
-				}
-				us = append(us, user2)
+				user2.IsFollow = isFollows[i]
 			} else {
 				user2.IsFollow = true
-				us = append(us, user2)
 			}
+			us = append(us, user2)
 		}
 	}
 	return us, nil

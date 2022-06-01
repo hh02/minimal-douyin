@@ -2,9 +2,12 @@ package service
 
 import (
 	"context"
+	"crypto/md5"
+	"fmt"
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
+	"io"
 )
 
 type CheckUserService struct {
@@ -16,16 +19,26 @@ func NewCheckUserService(ctx context.Context) *CheckUserService {
 	return &CheckUserService{ctx: ctx}
 }
 
-// UserRegister 用户服务,返回用户信息，错误
-func (s *UserService) User(req *userrpc.UserRequest) (*db.User, error) {
-	// 查询用户是否存在
-	user, err := db.QueryUserById(s.ctx, req.UserId)
+// CheckUser 用户服务，检查用户名密码是否匹配
+func (s *CheckUserService) CheckUser(req *userrpc.CheckUserRequest) (int64, error) {
+	// 先用 md5 对密码进行加密
+	h := md5.New()
+	if _, err := io.WriteString(h, req.Password); err != nil {
+		return 0, err
+	}
+	passWord := fmt.Sprintf("%x", h.Sum(nil))
+
+	userName := req.Username
+	user, err := db.QueryUserByName(s.ctx, userName)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
-	// 用户不存在则返回 用户不存在（UserNotExistErr）的错误
+	// 如果用户不存在
 	if user == nil {
-		return nil, errno.UserNotExistErr
+		return 0, errno.UserNotExistErr
 	}
-	return user, err
+	if user.Password != passWord {
+		return 0, errno.LoginErr
+	}
+	return int64(user.ID), nil
 }

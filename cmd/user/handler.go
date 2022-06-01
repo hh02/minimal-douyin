@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/cloudwego/kitex-examples/bizdemo/easy_note/kitex_gen/userdemo"
 	"github.com/hh02/minimal-douyin/cmd/user/service"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
@@ -75,20 +74,20 @@ func (s *UserServiceImpl) MGetUser(ctx context.Context, req *userrpc.MGetUserReq
 // CheckUser implements the UserServiceImpl interface.
 func (s *UserServiceImpl) CheckUser(ctx context.Context, req *userrpc.CheckUserRequest) (resp *userrpc.CheckUserResponse, err error) {
 	// TODO: Your code here...
-	resp = new(userdemo.CheckUserResponse)
+	resp = new(userrpc.CheckUserResponse)
 
-	if len(req.UserName) == 0 || len(req.Password) == 0 {
-		resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
+	if len(req.Username) == 0 || len(req.Password) == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
 	uid, err := service.NewCheckUserService(ctx).CheckUser(req)
 	if err != nil {
-		resp.BaseResp = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
 	resp.UserId = uid
-	resp.BaseResp = pack.BuildBaseResp(errno.Success)
+	resp.Status = errno.BuildStatus(errno.Success)
 	return resp, nil
 }
 
@@ -101,14 +100,12 @@ func (s *UserServiceImpl) AddFollowCount(ctx context.Context, req *userrpc.AddFo
 		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
-
-	user, err := service.NewGetUserService(ctx).GetUser(req)
+	err = service.NewAddFollowCountService(ctx).AddFollowCount(req)
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
 	resp.Status = errno.BuildStatus(errno.Success)
-	resp.User = user
 	return resp, nil
 }
 
@@ -122,12 +119,11 @@ func (s *UserServiceImpl) AddFollowerCount(ctx context.Context, req *userrpc.Add
 		return resp, nil
 	}
 
-	user, err := service.NewGetUserService(ctx).GetUser(req)
+	err = service.NewAddFollowerCountService(ctx).AddFollowerCount(req)
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
 	resp.Status = errno.BuildStatus(errno.Success)
-	resp.User = user
 	return resp, nil
 }
