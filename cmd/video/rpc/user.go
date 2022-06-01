@@ -47,8 +47,8 @@ func MGetUserMap(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*
 		return nil, err
 	}
 
-	if resp.StatusCode != errno.SuccessCode {
-		return nil, errno.NewErrNo(resp.StatusCode, resp.StatusMessage)
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
 	}
 	res := make(map[int64]*userrpc.User)
 	for _, user := range resp.Users {
