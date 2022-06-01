@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/hh02/minimal-douyin/cmd/follow/rpc"
-	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 
 	"github.com/hh02/minimal-douyin/cmd/follow/service"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
@@ -23,19 +21,14 @@ func (s *FollowServiceImpl) CreateFollow(ctx context.Context, req *followrpc.Cre
 		return resp, nil
 	}
 
-	rowsAffected, err := service.NewCreateFollowService(ctx).CreateFollow(req)
+	err = service.NewCreateFollowService(ctx).CreateFollow(req)
 
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
 
-	if rowsAffected > 0 {
-		rpc.AddFollowCount(ctx, &userrpc.AddFollowCountRequest{UserId: req.UserId, Count: 1})
-	}
-
 	resp.Status = errno.BuildStatus(errno.Success)
-
 	return resp, nil
 }
 
