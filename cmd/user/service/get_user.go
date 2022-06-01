@@ -14,12 +14,12 @@ type GetUserService struct {
 	ctx context.Context
 }
 
-// NewCreateUserService new CreateUserService
+// NewGetUserService new CreateUserService
 func NewGetUserService(ctx context.Context) *GetUserService {
 	return &GetUserService{ctx: ctx}
 }
 
-// UserRegister 用户服务,返回用户信息，错误
+// GetUser 用户服务,返回用户信息，错误
 func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, error) {
 	// 查询用户是否存在
 	user, err := db.QueryUserById(s.ctx, req.UserId)

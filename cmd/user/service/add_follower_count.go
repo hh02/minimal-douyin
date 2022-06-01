@@ -11,12 +11,12 @@ type AddFollowerCountService struct {
 	ctx context.Context
 }
 
-// NewAddFollowCountService new AddFollowCountService
+// NewAddFollowerCountService new AddFollowCountService
 func NewAddFollowerCountService(ctx context.Context) *AddFollowerCountService {
 	return &AddFollowerCountService{ctx: ctx}
 }
 
-// AddFollowCount 对指定用户增加粉丝数
+// AddFollowerCount 对指定用户增加粉丝数
 func (s *AddFollowerCountService) AddFollowerCount(req *userrpc.AddFollowerCountRequest) error {
 	// 查询用户是否存在
 	user, err := db.QueryUserById(s.ctx, req.UserId)
