@@ -21,11 +21,12 @@ func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) (boo
 		FollowId: req.FollowId,
 	}
 
-	isFollow, err := db.GetFollow(s.ctx, followModel)
+	follow, err := db.GetFollow(s.ctx, followModel)
+
 	if err != nil {
 		return false, err
 	}
-	if isFollow == nil {
+	if follow == nil {
 		return false, nil
 	}
 	return true, nil
