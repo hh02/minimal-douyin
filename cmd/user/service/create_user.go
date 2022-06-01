@@ -19,7 +19,7 @@ func NewCreateUserService(ctx context.Context) *CreateUserService {
 	return &CreateUserService{ctx: ctx}
 }
 
-// UserRegister 用户服务,返回用户信息，错误
+// CreateUser 用户服务,返回用户信息，错误
 func (s *CreateUserService) CreateUser(req *userrpc.CreateUserRequest) (error, int64) {
 	// 查询用户是否存在
 	user, err := db.QueryUserByName(s.ctx, req.Username)

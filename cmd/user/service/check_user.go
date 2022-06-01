@@ -14,7 +14,7 @@ type CheckUserService struct {
 	ctx context.Context
 }
 
-// NewCreateUserService new CreateUserService
+// NewCheckUserService new CreateUserService
 func NewCheckUserService(ctx context.Context) *CheckUserService {
 	return &CheckUserService{ctx: ctx}
 }
