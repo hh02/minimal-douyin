@@ -22,13 +22,15 @@ func (f *Follow) TableName() string {
 }
 
 // 关注
-func CreateFollow(ctx context.Context, follow *Follow) error {
-	return DB.WithContext(ctx).Create(follow).Error
+func CreateFollow(ctx context.Context, follow *Follow) (int64, error) {
+	result := DB.WithContext(ctx).Create(follow)
+	return result.RowsAffected, result.Error
 }
 
 // 取消关注
-func DeleteFollow(ctx context.Context, follow *Follow) error {
-	return DB.WithContext(ctx).Delete(follow).Error
+func DeleteFollow(ctx context.Context, follow *Follow) (int64, error) {
+	result := DB.WithContext(ctx).Delete(follow)
+	return result.RowsAffected, result.Error
 }
 
 // 返回关注列表
