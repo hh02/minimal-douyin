@@ -51,11 +51,22 @@ message CheckFollowResponse {
     bool is_follow = 2;
 }
 
+message MCheckFollowRequest {
+    int64 user_id = 1;
+    repeated int64 follow_ids = 2;
+}
+
+message MCheckFollowResponse {
+    common.Status status = 1;
+    repeated bool is_follows = 2;
+}
+
 service FollowService {
     rpc CreateFollow(CreateFollowRequest) returns (CreateFollowResponse) {}
     rpc DeleteFollow(DeleteFollowRequest) returns (DeleteFollowResponse) {}
     rpc QueryFollow(QueryFollowRequest) returns (QueryFollowResponse) {}
     rpc QueryFollower(QueryFollowerRequest) returns (QueryFollowerResponse) {}
     rpc CheckFollow(CheckFollowRequest) returns (CheckFollowResponse) {}
+    rpc MCheckFollow(MCheckFollowRequest) returns (MCheckFollowResponse) {}
 }
 

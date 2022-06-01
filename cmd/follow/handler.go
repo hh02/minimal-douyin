@@ -109,3 +109,7 @@ func (s *FollowServiceImpl) CheckFollow(ctx context.Context, req *followrpc.Chec
 	resp.IsFollow = isFollow
 	return resp, nil
 }
+
+func (s *FollowServiceImpl) MCheckFollow(ctx context.Context, req *followrpc.MCheckFollowRequest) (resp *followrpc.MCheckFollowResponse, err error) {
+	return nil, nil
+}
