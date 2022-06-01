@@ -16,6 +16,7 @@ type Client interface {
 	QueryFollow(ctx context.Context, Req *followrpc.QueryFollowRequest, callOptions ...callopt.Option) (r *followrpc.QueryFollowResponse, err error)
 	QueryFollower(ctx context.Context, Req *followrpc.QueryFollowerRequest, callOptions ...callopt.Option) (r *followrpc.QueryFollowerResponse, err error)
 	CheckFollow(ctx context.Context, Req *followrpc.CheckFollowRequest, callOptions ...callopt.Option) (r *followrpc.CheckFollowResponse, err error)
+	MCheckFollow(ctx context.Context, Req *followrpc.MCheckFollowRequest, callOptions ...callopt.Option) (r *followrpc.MCheckFollowResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -70,4 +71,9 @@ func (p *kFollowServiceClient) QueryFollower(ctx context.Context, Req *followrpc
 func (p *kFollowServiceClient) CheckFollow(ctx context.Context, Req *followrpc.CheckFollowRequest, callOptions ...callopt.Option) (r *followrpc.CheckFollowResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CheckFollow(ctx, Req)
+}
+
+func (p *kFollowServiceClient) MCheckFollow(ctx context.Context, Req *followrpc.MCheckFollowRequest, callOptions ...callopt.Option) (r *followrpc.MCheckFollowResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.MCheckFollow(ctx, Req)
 }

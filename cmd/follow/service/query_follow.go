@@ -23,8 +23,13 @@ func (s *QueryFollowService) QueryFollow(req *followrpc.QueryFollowRequest) ([]*
 	if err != nil {
 		return nil, err
 	}
-	rpcRequest := new(userrpc.MGetUserRequest)
-	rpcRequest.UserIds = userIds
+
+	rpcRequest := &userrpc.MGetUserRequest{
+		UserIds:        userIds,
+		TokenUserId:    req.UserId,
+		ReturnIsFollow: false,
+	}
+
 	users, err := rpc.MGetUser(s.ctx, rpcRequest)
 	if err != nil {
 		return nil, err
