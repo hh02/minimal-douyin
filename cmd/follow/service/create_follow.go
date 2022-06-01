@@ -27,13 +27,10 @@ func (s *CreateFollowService) CreateFollow(req *followrpc.CreateFollowRequest) e
 		return err
 	}
 	if rowsAffected > 0 {
-		rpcRequest := &userrpc.AddFollowCountRequest{
-			UserId: req.UserId,
-			Count:  1,
+		err := rpc.AddFollowCount(s.ctx, &userrpc.AddFollowCountRequest{UserId: req.UserId, Count: 1})
+		if err != nil {
+			return err
 		}
-		success, err := rpc.AddFollowCount(s.ctx, &userrpc.AddFollowCountRequest{UserId: req.UserId, Count: 1})
-
-		if err !=
 	}
-	return db.CreateFollow(s.ctx, followModel)
+	return nil
 }
