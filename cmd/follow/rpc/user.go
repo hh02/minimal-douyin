@@ -53,3 +53,14 @@ func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) ([]*userrpc.Use
 
 	return resp.Users, nil
 }
+
+func AddFollowCount(ctx context.Context, req *userrpc.AddFollowCountRequest) (error) {
+	resp, err := userClient.AddFollowCount(ctx, req)
+	if err != nil {
+		return err
+	}
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return errno.Status2ErrorNo(resp.Status)
+	}
+	return nil
+}

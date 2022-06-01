@@ -22,12 +22,13 @@ func (s *FollowServiceImpl) CreateFollow(ctx context.Context, req *followrpc.Cre
 	}
 
 	err = service.NewCreateFollowService(ctx).CreateFollow(req)
+
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
+		return resp, nil
 	}
 
 	resp.Status = errno.BuildStatus(errno.Success)
-
 	return resp, nil
 }
 
@@ -107,5 +108,22 @@ func (s *FollowServiceImpl) CheckFollow(ctx context.Context, req *followrpc.Chec
 	}
 	resp.Status = errno.BuildStatus(errno.Success)
 	resp.IsFollow = isFollow
+	return resp, nil
+}
+
+func (s *FollowServiceImpl) MCheckFollow(ctx context.Context, req *followrpc.MCheckFollowRequest) (resp *followrpc.MCheckFollowResponse, err error) {
+	resp = new(followrpc.MCheckFollowResponse)
+	if req.UserId <= 0 || len(req.FollowIds) == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	isFollows, err := service.NewMCheckFollowService(ctx).MCheckFollow(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.IsFollows = isFollows
 	return resp, nil
 }
