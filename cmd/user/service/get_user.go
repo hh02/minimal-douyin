@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
+	"github.com/hh02/minimal-douyin/cmd/user/pack"
 	"github.com/hh02/minimal-douyin/cmd/user/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
@@ -30,13 +31,21 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, er
 		return nil, errno.UserNotExistErr
 	}
 
-	followCount, err := rpc.QueryFollow(s.ctx, &followrpc.QueryFollowRequest{
-		UserId: int64(user.ID),
+	// 如果不需要查询是否关注，则直接设置为关注
+	if !req.ReturnIsFollow {
+		User := pack.User(user)
+		User.IsFollow = true
+		return User, err
+	}
+	// 否则，通过 follow 服务查询
+	isFollow, err := rpc.IsFollow(s.ctx, &followrpc.CheckFollowRequest{
+		UserId:   req.TokenUserId,
+		FollowId: req.UserId,
 	})
-	return &userrpc.User{
-		UserId:   int64(user.ID),
-		Username: user.Username,
-		// 远程调用 follow 查相关属性
-		FollowCount: int64(followCount),
-	}, err
+	if err != nil {
+		return nil, errno.FollowNotExistErr
+	}
+	User := pack.User(user)
+	User.IsFollow = isFollow
+	return User, err
 }

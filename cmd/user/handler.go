@@ -54,20 +54,22 @@ func (s *UserServiceImpl) GetUser(ctx context.Context, req *userrpc.GetUserReque
 // MGetUser implements the UserServiceImpl interface.
 func (s *UserServiceImpl) MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) (resp *userrpc.MGetUserResponse, err error) {
 	// TODO: Your code here...\
+
+	resp = new(userrpc.MGetUserResponse)
+
 	if len(req.UserIds) == 0 {
-		resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
 	users, err := service.NewMGetUserService(ctx).MGetUser(req)
 	if err != nil {
-		resp.BaseResp = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
-	resp.BaseResp = pack.BuildBaseResp(errno.Success)
+	resp.Status = errno.BuildStatus(errno.Success)
 	resp.Users = users
 	return resp, nil
-	return
 }
 
 // CheckUser implements the UserServiceImpl interface.
@@ -87,5 +89,45 @@ func (s *UserServiceImpl) CheckUser(ctx context.Context, req *userrpc.CheckUserR
 	}
 	resp.UserId = uid
 	resp.BaseResp = pack.BuildBaseResp(errno.Success)
+	return resp, nil
+}
+
+// AddFollowCount implements the UserServiceImpl interface.
+func (s *UserServiceImpl) AddFollowCount(ctx context.Context, req *userrpc.AddFollowCountRequest) (resp *userrpc.AddFollowCountResponse, err error) {
+	// TODO: Your code here...
+	resp = new(userrpc.AddFollowCountResponse)
+
+	if req.UserId == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	user, err := service.NewGetUserService(ctx).GetUser(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.User = user
+	return resp, nil
+}
+
+// AddFollowerCount implements the UserServiceImpl interface.
+func (s *UserServiceImpl) AddFollowerCount(ctx context.Context, req *userrpc.AddFollowerCountRequest) (resp *userrpc.AddFollowerCountResponse, err error) {
+	// TODO: Your code here...
+	resp = new(userrpc.AddFollowerCountResponse)
+
+	if req.UserId == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	user, err := service.NewGetUserService(ctx).GetUser(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.User = user
 	return resp, nil
 }

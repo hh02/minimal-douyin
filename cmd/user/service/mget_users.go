@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
+	"github.com/hh02/minimal-douyin/cmd/user/pack"
+	"github.com/hh02/minimal-douyin/cmd/user/rpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
@@ -17,7 +20,7 @@ func NewMGetUserService(ctx context.Context) *MGetUserService {
 }
 
 // UserRegister 用户服务,返回用户信息，错误
-func (s *MGetUserService) MGetUser(req *userrpc.MGetUserRequest) ([]*db.User, error) {
+func (s *MGetUserService) MGetUser(req *userrpc.MGetUserRequest) ([]*userrpc.User, error) {
 	// 查询用户是否存在
 	users, err := db.MQueryUserById(s.ctx, req.UserIds)
 	if err != nil {
@@ -27,5 +30,24 @@ func (s *MGetUserService) MGetUser(req *userrpc.MGetUserRequest) ([]*db.User, er
 	if len(users) == 0 {
 		return nil, errno.UserNotExistErr
 	}
-	return users, err
+	us := make([]*userrpc.User, 0)
+	for _, u := range users {
+		if user2 := pack.User(u); user2 != nil {
+			// 判断是否需要关注，需要则查询。不需要直接设为 true
+			if req.ReturnIsFollow {
+				user2.IsFollow, err = rpc.IsFollow(s.ctx, &followrpc.CheckFollowRequest{
+					UserId:   req.TokenUserId,
+					FollowId: user2.UserId,
+				})
+				if err != nil {
+					return nil, errno.FollowNotExistErr
+				}
+				us = append(us, user2)
+			} else {
+				user2.IsFollow = true
+				us = append(us, user2)
+			}
+		}
+	}
+	return us, nil
 }

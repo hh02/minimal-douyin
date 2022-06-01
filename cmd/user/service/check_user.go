@@ -7,13 +7,13 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
-type UserService struct {
+type CheckUserService struct {
 	ctx context.Context
 }
 
 // NewCreateUserService new CreateUserService
-func NewUserService(ctx context.Context) *UserService {
-	return &UserService{ctx: ctx}
+func NewCheckUserService(ctx context.Context) *CheckUserService {
+	return &CheckUserService{ctx: ctx}
 }
 
 // UserRegister 用户服务,返回用户信息，错误

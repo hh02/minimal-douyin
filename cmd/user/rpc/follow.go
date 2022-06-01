@@ -41,30 +41,16 @@ func initFollowRpc() {
 	userClient = c
 }
 
-// 调用  follow 服务中的查询关注函数
-func QueryFollow(ctx context.Context, req *followrpc.QueryFollowRequest) (int, error) {
-	resp, err := userClient.QueryFollow(ctx, req)
+// 调用  follow 服务中的查询是否关注
+func IsFollow(ctx context.Context, req *followrpc.CheckFollowRequest) (bool, error) {
+	resp, err := userClient.CheckFollow(ctx, req)
 	if err != nil {
-		return 0, err
+		return false, err
 	}
 
 	if resp.Status.StatusCode != errno.SuccessCode {
-		return 0, errno.Status2ErrorNo(resp.Status)
+		return false, errno.Status2ErrorNo(resp.Status)
 	}
 
-	return len(resp.Users), nil
-}
-
-// 调用 follow 中的查询粉丝函数
-func QueryFollower(ctx context.Context, req *followrpc.QueryFollowerRequest) (int, error) {
-	resp, err := userClient.QueryFollower(ctx, req)
-	if err != nil {
-		return 0, err
-	}
-
-	if resp.Status.StatusCode != errno.SuccessCode {
-		return 0, errno.Status2ErrorNo(resp.Status)
-	}
-
-	return len(resp.Users), nil
+	return resp.IsFollow, nil
 }
