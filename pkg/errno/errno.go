@@ -45,8 +45,7 @@ var (
 	FollowNotExistErr   = NewErrNo(FollowNotExistErrCode, "Follow does not exist")
 )
 
-
-// BuildBaseResp build baseResp from error
+// BuildStatus build baseResp from error
 func BuildStatus(err error) *common.Status {
 	if err == nil {
 		return ErrNo2Status(Success)
@@ -73,4 +72,16 @@ func Status2ErrorNo(status *common.Status) ErrNo {
 		ErrCode: status.StatusCode,
 		ErrMsg:  status.StatusMessage,
 	}
+}
+
+// ConvertErr convert error to Errno
+func ConvertErr(err error) ErrNo {
+	Err := ErrNo{}
+	if errors.As(err, &Err) {
+		return Err
+	}
+
+	s := ServiceErr
+	s.ErrMsg = err.Error()
+	return s
 }

@@ -3,6 +3,7 @@ package constants
 const (
 	IdentityKey               = "id"
 	Total                     = "total"
+	User                      = "user"
 	Notes                     = "notes"
 	NoteID                    = "note_id"
 	ApiServiceName            = "demoapi"
