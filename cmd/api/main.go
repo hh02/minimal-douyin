@@ -92,9 +92,9 @@ func main() {
 	//apiRouter.GET("/comment/list/", controller.CommentList)
 
 	// extra apis - II
-	//apiRouter.POST("/relation/action/", controller.RelationAction)
-	//apiRouter.GET("/relation/follow/list/", controller.FollowList)
-	//apiRouter.GET("/relation/follower/list/", controller.FollowerList)
+	apiRouter.POST("/relation/action/", handlers.RelationAction)
+	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
+	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		klog.Fatal(err)

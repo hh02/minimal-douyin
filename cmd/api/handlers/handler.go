@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	"github.com/cloudwego/kitex-examples/bizdemo/easy_note/pkg/errno"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
-	"net/http"
+	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
 type UserInfoResponse struct {
@@ -44,4 +45,17 @@ func SendRegisterResponse(c *gin.Context, err error) {
 type UserParam struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type StatusResponse struct {
+	StatusCode int32  `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
+}
+
+func SendStatusResponse(c *gin.Context, err error) {
+	status := errno.BuildStatus(err)
+	c.JSON(http.StatusOK, StatusResponse{
+		StatusCode: status.StatusCode,
+		StatusMsg:  status.StatusMessage,
+	})
 }
