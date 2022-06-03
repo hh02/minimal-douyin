@@ -90,18 +90,18 @@ func FollowList(c *gin.Context) {
 }
 
 func FollowerList(c *gin.Context) {
-	type FollowListParam struct {
+	type FollowerListParam struct {
 		UserId int64  `json:"user_id"`
 		Token  string `json:"token"`
 	}
 
-	var followListVar FollowListParam
-	if err := c.BindQuery(&followListVar); err != nil {
+	var followerListVar FollowerListParam
+	if err := c.BindQuery(&followerListVar); err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err))
 	}
 
-	users, err := rpc.QueryFollow(context.Background(), &followrpc.QueryFollowRequest{
-		UserId: followListVar.UserId,
+	users, err := rpc.QueryFollower(context.Background(), &followrpc.QueryFollowerRequest{
+		UserId: followerListVar.UserId,
 	})
 
 	if err != nil {

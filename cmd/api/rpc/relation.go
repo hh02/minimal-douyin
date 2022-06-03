@@ -72,6 +72,17 @@ func QueryFollow(ctx context.Context, req *followrpc.QueryFollowRequest) ([]*use
 		return nil, errno.Status2ErrorNo(resp.Status)
 	}
 	return resp.Users, nil
+}
+
+func QueryFollower(ctx context.Context, req *followrpc.QueryFollowerRequest) ([]*userrpc.User, error){
+	resp, err := followClient.QueryFollower(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
+	}
+	return resp.Users, nil
 
 
 }

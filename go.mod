@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/appleboy/gin-jwt/v2 v2.8.0
 	github.com/cloudwego/kitex v0.3.1
-	github.com/cloudwego/kitex-examples/bizdemo/easy_note v0.0.0-20220509014718-d4517a9a9df2
 	github.com/gin-gonic/gin v1.8.0
 	github.com/kitex-contrib/registry-etcd v0.0.0-20220110034026-b1c94979cea3
 	github.com/kitex-contrib/tracer-opentracing v0.0.3

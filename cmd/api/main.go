@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/gin-gonic/gin"
@@ -11,8 +14,6 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	"github.com/hh02/minimal-douyin/pkg/tracer"
-	"net/http"
-	"time"
 )
 
 func Init() {
