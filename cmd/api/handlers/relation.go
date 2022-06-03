@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -64,15 +65,16 @@ func RelationAction(c *gin.Context) {
 
 func FollowList(c *gin.Context) {
 	type FollowListParam struct {
-		UserId int64  `json:"user_id"`
-		Token  string `json:"token"`
+		UserId int64  `form:"user_id"`
+		Token  string `form:"token"`
 	}
 
 	var followListVar FollowListParam
-	if err := c.BindQuery(&followListVar); err != nil {
+	if err := c.ShouldBindQuery(&followListVar); err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err))
 	}
 
+	fmt.Println(followListVar.UserId)
 	users, err := rpc.QueryFollow(context.Background(), &followrpc.QueryFollowRequest{
 		UserId: followListVar.UserId,
 	})

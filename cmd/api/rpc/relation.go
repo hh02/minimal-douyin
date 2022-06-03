@@ -40,7 +40,6 @@ func initFollowRpc() {
 	followClient = c
 }
 
-
 func CreateFollow(ctx context.Context, req *followrpc.CreateFollowRequest) error {
 	resp, err := followClient.CreateFollow(ctx, req)
 	if err != nil {
@@ -63,18 +62,19 @@ func DeleteFollow(ctx context.Context, req *followrpc.DeleteFollowRequest) error
 	return nil
 }
 
-func QueryFollow(ctx context.Context, req *followrpc.QueryFollowRequest) ([]*userrpc.User, error){
+func QueryFollow(ctx context.Context, req *followrpc.QueryFollowRequest) ([]*userrpc.User, error) {
 	resp, err := followClient.QueryFollow(ctx, req)
 	if err != nil {
 		return nil, err
 	}
+
 	if resp.Status.StatusCode != errno.SuccessCode {
 		return nil, errno.Status2ErrorNo(resp.Status)
 	}
 	return resp.Users, nil
 }
 
-func QueryFollower(ctx context.Context, req *followrpc.QueryFollowerRequest) ([]*userrpc.User, error){
+func QueryFollower(ctx context.Context, req *followrpc.QueryFollowerRequest) ([]*userrpc.User, error) {
 	resp, err := followClient.QueryFollower(ctx, req)
 	if err != nil {
 		return nil, err
@@ -83,6 +83,5 @@ func QueryFollower(ctx context.Context, req *followrpc.QueryFollowerRequest) ([]
 		return nil, errno.Status2ErrorNo(resp.Status)
 	}
 	return resp.Users, nil
-
 
 }
