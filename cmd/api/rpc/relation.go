@@ -8,6 +8,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc/followservice"
+	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	etcd "github.com/kitex-contrib/registry-etcd"
@@ -62,3 +63,15 @@ func DeleteFollow(ctx context.Context, req *followrpc.DeleteFollowRequest) error
 	return nil
 }
 
+func QueryFollow(ctx context.Context, req *followrpc.QueryFollowRequest) ([]*userrpc.User, error){
+	resp, err := followClient.QueryFollow(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
+	}
+	return resp.Users, nil
+
+
+}
