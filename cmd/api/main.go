@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/gin-gonic/gin"
@@ -11,8 +14,6 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	"github.com/hh02/minimal-douyin/pkg/tracer"
-	"net/http"
-	"time"
 )
 
 func Init() {
@@ -92,9 +93,9 @@ func main() {
 	//apiRouter.GET("/comment/list/", controller.CommentList)
 
 	// extra apis - II
-	//apiRouter.POST("/relation/action/", controller.RelationAction)
-	//apiRouter.GET("/relation/follow/list/", controller.FollowList)
-	//apiRouter.GET("/relation/follower/list/", controller.FollowerList)
+	apiRouter.POST("/relation/action/", handlers.RelationAction)
+	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
+	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		klog.Fatal(err)
