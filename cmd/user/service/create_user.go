@@ -7,6 +7,7 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
+	"gorm.io/gorm"
 	"io"
 )
 
@@ -23,12 +24,14 @@ func NewCreateUserService(ctx context.Context) *CreateUserService {
 func (s *CreateUserService) CreateUser(req *userrpc.CreateUserRequest) (error, int64) {
 	// 查询用户是否存在
 	user, err := db.QueryUserByName(s.ctx, req.Username)
+
+	// 用户存在则返回 用户存在（UserAlreadyExistErr）的错误
+	if err != gorm.ErrRecordNotFound {
+		return errno.UserAlreadyExistErr, 0
+	}
+
 	if err != nil {
 		return err, 0
-	}
-	// 用户存在则返回 用户存在（UserAlreadyExistErr）的错误
-	if user != nil {
-		return errno.UserAlreadyExistErr, 0
 	}
 
 	h := md5.New()

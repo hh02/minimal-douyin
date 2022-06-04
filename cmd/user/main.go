@@ -8,6 +8,7 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/user/dal"
 	userrpc "github.com/hh02/minimal-douyin/kitex_gen/userrpc/userservice"
 	"github.com/hh02/minimal-douyin/pkg/constants"
+	tracer2 "github.com/hh02/minimal-douyin/pkg/tracer"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	trace "github.com/kitex-contrib/tracer-opentracing"
 	"log"
@@ -15,6 +16,7 @@ import (
 )
 
 func Init() {
+	tracer2.InitJaeger(constants.FollowServiceName)
 	dal.Init()
 	rpc.InitRPC()
 }
