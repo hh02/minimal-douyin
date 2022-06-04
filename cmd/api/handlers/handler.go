@@ -36,15 +36,15 @@ func SendRegisterResponse(c *gin.Context, err error) {
 	Err := errno.ConvertErr(err)
 	c.JSON(http.StatusOK, RegisterResponse{
 		StatusCode:    int32(Err.ErrCode),
-		StatusMessage: Err.ErrMsg,
+		StatusMessage: string(Err.ErrMsg),
 		UserId:        0,
 		Token:         "",
 	})
 }
 
 type UserParam struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `form:"username"`
+	Password string `form:"password"`
 }
 
 type StatusResponse struct {
