@@ -7,10 +7,18 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/follow/dal/db"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
 	"github.com/stretchr/testify/assert"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestCheckFollow(t *testing.T) {
-
+	Convey("TestCheckFollow", t, func() {
+		Convey("true case", func() {
+			patches := ApplyFunc(db.GetFollow, func(_ context.Context, follow *db.Follow) (*db.Follow, error) {
+				if 
+			})
+			
+		})
+	})
 	// 初始化工作
 	db.Init()
 	_, err := db.CreateFollow(context.Background(), &db.Follow{
