@@ -27,15 +27,6 @@ message CreateVideoResponse {
     common.Status status = 1;
 }
 
-message GetVideoRequest {
-    int64 video_id = 1;
-}
-
-message GetVideoResponse {
-    common.Status status = 1;
-    Video video = 2;
-}
-
 message MGetVideoRequest {
     repeated int64 video_ids = 1;
 }
