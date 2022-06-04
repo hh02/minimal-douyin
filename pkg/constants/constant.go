@@ -18,5 +18,6 @@ const (
 	VideoTableName            = "videos"
 	UserTableName             = "users"
 	FollowTableName           = "follows"
+	CommentTableName          = "comments"
 	SecretKey                 = "secret key"
 )

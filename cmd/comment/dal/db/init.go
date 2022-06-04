@@ -27,10 +27,10 @@ func Init() {
 	}
 
 	m := DB.Migrator()
-	if m.HasTable(&User{}) {
+	if m.HasTable(&Comment{}) {
 		return
 	}
-	if err = m.CreateTable(&User{}); err != nil {
+	if err = m.CreateTable(&Comment{}); err != nil {
 		panic(err)
 	}
 }
