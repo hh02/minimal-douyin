@@ -20,6 +20,7 @@ func UserInfo(c *gin.Context) {
 	}
 	if err := c.BindQuery(&queryVar); err != nil {
 		SendUserInfoResponse(c, errno.ConvertErr(err), nil)
+		return
 	}
 
 	if queryVar.UserId == 0 {
