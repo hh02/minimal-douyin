@@ -56,3 +56,16 @@ func MGetUserMap(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*
 	}
 	return res, nil
 }
+
+func GetUser(ctx context.Context, req *userrpc.GetUserRequest) (*userrpc.User, error) {
+	resp, err := userClient.GetUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
+	}
+	return resp.User, nil
+
+}
