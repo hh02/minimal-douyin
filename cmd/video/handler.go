@@ -60,6 +60,4 @@ func (s *VideoServiceImpl) QueryVideoByUserId(ctx context.Context, req *videorpc
 	resp.Status = errno.BuildStatus(errno.Success)
 	resp.Videos = videos
 	return resp, nil
-
-	return
 }
