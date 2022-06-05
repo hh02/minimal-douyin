@@ -89,8 +89,8 @@ func main() {
 	// extra apis - I
 	//apiRouter.POST("/favorite/action/", controller.FavoriteAction)
 	//apiRouter.GET("/favorite/list/", controller.FavoriteList)
-	//apiRouter.POST("/comment/action/", controller.CommentAction)
-	//apiRouter.GET("/comment/list/", controller.CommentList)
+	apiRouter.POST("/comment/action/", handlers.CommentAction)
+	apiRouter.GET("/comment/list/", handlers.CommentList)
 
 	// extra apis - II
 	apiRouter.POST("/relation/action/", handlers.RelationAction)
