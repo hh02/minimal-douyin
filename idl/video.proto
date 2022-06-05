@@ -28,7 +28,8 @@ message CreateVideoResponse {
 }
 
 message MGetVideoRequest {
-    repeated int64 video_ids = 1;
+    int64 token_user_id = 1;
+    repeated int64 video_ids = 2;
 }
 
 message MGetVideoResponse {

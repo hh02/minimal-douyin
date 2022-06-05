@@ -18,7 +18,7 @@ func NewMGetVideoService(ctx context.Context) *MGetVideoService {
 	return &MGetVideoService{ctx: ctx}
 }
 
-func (s *MGetVideoService) MGetVideoService(req *videorpc.MGetVideoRequest) ([]*videorpc.Video, error) {
+func (s *MGetVideoService) MGetVideo(req *videorpc.MGetVideoRequest) ([]*videorpc.Video, error) {
 
 	videoModels, err := db.MgetVideo(s.ctx, req.VideoIds)
 	if err != nil {
@@ -28,7 +28,12 @@ func (s *MGetVideoService) MGetVideoService(req *videorpc.MGetVideoRequest) ([]*
 	// 提取出所有用户ID并去重
 	userIds := pack.UserIds(videoModels)
 
-	userMap, err := rpc.MGetUserMap(s.ctx, &userrpc.MGetUserRequest{UserIds: userIds})
+	userMap, err := rpc.MGetUserMap(s.ctx, &userrpc.MGetUserRequest{
+		UserIds:        userIds,
+		TokenUserId:    req.TokenUserId,
+		ReturnIsFollow: true,
+	})
+
 	if err != nil {
 		return nil, err
 	}
