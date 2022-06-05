@@ -9,9 +9,9 @@ import (
 // User 用户服务
 type User struct {
 	gorm.Model
-	// username's maxlen is 64
+	// username's maxlen is 32
 	Username string `gorm:"type:varchar(32);not null"`
-	// md5's length is 128
+	// md5's length is 32
 	Password      string `gorm:"type:char(32);not null"`
 	FollowCount   int64  `gorm:"default:0"`
 	FollowerCount int64  `gorm:"default:0"`
@@ -23,7 +23,7 @@ func (u *User) TableName() string {
 
 // CreateUser 用户注册，向数据库中添加用户。返回错误，以及当前用户ID。
 func CreateUser(ctx context.Context, user *User) (error, int64) {
-	err := DB.WithContext(ctx).Create(user).Error
+	err := DB.WithContext(ctx).Create(&user).Error
 	return err, int64(user.ID)
 }
 
