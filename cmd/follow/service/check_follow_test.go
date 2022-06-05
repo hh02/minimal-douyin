@@ -10,14 +10,6 @@ import (
 )
 
 func TestCheckFollow(t *testing.T) {
-	Convey("TestCheckFollow", t, func() {
-		Convey("true case", func() {
-			patches := ApplyFunc(db.GetFollow, func(_ context.Context, follow *db.Follow) (*db.Follow, error) {
-				if 
-			})
-			
-		})
-	})
 	// 初始化工作
 	db.Init()
 	_, err := db.CreateFollow(context.Background(), &db.Follow{
