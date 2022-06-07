@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -45,8 +46,9 @@ func main() {
 			if len(loginVar.Username) == 0 || len(loginVar.Password) == 0 {
 				return "", jwt.ErrMissingLoginValues
 			}
-
-			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
+			id, err := rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
+			fmt.Println(id)
+			return id, err
 		},
 		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
 		TokenHeadName: "Bearer",
@@ -59,7 +61,7 @@ func main() {
 
 	// basic apis
 	//apiRouter.GET("/feed/", handlers.Feed)
-	apiRouter.GET("/user/", handlers.UserInfo)
+
 	apiRouter.POST("/user/register/", func(c *gin.Context) {
 		var userVar handlers.UserParam
 		if err := c.BindQuery(&userVar); err != nil {
@@ -84,6 +86,7 @@ func main() {
 		r.HandleContext(c)
 	})
 	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
+
 	//apiRouter.POST("/publish/action/", controller.Publish)
 	//apiRouter.GET("/publish/list/", controller.PublishList)
 
@@ -94,9 +97,15 @@ func main() {
 	apiRouter.GET("/comment/list/", handlers.CommentList)
 
 	// extra apis - II
-	apiRouter.POST("/relation/action/", handlers.RelationAction)
+
 	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
 	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
+
+	apiRouter.Use(authMiddleware.MiddlewareFunc())
+	{
+		apiRouter.GET("/user/", handlers.UserInfo)
+		apiRouter.POST("/relation/action/", handlers.RelationAction)
+	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {
 		klog.Fatal(err)
