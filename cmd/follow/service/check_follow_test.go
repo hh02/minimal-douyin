@@ -12,7 +12,7 @@ import (
 func TestCheckFollow(t *testing.T) {
 	// 初始化工作
 	db.Init()
-	_, err := db.CreateFollow(context.Background(), &db.Follow{
+	err := db.CreateFollow(context.Background(), &db.Follow{
 		UserId:   1234,
 		FollowId: 5678,
 	})

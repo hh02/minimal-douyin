@@ -23,6 +23,9 @@ func (s *QueryFollowService) QueryFollow(req *followrpc.QueryFollowRequest) ([]*
 	if err != nil {
 		return nil, err
 	}
+	if len(userIds) == 0 {
+		return nil, nil
+	}
 
 	rpcRequest := &userrpc.MGetUserRequest{
 		UserIds:        userIds,
