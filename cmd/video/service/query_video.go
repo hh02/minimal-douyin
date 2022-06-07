@@ -34,3 +34,5 @@ func (s *QueryVideoService) QueryVideoByUserId(req *videorpc.QueryVideoByUserIdR
 	}
 	return videos, nil
 }
+
+func (s *QueryVideoService) QueryVideoByTime(req *vide)
