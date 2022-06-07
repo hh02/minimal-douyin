@@ -14,7 +14,7 @@ import (
 	trace "github.com/kitex-contrib/tracer-opentracing"
 )
 
-var userClient followservice.Client
+var followClient followservice.Client
 
 func initFollowRpc() {
 	r, err := etcd.NewEtcdResolver([]string{constants.EtcdAddress})
@@ -38,12 +38,12 @@ func initFollowRpc() {
 		panic(err)
 	}
 
-	userClient = c
+	followClient = c
 }
 
-// 调用  follow 服务中的查询是否关注
+// IsFollow 调用  follow 服务中的查询是否关注
 func IsFollow(ctx context.Context, req *followrpc.CheckFollowRequest) (bool, error) {
-	resp, err := userClient.CheckFollow(ctx, req)
+	resp, err := followClient.CheckFollow(ctx, req)
 	if err != nil {
 		return false, err
 	}
@@ -55,9 +55,9 @@ func IsFollow(ctx context.Context, req *followrpc.CheckFollowRequest) (bool, err
 	return resp.IsFollow, nil
 }
 
-// 调用 follow 中查询多个是否关注
+// BatchIsFollow 调用 follow 中查询多个是否关注
 func BatchIsFollow(ctx context.Context, req *followrpc.MCheckFollowRequest) ([]bool, error) {
-	resp, err := userClient.MCheckFollow(ctx, req)
+	resp, err := followClient.MCheckFollow(ctx, req)
 	if err != nil {
 		return nil, err
 	}

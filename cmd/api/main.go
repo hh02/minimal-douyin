@@ -79,6 +79,7 @@ func main() {
 			handlers.SendRegisterResponse(c, errno.ConvertErr(err))
 			return
 		}
+
 		c.Request.URL.Path = "/douyin/user/login"
 		r.HandleContext(c)
 	})
@@ -97,7 +98,7 @@ func main() {
 	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
 	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
 
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	if err := http.ListenAndServe(":80", r); err != nil {
 		klog.Fatal(err)
 	}
 }
