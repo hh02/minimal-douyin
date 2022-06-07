@@ -25,4 +25,5 @@ const (
 	VideoFolder                = "public/video/"
 	SnapshotFolder             = "public/snapshot/"
 	FileServer                 = "120.46.179.205/"
+	TotalFeedNumber            = 20
 )

@@ -50,6 +50,18 @@ func QueryVideoByUserId(ctx context.Context, req *videorpc.QueryVideoByUserIdReq
 	return resp.Videos, nil
 }
 
+func QueryVideoByTime(ctx context.Context, req *videorpc.QueryVideoByTimeRequest) (int64, []*videorpc.Video, error) {
+	resp, err := videoClient.QueryVideoByTime(ctx, req)
+	if err != nil {
+		return 0, nil, err
+	}
+
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return 0, nil, errno.Status2ErrorNo(resp.Status)
+	}
+	return resp.NextTime, resp.Videos, nil
+}
+
 func CreateVideo(ctx context.Context, req *videorpc.CreateVideoRequest) error {
 	resp, err := videoClient.CreateVideo(ctx, req)
 	if err != nil {

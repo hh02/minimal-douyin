@@ -58,7 +58,7 @@ func main() {
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
-	//apiRouter.GET("/feed/", handlers.Feed)
+	apiRouter.GET("/feed/", handlers.Feed)
 	apiRouter.GET("/user/", handlers.UserInfo)
 	apiRouter.POST("/user/register/", func(c *gin.Context) {
 		var userVar handlers.UserParam
@@ -83,8 +83,8 @@ func main() {
 		r.HandleContext(c)
 	})
 	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
-	//apiRouter.POST("/publish/action/", controller.Publish)
-	//apiRouter.GET("/publish/list/", controller.PublishList)
+	apiRouter.POST("/publish/action/", handlers.PublishAction)
+	apiRouter.GET("/publish/list/", handlers.PublishList)
 
 	// extra apis - I
 	//apiRouter.POST("/favorite/action/", controller.FavoriteAction)

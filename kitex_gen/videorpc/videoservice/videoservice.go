@@ -25,6 +25,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"CreateVideo":        kitex.NewMethodInfo(createVideoHandler, newCreateVideoArgs, newCreateVideoResult, false),
 		"MGetVideo":          kitex.NewMethodInfo(mGetVideoHandler, newMGetVideoArgs, newMGetVideoResult, false),
 		"QueryVideoByUserId": kitex.NewMethodInfo(queryVideoByUserIdHandler, newQueryVideoByUserIdArgs, newQueryVideoByUserIdResult, false),
+		"QueryVideoByTime":   kitex.NewMethodInfo(queryVideoByTimeHandler, newQueryVideoByTimeArgs, newQueryVideoByTimeResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "video",
@@ -349,6 +350,109 @@ func (p *QueryVideoByUserIdResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
+func queryVideoByTimeHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(videorpc.QueryVideoByTimeRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(videorpc.VideoService).QueryVideoByTime(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *QueryVideoByTimeArgs:
+		success, err := handler.(videorpc.VideoService).QueryVideoByTime(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*QueryVideoByTimeResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newQueryVideoByTimeArgs() interface{} {
+	return &QueryVideoByTimeArgs{}
+}
+
+func newQueryVideoByTimeResult() interface{} {
+	return &QueryVideoByTimeResult{}
+}
+
+type QueryVideoByTimeArgs struct {
+	Req *videorpc.QueryVideoByTimeRequest
+}
+
+func (p *QueryVideoByTimeArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in QueryVideoByTimeArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *QueryVideoByTimeArgs) Unmarshal(in []byte) error {
+	msg := new(videorpc.QueryVideoByTimeRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var QueryVideoByTimeArgs_Req_DEFAULT *videorpc.QueryVideoByTimeRequest
+
+func (p *QueryVideoByTimeArgs) GetReq() *videorpc.QueryVideoByTimeRequest {
+	if !p.IsSetReq() {
+		return QueryVideoByTimeArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *QueryVideoByTimeArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type QueryVideoByTimeResult struct {
+	Success *videorpc.QueryVideoByTimeResponse
+}
+
+var QueryVideoByTimeResult_Success_DEFAULT *videorpc.QueryVideoByTimeResponse
+
+func (p *QueryVideoByTimeResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in QueryVideoByTimeResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *QueryVideoByTimeResult) Unmarshal(in []byte) error {
+	msg := new(videorpc.QueryVideoByTimeResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *QueryVideoByTimeResult) GetSuccess() *videorpc.QueryVideoByTimeResponse {
+	if !p.IsSetSuccess() {
+		return QueryVideoByTimeResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *QueryVideoByTimeResult) SetSuccess(x interface{}) {
+	p.Success = x.(*videorpc.QueryVideoByTimeResponse)
+}
+
+func (p *QueryVideoByTimeResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -384,6 +488,16 @@ func (p *kClient) QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVid
 	_args.Req = Req
 	var _result QueryVideoByUserIdResult
 	if err = p.c.Call(ctx, "QueryVideoByUserId", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) QueryVideoByTime(ctx context.Context, Req *videorpc.QueryVideoByTimeRequest) (r *videorpc.QueryVideoByTimeResponse, err error) {
+	var _args QueryVideoByTimeArgs
+	_args.Req = Req
+	var _result QueryVideoByTimeResult
+	if err = p.c.Call(ctx, "QueryVideoByTime", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

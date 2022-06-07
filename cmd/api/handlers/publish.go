@@ -70,7 +70,7 @@ func PublishAction(c *gin.Context) {
 	playUrl := constants.FileServer + videoPath
 	coverUrl := constants.FileServer + snapshotPath
 
-	err = rpc.CreateVideo(ctx, &videorpc.CreateVideoRequest{
+	err = rpc.CreateVideo(context.Background(), &videorpc.CreateVideoRequest{
 		UserId:   userId,
 		PlayUrl:  playUrl,
 		CoverUrl: coverUrl,
