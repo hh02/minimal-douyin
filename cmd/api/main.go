@@ -83,14 +83,8 @@ func main() {
 	})
 	apiRouter.GET("/feed/", handlers.Feed)
 	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
-
-	apiRouter.Use(authMiddleware.MiddlewareFunc())
-	{
-		apiRouter.GET("/user/", handlers.UserInfo)
-	}
-
-	apiRouter.POST("/publish/action/", handlers.PublishAction)
-	apiRouter.GET("/publish/list/", handlers.PublishList)
+	//apiRouter.POST("/publish/action/", controller.Publish)
+	//apiRouter.GET("/publish/list/", controller.PublishList)
 
 	// extra apis - I
 	//apiRouter.POST("/favorite/action/", controller.FavoriteAction)
@@ -99,9 +93,15 @@ func main() {
 	apiRouter.GET("/comment/list/", handlers.CommentList)
 
 	// extra apis - II
-	apiRouter.POST("/relation/action/", handlers.RelationAction)
+
 	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
 	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
+
+	apiRouter.Use(authMiddleware.MiddlewareFunc())
+	{
+		apiRouter.GET("/user/", handlers.UserInfo)
+		apiRouter.POST("/relation/action/", handlers.RelationAction)
+	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {
 		klog.Fatal(err)

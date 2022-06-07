@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/hh02/minimal-douyin/cmd/like/rpc"
 	"github.com/hh02/minimal-douyin/cmd/like/dal"
+	"github.com/hh02/minimal-douyin/cmd/like/rpc"
 	likerpc "github.com/hh02/minimal-douyin/kitex_gen/likerpc/likeservice"
 	"log"
 )

@@ -22,9 +22,9 @@ type UserListResponse struct {
 
 func RelationAction(c *gin.Context) {
 	type RelationParam struct {
-		Token      string `form:"token"`
-		ToUserId   int64  `form:"to_user_id"`
-		ActionType uint8  `form:"action_type"`
+		Token      string `json:"token"`
+		ToUserId   int64  `json:"to_user_id"`
+		ActionType uint8  `json:"action_type"`
 	}
 
 	var relationVar RelationParam
@@ -32,9 +32,6 @@ func RelationAction(c *gin.Context) {
 		SendStatusResponse(c, err)
 		return
 	}
-
-	fmt.Println(relationVar.Token, relationVar.ToUserId, relationVar.ActionType)
-
 	if relationVar.ToUserId <= 0 || (relationVar.ActionType != 1 && relationVar.ActionType != 2) {
 		SendStatusResponse(c, errno.ParamErr)
 		return
@@ -42,7 +39,6 @@ func RelationAction(c *gin.Context) {
 
 	clams := jwt.ExtractClaims(c)
 	userId := int64(clams[constants.IdentityKey].(float64))
-
 	// 1 for follow, 2 for unfollow
 	if relationVar.ActionType == 1 {
 		err := rpc.CreateFollow(context.Background(), &followrpc.CreateFollowRequest{
@@ -78,6 +74,7 @@ func FollowList(c *gin.Context) {
 		return
 	}
 
+	fmt.Println(followListVar.UserId)
 	users, err := rpc.QueryFollow(context.Background(), &followrpc.QueryFollowRequest{
 		UserId: followListVar.UserId,
 	})

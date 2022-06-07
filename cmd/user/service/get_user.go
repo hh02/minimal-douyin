@@ -44,7 +44,6 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, er
 		return User, nil
 	}
 
-
 	// 否则，通过 follow 服务查询
 	isFollow, err := rpc.IsFollow(s.ctx, &followrpc.CheckFollowRequest{
 		UserId:   req.TokenUserId,

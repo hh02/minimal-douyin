@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
@@ -14,9 +13,7 @@ import (
 
 // UserInfo query user info
 func UserInfo(c *gin.Context) {
-
 	claims := jwt.ExtractClaims(c)
-
 	tokenID := int64(claims[constants.IdentityKey].(float64))
 	var queryVar struct {
 		UserId int64 `json:"user_id" form:"user_id"`

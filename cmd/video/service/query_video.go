@@ -60,7 +60,7 @@ func (s *QueryVideoService) QueryVideoByTime(req *videorpc.QueryVideoByTimeReque
 	videos = pack.Videos(videoModels)
 
 	for i := 0; i < len(videos); i++ {
-		if user, ok := userMap[videos[i].Author.UserId]; ok {
+		if user, ok := userMap[videos[i].Author.Id]; ok {
 			videos[i].Author = user
 		}
 	}
