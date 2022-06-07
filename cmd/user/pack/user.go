@@ -11,8 +11,8 @@ func User(u *db.User) *userrpc.User {
 		return nil
 	}
 	return &userrpc.User{
-		UserId:        int64(u.ID),
-		Username:      u.Username,
+		Id:            int64(u.ID),
+		Name:          u.Username,
 		FollowCount:   u.FollowCount,
 		FollowerCount: u.FollowerCount,
 	}
