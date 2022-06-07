@@ -27,7 +27,7 @@ type CommentListResponse struct {
 func CommentAction(c *gin.Context) {
 	type CommentParam struct {
 		Token       string `json:"token"`
-		VideoId     int64  `json:"to_user_id"`
+		VideoId     int64  `json:"video_id"`
 		ActionType  uint8  `json:"action_type"`
 		CommentText string `json:"comment_text"`
 		CommentId   int64  `json:"comment_id"`
