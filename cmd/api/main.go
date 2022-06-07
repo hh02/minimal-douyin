@@ -48,8 +48,8 @@ func main() {
 
 			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
 		},
-		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
-		TokenHeadName: "Bearer",
+		TokenLookup:   "query: token, cookie: jwt",
+		TokenHeadName: "",
 		TimeFunc:      time.Now,
 	})
 
