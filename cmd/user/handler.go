@@ -2,95 +2,128 @@ package main
 
 import (
 	"context"
-	"github.com/hh02/minimal-douyin/cmd/user/pack"
 	"github.com/hh02/minimal-douyin/cmd/user/service"
-	"github.com/hh02/minimal-douyin/kitex_gen/douyin/core"
+	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
 // UserServiceImpl implements the last service interface defined in the IDL.
-type UserServiceImpl struct {
-	ctx context.Context
-}
+type UserServiceImpl struct{}
 
-// UserRegister implements the UserServiceImpl interface.
-func (s *UserServiceImpl) UserRegister(ctx context.Context, req *core.UserRegisterRequest) (resp *core.UserRegisterResponse, err error) {
+// CreateUser implements the UserServiceImpl interface.
+func (s *UserServiceImpl) CreateUser(ctx context.Context, req *userrpc.CreateUserRequest) (resp *userrpc.CreateUserResponse, err error) {
 	// TODO: Your code here...
-	resp = new(core.UserRegisterResponse)
+	resp = new(userrpc.CreateUserResponse)
 
-	// 当用户名密码长度都为 0 时，返回参数错误的状态
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		//resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
-		resp.StatusCode = errno.ParamErr.ErrCode
-		resp.StatusMsg = errno.ParamErr.ErrMsg
-
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
-	// 用户注册
-	UserId, token, err := service.NewUserRegiaterService(ctx).UserRegister(req)
-	// 如果注册发生错误
+	err, Id := service.NewCreateUserService(ctx).CreateUser(req)
 	if err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
-	// 注册成功
-	resp.StatusCode, resp.StatusMsg = pack.BuildBaseResp(errno.Success)
-	resp.UserId = int64(UserId)
-	resp.Token = token
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.UserId = Id
 	return resp, nil
 }
 
-// UserLogin implements the UserServiceImpl interface.
-func (s *UserServiceImpl) UserLogin(ctx context.Context, req *core.UserLoginRequest) (resp *core.UserLoginResponse, err error) {
+// GetUser implements the UserServiceImpl interface.
+func (s *UserServiceImpl) GetUser(ctx context.Context, req *userrpc.GetUserRequest) (resp *userrpc.GetUserResponse, err error) {
 	// TODO: Your code here...
-	resp = new(core.UserLoginResponse)
+	resp = new(userrpc.GetUserResponse)
 
-	// 当用户名密码长度都为 0 时，返回参数错误的状态
-	if len(req.Username) == 0 || len(req.Password) == 0 {
-		//resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
-		resp.StatusCode = errno.ParamErr.ErrCode
-		resp.StatusMsg = errno.ParamErr.ErrMsg
-
+	if req.UserId == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
-	// 用户登录
-	UserId, token, err := service.NewUserLoginService(ctx).UserLogin(req)
-	// 如果登录发生错误
+	user, err := service.NewGetUserService(ctx).GetUser(req)
 	if err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
-	// 登录成功
-	resp.StatusCode, resp.StatusMsg = pack.BuildBaseResp(errno.Success)
-	resp.UserId = int64(UserId)
-	resp.Token = token
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.User = user
 	return resp, nil
 }
 
-// User implements the UserServiceImpl interface.
-func (s *UserServiceImpl) User(ctx context.Context, req *core.UserRequest) (resp *core.UserResponse, err error) {
-	// TODO: Your code here...
-	resp = new(core.UserResponse)
+// MGetUser implements the UserServiceImpl interface.
+func (s *UserServiceImpl) MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) (resp *userrpc.MGetUserResponse, err error) {
+	// TODO: Your code here...\
 
-	// 当用户名密码长度都为 0 时，返回参数错误的状态
-	if req.UserId == 0 || len(req.Token) == 0 {
-		//resp.BaseResp = pack.BuildBaseResp(errno.ParamErr)
-		resp.StatusCode = errno.ParamErr.ErrCode
-		resp.StatusMsg = errno.ParamErr.ErrMsg
+	resp = new(userrpc.MGetUserResponse)
 
+	if len(req.UserIds) == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
-	// 用户登录
-	user, err := service.NewUserService(ctx).User(req)
-	// 如果登录发生错误
+	users, err := service.NewMGetUserService(ctx).MGetUser(req)
 	if err != nil {
-		resp.StatusCode, resp.StatusMsg = pack.BuildBaseResp(err)
+		resp.Status = errno.BuildStatus(err)
 		return resp, nil
 	}
-	// 登录成功
-	resp.User = pack.User(user)
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.Users = users
+	return resp, nil
+}
+
+// CheckUser implements the UserServiceImpl interface.
+func (s *UserServiceImpl) CheckUser(ctx context.Context, req *userrpc.CheckUserRequest) (resp *userrpc.CheckUserResponse, err error) {
+	// TODO: Your code here...
+	resp = new(userrpc.CheckUserResponse)
+
+	if len(req.Username) == 0 || len(req.Password) == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	uid, err := service.NewCheckUserService(ctx).CheckUser(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.UserId = uid
+	resp.Status = errno.BuildStatus(errno.Success)
+	return resp, nil
+}
+
+// AddFollowCount implements the UserServiceImpl interface.
+func (s *UserServiceImpl) AddFollowCount(ctx context.Context, req *userrpc.AddFollowCountRequest) (resp *userrpc.AddFollowCountResponse, err error) {
+	// TODO: Your code here...
+	resp = new(userrpc.AddFollowCountResponse)
+
+	if req.UserId == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+	err = service.NewAddFollowCountService(ctx).AddFollowCount(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	return resp, nil
+}
+
+// AddFollowerCount implements the UserServiceImpl interface.
+func (s *UserServiceImpl) AddFollowerCount(ctx context.Context, req *userrpc.AddFollowerCountRequest) (resp *userrpc.AddFollowerCountResponse, err error) {
+	// TODO: Your code here...
+	resp = new(userrpc.AddFollowerCountResponse)
+
+	if req.UserId == 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	err = service.NewAddFollowerCountService(ctx).AddFollowerCount(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
 	return resp, nil
 }

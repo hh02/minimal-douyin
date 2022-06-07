@@ -1,0 +1,39 @@
+syntax = "proto3";
+package like;
+option go_package = "likerpc";
+
+import "video.proto";
+import "common.proto";
+
+message CreateLikeRequest {
+    int64 user_id = 1;
+    int64 video_id = 2;
+}
+
+message CreateLikeResponse {
+    common.Status status = 1;
+}
+
+message DeleteLikeRequest {
+    int64 user_id = 1;
+    int64 video_id = 2;
+}
+
+message DeleteLikeResponse {
+    common.Status status = 1;
+}
+
+message QueryLikeByUserIdRequest {
+    int64 user_id = 1;
+}
+
+message QueryLikeByUserIdResponse {
+    common.Status status = 1;
+    repeated video.Video videos = 2;
+}
+
+service UserService {
+    rpc CreateLike(CreateLikeRequest) returns (CreateLikeResponse) {}
+    rpc GetUser(DeleteLikeRequest) returns (DeleteLikeResponse) {}
+    rpc MGetUser(QueryLikeByUserIdRequest) returns (QueryLikeByUserIdResponse) {}
+}

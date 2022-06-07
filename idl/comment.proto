@@ -1,0 +1,50 @@
+syntax = "proto3";
+package comment;
+option go_package = "commentrpc";
+
+import "user.proto";
+import "common.proto";
+
+
+message Comment {
+    int64 comment_id = 1;
+    user.User user = 2;
+    string content = 3;
+    string create_date = 4;
+}
+
+message CreateCommentRequest {
+    int64 user_id = 1;
+    int64 video_id = 2;
+    string comment_text = 3;
+}
+
+message CreateCommentResponse {
+    common.Status status = 1;
+    Comment comment = 2;
+}
+
+message DeleteCommentRequest {
+    int64 comment_id = 1;
+    int64 user_id = 2;
+}
+
+message DeleteCommentResponse {
+    common.Status status = 1;
+}
+
+message QueryCommentByVideoIdRequest {
+    int64 video_id = 1;
+    int64 token_user_id = 2;
+}
+
+message QueryCommentByVideoIdResponse {
+    common.Status status = 1;
+    repeated Comment comment_list = 2;
+}
+
+service CommentService {
+    rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse) {}
+    rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {}
+    rpc QueryCommentByVideo(QueryCommentByVideoIdRequest) returns (QueryCommentByVideoIdResponse) {}
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+package common;
+option go_package = "common";
+
+message Status {
+    int32 status_code = 1;
+    string status_message = 2; 
+}

@@ -1,0 +1,72 @@
+syntax = "proto3";
+package follow;
+option go_package = "followrpc";
+
+import "user.proto";
+import "common.proto";
+
+message CreateFollowRequest {
+    int64 user_id = 1; // 用户id
+    int64 follow_id = 2; // 关注用户的id
+}
+
+message CreateFollowResponse {
+    common.Status status = 1;
+}
+
+message DeleteFollowRequest {
+    int64 user_id = 1;
+    int64 follow_id = 2;
+}
+
+message DeleteFollowResponse {
+    common.Status status = 1;
+}
+
+message QueryFollowRequest {
+    int64 user_id = 1;
+}
+
+message QueryFollowResponse {
+    common.Status status = 1;
+    repeated user.User users = 2;
+}
+
+message QueryFollowerRequest {
+    int64 user_id = 1;
+}
+
+message QueryFollowerResponse {
+    common.Status status = 1;
+    repeated user.User users = 2;
+}
+
+message CheckFollowRequest {
+    int64 user_id = 1;
+    int64 follow_id = 2;
+}
+
+message CheckFollowResponse {
+    common.Status status = 1;
+    bool is_follow = 2;
+}
+
+message MCheckFollowRequest {
+    int64 user_id = 1;
+    repeated int64 follow_ids = 2;
+}
+
+message MCheckFollowResponse {
+    common.Status status = 1;
+    repeated bool is_follows = 2;
+}
+
+service FollowService {
+    rpc CreateFollow(CreateFollowRequest) returns (CreateFollowResponse) {}
+    rpc DeleteFollow(DeleteFollowRequest) returns (DeleteFollowResponse) {}
+    rpc QueryFollow(QueryFollowRequest) returns (QueryFollowResponse) {}
+    rpc QueryFollower(QueryFollowerRequest) returns (QueryFollowerResponse) {}
+    rpc CheckFollow(CheckFollowRequest) returns (CheckFollowResponse) {}
+    rpc MCheckFollow(MCheckFollowRequest) returns (MCheckFollowResponse) {}
+}
+
