@@ -23,14 +23,13 @@ func NewCreateUserService(ctx context.Context) *CreateUserService {
 // CreateUser 用户服务,返回用户信息，错误
 func (s *CreateUserService) CreateUser(req *userrpc.CreateUserRequest) (error, int64) {
 	// 查询用户是否存在
-	user, err := db.QueryUserByName(s.ctx, req.Username)
+	_, err := db.QueryUserByName(s.ctx, req.Username)
 
 	// 用户存在则返回 用户存在（UserAlreadyExistErr）的错误
-	if err != gorm.ErrRecordNotFound {
+	if err == nil {
 		return errno.UserAlreadyExistErr, 0
 	}
-
-	if err != nil {
+	if err != gorm.ErrRecordNotFound {
 		return err, 0
 	}
 
@@ -39,8 +38,9 @@ func (s *CreateUserService) CreateUser(req *userrpc.CreateUserRequest) (error, i
 		return err, 0
 	}
 	passWord := fmt.Sprintf("%x", h.Sum(nil))
+
 	return db.CreateUser(s.ctx, &db.User{
-		Username: user.Username,
+		Username: req.Username,
 		Password: passWord,
 	})
 }
