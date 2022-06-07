@@ -47,9 +47,22 @@ message QueryVideoByUserIdResponse {
     repeated Video videos = 2;
 }
 
+message QueryVideoByTimeRequest {
+    int64 latest_time = 1;
+    int64 token_user_id = 2;
+}
+
+message QueryVideoByTimeResponse {
+    common.Status status = 1;
+    int64 next_time = 2;
+    repeated Video videos = 3;
+
+}
+
 
 service VideoService {
     rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
     rpc MGetVideo( MGetVideoRequest) returns (MGetVideoResponse) {}
     rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
+    rpc QueryVideoByTime(QueryVideoByTimeRequest) returns (QueryVideoByTimeResponse) {}
 }

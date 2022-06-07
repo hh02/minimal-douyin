@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -76,7 +75,6 @@ func FollowList(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(followListVar.UserId)
 	users, err := rpc.QueryFollow(context.Background(), &followrpc.QueryFollowRequest{
 		UserId: followListVar.UserId,
 	})

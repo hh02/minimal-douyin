@@ -60,6 +60,17 @@ func (s *VideoServiceImpl) QueryVideoByUserId(ctx context.Context, req *videorpc
 	resp.Status = errno.BuildStatus(errno.Success)
 	resp.Videos = videos
 	return resp, nil
+}
 
-	return
+func (s *VideoServiceImpl) QueryVideoByTime(ctx context.Context, req *videorpc.QueryVideoByTimeRequest) (resp *videorpc.QueryVideoByTimeResponse, err error) {
+	resp = new(videorpc.QueryVideoByTimeResponse)
+	nextTime, videos, err := service.NewQueryVideoService(ctx).QueryVideoByTime(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	resp.NextTime = nextTime
+	resp.Videos = videos
+	return resp, nil
 }
