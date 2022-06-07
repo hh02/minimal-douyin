@@ -41,22 +41,7 @@ func initUserRpc() {
 	userClient = c
 }
 
-func MGetUserMap(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*userrpc.User, error) {
-	resp, err := userClient.MGetUser(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.Status.StatusCode != errno.SuccessCode {
-		return nil, errno.Status2ErrorNo(resp.Status)
-	}
-	res := make(map[int64]*userrpc.User)
-	for _, user := range resp.Users {
-		res[user.UserId] = user
-	}
-	return res, nil
-}
-
+// GetUser 远程调用 userservice 获取 User
 func GetUser(ctx context.Context, req *userrpc.GetUserRequest) (*userrpc.User, error) {
 	resp, err := userClient.GetUser(ctx, req)
 	if err != nil {
@@ -66,6 +51,19 @@ func GetUser(ctx context.Context, req *userrpc.GetUserRequest) (*userrpc.User, e
 	if resp.Status.StatusCode != errno.SuccessCode {
 		return nil, errno.Status2ErrorNo(resp.Status)
 	}
-	return resp.User, nil
 
+	return resp.User, nil
+}
+
+func MGetUser(ctx context.Context, req *userrpc.MGetUserRequest) ([]*userrpc.User, error) {
+	resp, err := userClient.MGetUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Status.StatusCode != errno.SuccessCode {
+		return nil, errno.Status2ErrorNo(resp.Status)
+	}
+
+	return resp.Users, nil
 }
