@@ -32,7 +32,7 @@ message QueryLikeByUserIdResponse {
     repeated video.Video videos = 2;
 }
 
-service UserService {
+service LikeService {
     rpc CreateLike(CreateLikeRequest) returns (CreateLikeResponse) {}
     rpc GetUser(DeleteLikeRequest) returns (DeleteLikeResponse) {}
     rpc MGetUser(QueryLikeByUserIdRequest) returns (QueryLikeByUserIdResponse) {}
