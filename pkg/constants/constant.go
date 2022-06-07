@@ -21,4 +21,8 @@ const (
 	FollowTableName            = "follows"
 	CommentTableName           = "comments"
 	SecretKey                  = "secret key"
+	StaticFolder               = "public/"
+	VideoFolder                = "public/video/"
+	SnapshotFolder             = "public/snapshot/"
+	FileServer                 = "120.46.179.205/"
 )
