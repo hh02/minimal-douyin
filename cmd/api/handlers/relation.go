@@ -30,10 +30,12 @@ func RelationAction(c *gin.Context) {
 	var relationVar RelationParam
 	if err := c.ShouldBind(&relationVar); err != nil {
 		SendStatusResponse(c, err)
+		return
 	}
 
 	if relationVar.ToUserId <= 0 || (relationVar.ActionType != 1 && relationVar.ActionType != 2) {
 		SendStatusResponse(c, errno.ParamErr)
+		return
 	}
 
 	clams := jwt.ExtractClaims(c)
@@ -49,7 +51,6 @@ func RelationAction(c *gin.Context) {
 			SendStatusResponse(c, errno.ConvertErr(err))
 			return
 		}
-		SendStatusResponse(c, errno.Success)
 	} else if relationVar.ActionType == 2 {
 		err := rpc.DeleteFollow(c, &followrpc.DeleteFollowRequest{
 			UserId:   userId,
@@ -72,6 +73,7 @@ func FollowList(c *gin.Context) {
 	var followListVar FollowListParam
 	if err := c.ShouldBindQuery(&followListVar); err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err))
+		return
 	}
 
 	fmt.Println(followListVar.UserId)
@@ -100,6 +102,7 @@ func FollowerList(c *gin.Context) {
 	var followerListVar FollowerListParam
 	if err := c.BindQuery(&followerListVar); err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err))
+		return
 	}
 
 	users, err := rpc.QueryFollower(context.Background(), &followrpc.QueryFollowerRequest{
