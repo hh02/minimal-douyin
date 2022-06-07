@@ -4,6 +4,7 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	gormopentracing "gorm.io/plugin/opentracing"
 )
 
 var DB *gorm.DB
@@ -21,9 +22,9 @@ func Init() {
 	}
 
 	//先不用链路追踪
-	//if err = DB.Use(gormopentracing.New()); err != nil {
-	//	panic(err)
-	//}
+	if err = DB.Use(gormopentracing.New()); err != nil {
+		panic(err)
+	}
 
 	m := DB.Migrator()
 	if m.HasTable(&User{}) {
