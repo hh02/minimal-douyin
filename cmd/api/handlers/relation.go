@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -21,24 +20,25 @@ type UserListResponse struct {
 }
 
 func RelationAction(c *gin.Context) {
-	type RelationParam struct {
-		Token      string `json:"token"`
-		ToUserId   int64  `json:"to_user_id"`
-		ActionType uint8  `json:"action_type"`
+	type relationParam struct {
+		Token      string `form:"token"`
+		ToUserId   int64  `form:"to_user_id"`
+		ActionType uint8  `form:"action_type"`
 	}
 
-	var relationVar RelationParam
+	var relationVar relationParam
 	if err := c.ShouldBind(&relationVar); err != nil {
 		SendStatusResponse(c, err)
 		return
 	}
+
 	if relationVar.ToUserId <= 0 || (relationVar.ActionType != 1 && relationVar.ActionType != 2) {
 		SendStatusResponse(c, errno.ParamErr)
 		return
 	}
 
-	clams := jwt.ExtractClaims(c)
-	userId := int64(clams[constants.IdentityKey].(float64))
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
 	// 1 for follow, 2 for unfollow
 	if relationVar.ActionType == 1 {
 		err := rpc.CreateFollow(context.Background(), &followrpc.CreateFollowRequest{
@@ -63,20 +63,12 @@ func RelationAction(c *gin.Context) {
 }
 
 func FollowList(c *gin.Context) {
-	type FollowListParam struct {
-		UserId int64  `form:"user_id"`
-		Token  string `form:"token"`
-	}
 
-	var followListVar FollowListParam
-	if err := c.ShouldBindQuery(&followListVar); err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
-		return
-	}
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
 
-	fmt.Println(followListVar.UserId)
 	users, err := rpc.QueryFollow(context.Background(), &followrpc.QueryFollowRequest{
-		UserId: followListVar.UserId,
+		UserId: userId,
 	})
 
 	if err != nil {
@@ -92,19 +84,11 @@ func FollowList(c *gin.Context) {
 }
 
 func FollowerList(c *gin.Context) {
-	type FollowerListParam struct {
-		UserId int64  `form:"user_id"`
-		Token  string `form:"token"`
-	}
-
-	var followerListVar FollowerListParam
-	if err := c.BindQuery(&followerListVar); err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
-		return
-	}
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
 
 	users, err := rpc.QueryFollower(context.Background(), &followrpc.QueryFollowerRequest{
-		UserId: followerListVar.UserId,
+		UserId: userId,
 	})
 
 	if err != nil {

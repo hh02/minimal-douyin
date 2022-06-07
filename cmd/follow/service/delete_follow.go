@@ -32,6 +32,10 @@ func (s *DeleteFollowService) DeleteFollow(req *followrpc.DeleteFollowRequest) e
 		if err != nil {
 			return err
 		}
+		err = rpc.AddFollowerCount(s.ctx, &userrpc.AddFollowerCountRequest{UserId: req.FollowId, Count: -1})
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

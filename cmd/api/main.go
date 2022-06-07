@@ -94,13 +94,12 @@ func main() {
 
 	// extra apis - II
 
-	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
-	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
-
 	apiRouter.Use(authMiddleware.MiddlewareFunc())
 	{
 		apiRouter.GET("/user/", handlers.UserInfo)
 		apiRouter.POST("/relation/action/", handlers.RelationAction)
+		apiRouter.GET("/relation/follow/list/", handlers.FollowList)
+		apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
 	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {
