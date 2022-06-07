@@ -19,6 +19,7 @@ const (
 	VideoTableName             = "videos"
 	UserTableName              = "users"
 	FollowTableName            = "follows"
+	LikeTableName              = "likes"
 	CommentTableName           = "comments"
 	SecretKey                  = "secret key"
 	StaticFolder               = "public/"

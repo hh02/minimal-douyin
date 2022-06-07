@@ -58,8 +58,6 @@ func main() {
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
-	apiRouter.GET("/feed/", handlers.Feed)
-	apiRouter.GET("/user/", handlers.UserInfo)
 	apiRouter.POST("/user/register/", func(c *gin.Context) {
 		var userVar handlers.UserParam
 		if err := c.BindQuery(&userVar); err != nil {
@@ -83,7 +81,14 @@ func main() {
 		c.Request.URL.Path = "/douyin/user/login"
 		r.HandleContext(c)
 	})
+	apiRouter.GET("/feed/", handlers.Feed)
 	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
+
+	apiRouter.Use(authMiddleware.MiddlewareFunc())
+	{
+		apiRouter.GET("/user/", handlers.UserInfo)
+	}
+
 	apiRouter.POST("/publish/action/", handlers.PublishAction)
 	apiRouter.GET("/publish/list/", handlers.PublishList)
 

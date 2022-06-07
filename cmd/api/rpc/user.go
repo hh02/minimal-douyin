@@ -2,6 +2,8 @@ package rpc
 
 import (
 	"context"
+	"time"
+
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
@@ -10,7 +12,6 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	trace "github.com/kitex-contrib/tracer-opentracing"
-	"time"
 )
 
 var userClient userservice.Client
