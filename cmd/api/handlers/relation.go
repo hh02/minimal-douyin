@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -21,9 +22,9 @@ type UserListResponse struct {
 
 func RelationAction(c *gin.Context) {
 	type RelationParam struct {
-		Token      string `json:"token"`
-		ToUserId   int64  `json:"to_user_id"`
-		ActionType uint8  `json:"action_type"`
+		Token      string `form:"token"`
+		ToUserId   int64  `form:"to_user_id"`
+		ActionType uint8  `form:"action_type"`
 	}
 
 	var relationVar RelationParam
@@ -31,6 +32,8 @@ func RelationAction(c *gin.Context) {
 		SendStatusResponse(c, err)
 		return
 	}
+
+	fmt.Println(relationVar.Token, relationVar.ToUserId, relationVar.ActionType)
 
 	if relationVar.ToUserId <= 0 || (relationVar.ActionType != 1 && relationVar.ActionType != 2) {
 		SendStatusResponse(c, errno.ParamErr)
@@ -93,8 +96,8 @@ func FollowList(c *gin.Context) {
 
 func FollowerList(c *gin.Context) {
 	type FollowerListParam struct {
-		UserId int64  `json:"user_id"`
-		Token  string `json:"token"`
+		UserId int64  `form:"user_id"`
+		Token  string `form:"token"`
 	}
 
 	var followerListVar FollowerListParam
