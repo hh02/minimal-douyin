@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"net"
+
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
@@ -11,12 +14,10 @@ import (
 	tracer2 "github.com/hh02/minimal-douyin/pkg/tracer"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	trace "github.com/kitex-contrib/tracer-opentracing"
-	"log"
-	"net"
 )
 
 func Init() {
-	tracer2.InitJaeger(constants.FollowServiceName)
+	tracer2.InitJaeger(constants.UserServiceName)
 	dal.Init()
 	rpc.InitRPC()
 }
@@ -26,7 +27,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:8889")
+	addr, err := net.ResolveTCPAddr("tcp", "0.0.0.0:8889")
 	if err != nil {
 		panic(err)
 	}

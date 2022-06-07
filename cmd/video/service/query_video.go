@@ -8,6 +8,7 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/video/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
+	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
 type QueryVideoService struct {
@@ -33,4 +34,38 @@ func (s *QueryVideoService) QueryVideoByUserId(req *videorpc.QueryVideoByUserIdR
 		videos[i].Author = user
 	}
 	return videos, nil
+}
+
+func (s *QueryVideoService) QueryVideoByTime(req *videorpc.QueryVideoByTimeRequest) (nextTime int64, videos []*videorpc.Video, err error) {
+	videoModels, err := db.QueryVideoByTime(s.ctx, req.LatestTime)
+	if err != nil {
+		return 0, nil, err
+	}
+	if len(videoModels) == 0 {
+		return 0, nil, errno.ServiceErr.WithMessage("no more videos")
+	}
+
+	returnIsFollow := (req.TokenUserId > 0)
+
+	// 提取出不重复的 userIds
+	userIds := pack.UserIds(videoModels)
+	userMap, err := rpc.MGetUserMap(s.ctx, &userrpc.MGetUserRequest{
+		UserIds:        userIds,
+		TokenUserId:    req.TokenUserId,
+		ReturnIsFollow: returnIsFollow,
+	})
+	if err != nil {
+		return 0, nil, err
+	}
+	videos = pack.Videos(videoModels)
+
+	for i := 0; i < len(videos); i++ {
+		if user, ok := userMap[videos[i].Author.Id]; ok {
+			videos[i].Author = user
+		}
+	}
+
+	nextTime = videoModels[len(videoModels)-1].CreateTime
+	err = nil
+	return
 }

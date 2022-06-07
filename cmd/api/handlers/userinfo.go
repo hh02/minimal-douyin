@@ -23,7 +23,7 @@ func UserInfo(c *gin.Context) {
 		return
 	}
 
-	if queryVar.UserId == 0 {
+	if queryVar.UserId <= 0 {
 		SendUserInfoResponse(c, errno.ParamErr, nil)
 		return
 	}

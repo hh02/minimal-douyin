@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -46,9 +45,8 @@ func main() {
 			if len(loginVar.Username) == 0 || len(loginVar.Password) == 0 {
 				return "", jwt.ErrMissingLoginValues
 			}
-			id, err := rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
-			fmt.Println(id)
-			return id, err
+
+			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
 		},
 		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
 		TokenHeadName: "Bearer",
@@ -60,8 +58,6 @@ func main() {
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
-	//apiRouter.GET("/feed/", handlers.Feed)
-
 	apiRouter.POST("/user/register/", func(c *gin.Context) {
 		var userVar handlers.UserParam
 		if err := c.BindQuery(&userVar); err != nil {
@@ -85,8 +81,8 @@ func main() {
 		c.Request.URL.Path = "/douyin/user/login"
 		r.HandleContext(c)
 	})
+	apiRouter.GET("/feed/", handlers.Feed)
 	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
-
 	//apiRouter.POST("/publish/action/", controller.Publish)
 	//apiRouter.GET("/publish/list/", controller.PublishList)
 

@@ -14,6 +14,7 @@ type Client interface {
 	CreateVideo(ctx context.Context, Req *videorpc.CreateVideoRequest, callOptions ...callopt.Option) (r *videorpc.CreateVideoResponse, err error)
 	MGetVideo(ctx context.Context, Req *videorpc.MGetVideoRequest, callOptions ...callopt.Option) (r *videorpc.MGetVideoResponse, err error)
 	QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error)
+	QueryVideoByTime(ctx context.Context, Req *videorpc.QueryVideoByTimeRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByTimeResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kVideoServiceClient) MGetVideo(ctx context.Context, Req *videorpc.MGetV
 func (p *kVideoServiceClient) QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.QueryVideoByUserId(ctx, Req)
+}
+
+func (p *kVideoServiceClient) QueryVideoByTime(ctx context.Context, Req *videorpc.QueryVideoByTimeRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByTimeResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.QueryVideoByTime(ctx, Req)
 }

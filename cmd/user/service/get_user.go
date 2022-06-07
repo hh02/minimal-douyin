@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"log"
+
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/user/pack"
 	"github.com/hh02/minimal-douyin/cmd/user/rpc"
@@ -24,10 +27,13 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, er
 	// 查询用户是否存在
 	user, err := db.QueryUserById(s.ctx, req.UserId)
 	if err != nil {
+		log.Fatal("db error")
 		return nil, err
 	}
+
 	// 用户不存在则返回 用户不存在（UserNotExistErr）的错误
 	if user == nil {
+		fmt.Println("user not exist")
 		return nil, errno.UserNotExistErr
 	}
 
@@ -35,13 +41,15 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, er
 	if !req.ReturnIsFollow {
 		User := pack.User(user)
 		User.IsFollow = true
-		return User, err
+		return User, nil
 	}
+
 	// 否则，通过 follow 服务查询
 	isFollow, err := rpc.IsFollow(s.ctx, &followrpc.CheckFollowRequest{
 		UserId:   req.TokenUserId,
 		FollowId: req.UserId,
 	})
+
 	if err != nil {
 		return nil, errno.FollowNotExistErr
 	}

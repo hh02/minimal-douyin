@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/appleboy/gin-jwt/v2 v2.8.0
 	github.com/cloudwego/kitex v0.3.1
+	github.com/disintegration/imaging v1.6.2
 	github.com/gin-gonic/gin v1.8.0
 	github.com/kitex-contrib/registry-etcd v0.0.0-20220110034026-b1c94979cea3
 	github.com/kitex-contrib/tracer-opentracing v0.0.3
@@ -17,8 +18,12 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go v1.38.20 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/u2takey/go-utils v0.3.1 // indirect
+	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd // indirect
 )
 
 require (
@@ -51,6 +56,7 @@ require (
 	github.com/tidwall/gjson v1.12.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/u2takey/ffmpeg-go v0.4.1
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.1 // indirect
@@ -63,7 +69,7 @@ require (
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220110181412-a018aaa089fe // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	google.golang.org/grpc v1.38.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
