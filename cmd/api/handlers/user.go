@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 
 	"net/http"
-	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
@@ -23,25 +21,7 @@ type AuthResponse struct {
 	Token      string `json:"token"`
 }
 
-func UserLoginResponse(c *gin.Context, code int, tokenString string, time time.Time) {
-	if code != http.StatusOK {
-		c.JSON(code, AuthResponse{
-			StatusCode: int32(code),
-			StatusMsg:  "登陆失败，用户名或密码错误",
-			UserId:     0,
-			Token:      "",
-		})
-	}
-	c.AddParam("token", tokenString)
-	c.Next()
-}
-
-func Unauthorized(c *gin.Context, code int, message string) {
-
-}
-
-func UserLogin(c *gin.Context) {
-	fmt.Println("UserLogin")
+func UserLoginResponse(c *gin.Context) {
 
 	claims := jwt.ExtractClaims(c)
 	tokenId := int64(claims[constants.IdentityKey].(float64))
@@ -89,7 +69,7 @@ func UserInfo(c *gin.Context) {
 
 func UserRegister(c *gin.Context) {
 	var userVar UserParam
-	if err := c.BindQuery(&userVar); err != nil {
+	if err := c.ShouldBind(&userVar); err != nil {
 		SendRegisterResponse(c, errno.ConvertErr(err))
 		return
 	}
@@ -102,8 +82,10 @@ func UserRegister(c *gin.Context) {
 		Username: userVar.Username,
 		Password: userVar.Password,
 	})
+
 	if err != nil {
 		SendRegisterResponse(c, errno.ConvertErr(err))
 		return
 	}
+	c.Next()
 }
