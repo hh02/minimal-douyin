@@ -62,7 +62,18 @@ func main() {
 			err := errno.ConvertErr(e)
 			return err.ErrMsg
 		},
-		LoginResponse: handlers.UserLoginResponse,
+		LoginResponse: func(c *gin.Context, code int, tokenString string, time time.Time) {
+			if code != http.StatusOK {
+				c.JSON(code, handlers.AuthResponse{
+					StatusCode: int32(code),
+					StatusMsg:  "登陆失败",
+					UserId:     0,
+					Token:      "",
+				})
+			}
+			c.AddParam("token", tokenString)
+			c.Next()
+		},
 		TokenLookup:   "query: token, param: token",
 		TokenHeadName: "",
 		TimeFunc:      time.Now,
@@ -71,13 +82,21 @@ func main() {
 	r.Static(constants.StaticServerPath, constants.StaticFolder)
 
 	douyin := r.Group("/douyin")
-	douyin.POST("/user/register/", handlers.UserRegister)
 
 	// 登录获取token，中间件解析token，UserLogin返回结果
 	douyin.POST("/user/login/", authMiddleware.LoginHandler,
 		authMiddleware.MiddlewareFunc(),
-		handlers.UserLogin,
+		handlers.UserLoginResponse,
 	)
+
+	// 注册后登录
+	douyin.POST("/user/register/", handlers.UserRegister,
+		authMiddleware.LoginHandler,
+		authMiddleware.MiddlewareFunc(),
+		handlers.UserLoginResponse,
+	)
+
+	// douyin.POST("/user/register/", handlers.UserRegister)
 
 	douyin.GET("/feed/", handlers.Feed)
 
