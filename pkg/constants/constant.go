@@ -29,12 +29,14 @@ const (
 	CPURateLimit    float64 = 80.0
 	DefaultLimit            = 10
 
-	SecretKey        = "secret key"
-	StaticServerPath = "/static"
-	StaticFolder     = "./static"
+	StaticRelativePath = "/static"
+	StaticServerPath   = "120.46.179.205" + StaticRelativePath
+	StaticLocalPath    = "./static"
+	VideoLocalPath     = StaticLocalPath + "/video"
+	CoverLocalPath     = StaticLocalPath + "/cover"
+	VideoServerPath    = StaticServerPath + "/video"
+	CoverServerPath    = StaticServerPath + "/cover"
 
-	VideoFolder     = "/root/public/video/"
-	CoverFolder     = "/root/public/cover/"
-	FileServer      = "120.46.179.205"
 	TotalFeedNumber = 20
+	SecretKey       = "secret key"
 )

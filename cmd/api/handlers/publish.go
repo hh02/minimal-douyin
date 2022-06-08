@@ -36,7 +36,7 @@ func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
 		return err
 	}
 
-	err = imaging.Save(img, snapshotPath+".png")
+	err = imaging.Save(img, snapshotPath)
 	if err != nil {
 		return err
 	}
@@ -61,22 +61,32 @@ func PublishAction(c *gin.Context) {
 		return
 	}
 
+	c.AddParam("token", formParamVar.Token)
+	// 调用鉴权
+	c.Next()
+
+	// 鉴权失败则返回
+	if c.IsAborted() {
+		return
+	}
+
 	claims := jwt.ExtractClaims(c)
 	userId := int64(claims[constants.IdentityKey].(float64))
 
 	videoName := uuid.NewV4().String()
-	videoPath := constants.VideoFolder + videoName + ".mp4"
-	coverPath := constants.CoverFolder + videoName + ".png"
 
-	c.SaveUploadedFile(formParamVar.Data, videoPath)
-	err := getSnapshot(videoPath, coverPath, 1)
+	videoLocalPath := constants.VideoLocalPath + "/" + videoName + ".mp4"
+	coverLocalPath := constants.CoverLocalPath + "/" + videoName + ".png"
+
+	c.SaveUploadedFile(formParamVar.Data, videoLocalPath)
+	err := getSnapshot(videoLocalPath, coverLocalPath, 1)
 	if err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err).WithMessage("获取封面失败"))
 		return
 	}
 
-	playUrl := constants.FileServer + videoPath
-	coverUrl := constants.FileServer + coverPath
+	playUrl := constants.VideoServerPath + "/" + videoName + ".mp4"
+	coverUrl := constants.CoverServerPath + "/" + videoName + ".png"
 
 	err = rpc.CreateVideo(context.Background(), &videorpc.CreateVideoRequest{
 		UserId:   userId,
@@ -94,6 +104,10 @@ func PublishAction(c *gin.Context) {
 }
 
 func PublishList(c *gin.Context) {
+	if c.IsAborted() {
+		return
+	}
+
 	type param struct {
 		Token  string `form:"token"`
 		UserId int64  `form:"user_id"`
@@ -110,7 +124,10 @@ func PublishList(c *gin.Context) {
 		return
 	}
 
-	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: paramVar.UserId})
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
+
+	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: userId})
 
 	if err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err))

@@ -16,6 +16,7 @@ const (
 	UserAlreadyExistErrCode = 10005
 	FollowNotExistErrCode   = 10006
 	PermissionErrCode       = 10007
+	AuthErrCode             = 10008 //鉴权失败
 )
 
 type ErrNo struct {
@@ -45,6 +46,7 @@ var (
 	UserAlreadyExistErr = NewErrNo(UserAlreadyExistErrCode, "User already exists")
 	FollowNotExistErr   = NewErrNo(FollowNotExistErrCode, "Follow does not exist")
 	PermissionErr       = NewErrNo(PermissionErrCode, "User does not have permission")
+	AuthErr             = NewErrNo(AuthErrCode, "Authentication failed")
 )
 
 // BuildStatus build baseResp from error
