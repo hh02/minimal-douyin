@@ -12,7 +12,6 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
-	"github.com/hh02/minimal-douyin/pkg/errno"
 	"github.com/hh02/minimal-douyin/pkg/tracer"
 )
 
@@ -48,58 +47,38 @@ func main() {
 
 			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
 		},
-		TokenLookup:   "query: token, cookie: jwt",
+		LoginResponse: handlers.UserLoginResponse,
+		TokenLookup:   "query: token, param: token",
 		TokenHeadName: "",
 		TimeFunc:      time.Now,
 	})
 
-	r.Static("/static", "./public")
+	r.Static(constants.StaticServerPath, constants.StaticFolder)
 
-	apiRouter := r.Group("/douyin")
+	douyin := r.Group("/douyin")
+	douyin.POST("/user/register/", handlers.UserRegister)
 
-	// basic apis
-	apiRouter.POST("/user/register/", func(c *gin.Context) {
-		var userVar handlers.UserParam
-		if err := c.BindQuery(&userVar); err != nil {
-			handlers.SendRegisterResponse(c, errno.ConvertErr(err))
-			return
-		}
-		if len(userVar.Username) == 0 || len(userVar.Password) == 0 {
-			handlers.SendRegisterResponse(c, errno.ParamErr)
-			return
-		}
+	// 登录获取token，中间件解析token，UserLogin返回结果
+	douyin.POST("/user/login/", authMiddleware.LoginHandler,
+		authMiddleware.MiddlewareFunc(),
+		handlers.UserLogin,
+	)
 
-		err := rpc.CreateUser(context.Background(), &userrpc.CreateUserRequest{
-			Username: userVar.Username,
-			Password: userVar.Password,
-		})
-		if err != nil {
-			handlers.SendRegisterResponse(c, errno.ConvertErr(err))
-			return
-		}
+	douyin.GET("/feed/", handlers.Feed)
 
-		c.Request.URL.Path = "/douyin/user/login"
-		r.HandleContext(c)
-	})
-	apiRouter.GET("/feed/", handlers.Feed)
-	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
-	//apiRouter.POST("/publish/action/", controller.Publish)
-	//apiRouter.GET("/publish/list/", controller.PublishList)
-
-	// extra apis - I
-	//apiRouter.POST("/favorite/action/", controller.FavoriteAction)
-	//apiRouter.GET("/favorite/list/", controller.FavoriteList)
-	apiRouter.POST("/comment/action/", handlers.CommentAction)
-	apiRouter.GET("/comment/list/", handlers.CommentList)
-
-	// extra apis - II
-
-	apiRouter.Use(authMiddleware.MiddlewareFunc())
+	douyin.Use(authMiddleware.MiddlewareFunc())
 	{
-		apiRouter.GET("/user/", handlers.UserInfo)
-		apiRouter.POST("/relation/action/", handlers.RelationAction)
-		apiRouter.GET("/relation/follow/list/", handlers.FollowList)
-		apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
+		douyin.GET("/user/", handlers.UserInfo)
+
+		douyin.POST("/relation/action/", handlers.RelationAction)
+		douyin.GET("/relation/follow/list/", handlers.FollowList)
+		douyin.GET("/relation/follower/list/", handlers.FollowerList)
+
+		douyin.POST("/publish/action/", handlers.PublishAction)
+		douyin.GET("/publish/list/", handlers.PublishList)
+
+		douyin.POST("/comment/action/", handlers.CommentAction)
+		douyin.GET("/comment/list/", handlers.CommentList)
 	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {
