@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"gorm.io/gorm"
@@ -33,6 +34,9 @@ func QueryUserByName(ctx context.Context, UserName string) (*User, error) {
 	res := &User{}
 	err := DB.WithContext(ctx).Where("username = ?", UserName).First(&res).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return res, nil

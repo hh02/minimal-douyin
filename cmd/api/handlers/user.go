@@ -16,7 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type LoginResponse struct {
+type AuthResponse struct {
 	StatusCode int32  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 	UserId     int64  `json:"user_id"`
@@ -25,7 +25,7 @@ type LoginResponse struct {
 
 func UserLoginResponse(c *gin.Context, code int, tokenString string, time time.Time) {
 	if code != http.StatusOK {
-		c.JSON(code, LoginResponse{
+		c.JSON(code, AuthResponse{
 			StatusCode: int32(code),
 			StatusMsg:  "登陆失败，用户名或密码错误",
 			UserId:     0,
@@ -36,6 +36,10 @@ func UserLoginResponse(c *gin.Context, code int, tokenString string, time time.T
 	c.Next()
 }
 
+func Unauthorized(c *gin.Context, code int, message string) {
+
+}
+
 func UserLogin(c *gin.Context) {
 	fmt.Println("UserLogin")
 
@@ -43,7 +47,7 @@ func UserLogin(c *gin.Context) {
 	tokenId := int64(claims[constants.IdentityKey].(float64))
 	tokenString := jwt.GetToken(c)
 
-	c.JSON(http.StatusOK, LoginResponse{
+	c.JSON(http.StatusOK, AuthResponse{
 		StatusCode: errno.Success.ErrCode,
 		StatusMsg:  errno.Success.ErrMsg,
 		UserId:     tokenId,

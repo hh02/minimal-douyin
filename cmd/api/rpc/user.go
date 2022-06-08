@@ -58,7 +58,7 @@ func CheckUser(ctx context.Context, req *userrpc.CheckUserRequest) (int64, error
 		return 0, err
 	}
 	if resp.Status.StatusCode != 0 {
-		return 0, errno.NewErrNo(resp.Status.StatusCode, resp.Status.StatusMessage)
+		return 0, errno.Status2ErrorNo(resp.Status)
 	}
 	return resp.UserId, nil
 }

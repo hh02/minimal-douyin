@@ -12,6 +12,7 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
+	"github.com/hh02/minimal-douyin/pkg/errno"
 	"github.com/hh02/minimal-douyin/pkg/tracer"
 )
 
@@ -46,6 +47,20 @@ func main() {
 			}
 
 			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
+		},
+		Unauthorized: func(c *gin.Context, code int, message string) {
+			statusCode := errno.ServiceErr.ErrCode
+			if message == errno.LoginErr.ErrMsg {
+				statusCode = errno.LoginErr.ErrCode
+			}
+			c.JSON(code, handlers.AuthResponse{
+				StatusCode: statusCode,
+				StatusMsg:  message,
+			})
+		},
+		HTTPStatusMessageFunc: func(e error, c *gin.Context) string {
+			err := errno.ConvertErr(e)
+			return err.ErrMsg
 		},
 		LoginResponse: handlers.UserLoginResponse,
 		TokenLookup:   "query: token, param: token",
