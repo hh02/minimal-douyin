@@ -21,14 +21,14 @@ type UserListResponse struct {
 
 func RelationAction(c *gin.Context) {
 	type relationParam struct {
-		Token      string `form:"token"`
-		ToUserId   int64  `form:"to_user_id"`
-		ActionType uint8  `form:"action_type"`
+		Token      string `form:"token" binding:"required"`
+		ToUserId   int64  `form:"to_user_id" binding:"required"`
+		ActionType uint8  `form:"action_type" binding:"required"`
 	}
 
 	var relationVar relationParam
 	if err := c.ShouldBind(&relationVar); err != nil {
-		SendStatusResponse(c, err)
+		SendStatusResponse(c, errno.ParamErr)
 		return
 	}
 

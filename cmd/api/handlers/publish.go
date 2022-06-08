@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"mime/multipart"
 	"net/http"
 	"os"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
+	uuid "github.com/satori/go.uuid"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
@@ -42,39 +44,45 @@ func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
 }
 
 func PublishAction(c *gin.Context) {
-	// TODO 检查参数是否合法
-	title := c.PostForm("title")
-	token := c.PostForm("token")
-	if len(title) == 0 || len(title) > 100 || len(token) == 0 {
+	type formParam struct {
+		Data  *multipart.FileHeader `form:"data" binding:"required"`
+		Token string                `form:"token" binding:"required"`
+		Title string                `form:"title" binding:"required"`
+	}
+
+	var formParamVar formParam
+	if err := c.ShouldBind(&formParamVar); err != nil {
 		SendStatusResponse(c, errno.ParamErr)
 		return
 	}
 
-	file, err := c.FormFile("data")
-	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+	if len(formParamVar.Title) > 100 {
+		SendStatusResponse(c, errno.ParamErr.WithMessage("标题长度超过100"))
 		return
 	}
 
-	videoPath := constants.VideoFolder + file.Filename
-	snapshotPath := constants.SnapshotFolder + file.Filename
-	c.SaveUploadedFile(file, videoPath)
-	err = getSnapshot(videoPath, snapshotPath, 1)
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
+
+	videoName := uuid.NewV4().String()
+	videoPath := constants.VideoFolder + videoName + ".mp4"
+	coverPath := constants.CoverFolder + videoName + ".png"
+
+	c.SaveUploadedFile(formParamVar.Data, videoPath)
+	err := getSnapshot(videoPath, coverPath, 1)
 	if err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err).WithMessage("获取封面失败"))
 		return
 	}
 
-	clams := jwt.ExtractClaims(c)
-	userId := int64(clams[constants.IdentityKey].(float64))
 	playUrl := constants.FileServer + videoPath
-	coverUrl := constants.FileServer + snapshotPath
+	coverUrl := constants.FileServer + coverPath
 
 	err = rpc.CreateVideo(context.Background(), &videorpc.CreateVideoRequest{
 		UserId:   userId,
 		PlayUrl:  playUrl,
 		CoverUrl: coverUrl,
-		Title:    title,
+		Title:    formParamVar.Title,
 	})
 
 	if err != nil {

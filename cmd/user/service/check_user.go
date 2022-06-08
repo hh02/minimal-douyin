@@ -4,10 +4,11 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
+	"io"
+
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
-	"io"
 )
 
 type CheckUserService struct {
