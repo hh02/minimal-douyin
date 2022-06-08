@@ -51,7 +51,7 @@ func (s *GetUserService) GetUser(req *userrpc.GetUserRequest) (*userrpc.User, er
 	})
 
 	if err != nil {
-		return nil, errno.FollowNotExistErr
+		return nil, err
 	}
 	User := pack.User(user)
 	User.IsFollow = isFollow

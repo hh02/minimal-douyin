@@ -49,7 +49,7 @@ func main() {
 			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
-			statusCode := errno.ServiceErr.ErrCode
+			statusCode := errno.AuthErr.ErrCode
 			if message == errno.LoginErr.ErrMsg {
 				statusCode = errno.LoginErr.ErrCode
 			}
@@ -79,7 +79,7 @@ func main() {
 		TimeFunc:      time.Now,
 	})
 
-	r.Static(constants.StaticServerPath, constants.StaticFolder)
+	r.Static(constants.StaticRelativePath, constants.StaticLocalPath)
 
 	douyin := r.Group("/douyin")
 
@@ -96,9 +96,10 @@ func main() {
 		handlers.UserLoginResponse,
 	)
 
-	// douyin.POST("/user/register/", handlers.UserRegister)
-
 	douyin.GET("/feed/", handlers.Feed)
+
+	// 因为token在body中，要先取出来
+	douyin.POST("/publish/action/", handlers.PublishAction, authMiddleware.MiddlewareFunc())
 
 	douyin.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -108,7 +109,6 @@ func main() {
 		douyin.GET("/relation/follow/list/", handlers.FollowList)
 		douyin.GET("/relation/follower/list/", handlers.FollowerList)
 
-		douyin.POST("/publish/action/", handlers.PublishAction)
 		douyin.GET("/publish/list/", handlers.PublishList)
 
 		douyin.POST("/comment/action/", handlers.CommentAction)
