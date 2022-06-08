@@ -22,9 +22,9 @@ type UserListResponse struct {
 
 func RelationAction(c *gin.Context) {
 	type RelationParam struct {
-		Token      string `form:"token"`
-		ToUserId   int64  `form:"to_user_id"`
-		ActionType uint8  `form:"action_type"`
+		Token      string `form:"token" binding:"required"`
+		ToUserId   int64  `form:"to_user_id" binding:"required"`
+		ActionType uint8  `form:"action_type" binding:"required"`
 	}
 
 	var relationVar RelationParam

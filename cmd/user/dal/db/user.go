@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"errors"
+
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"gorm.io/gorm"
 )
@@ -32,6 +34,9 @@ func QueryUserByName(ctx context.Context, UserName string) (*User, error) {
 	res := &User{}
 	err := DB.WithContext(ctx).Where("username = ?", UserName).First(&res).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return res, nil
@@ -62,10 +67,10 @@ func MQueryUserById(ctx context.Context, IDs []int64) ([]*User, error) {
 
 // AddFollowCount 对指定用户增加 count 关注数
 func AddFollowCount(ctx context.Context, Id int64, count int32) error {
-	return DB.WithContext(ctx).Where("id = ?", Id).Update("follow_count", gorm.Expr("follow_count + ?", count)).Error
+	return DB.WithContext(ctx).Table(constants.UserTableName).Where("id = ?", Id).Update("follow_count", gorm.Expr("follow_count + ?", count)).Error
 }
 
 // AddFollowerCount 对指定用户增加 count 粉丝数
 func AddFollowerCount(ctx context.Context, Id int64, count int32) error {
-	return DB.WithContext(ctx).Where("id = ?", Id).Update("follower_count", gorm.Expr("follow_counter + ?", count)).Error
+	return DB.WithContext(ctx).Table(constants.UserTableName).Where("id = ?", Id).Update("follower_count", gorm.Expr("follower_count + ?", count)).Error
 }

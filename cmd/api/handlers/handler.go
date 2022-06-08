@@ -37,9 +37,8 @@ func SendRegisterResponse(c *gin.Context, err error) {
 	c.JSON(http.StatusOK, RegisterResponse{
 		StatusCode: int32(Err.ErrCode),
 		StatusMsg:  string(Err.ErrMsg),
-		UserId:     0,
-		Token:      "",
 	})
+	c.Abort()
 }
 
 type UserParam struct {

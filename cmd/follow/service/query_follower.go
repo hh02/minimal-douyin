@@ -24,6 +24,10 @@ func (s *QueryFollowerService) QueryFollower(req *followrpc.QueryFollowerRequest
 		return nil, err
 	}
 
+	if len(userIds) == 0 {
+		return nil, nil
+	}
+
 	rpcRequest := &userrpc.MGetUserRequest{
 		UserIds:        userIds,
 		TokenUserId:    req.UserId,

@@ -48,59 +48,71 @@ func main() {
 
 			return rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{Username: loginVar.Username, Password: loginVar.Password})
 		},
-		TokenLookup:   "query: token, cookie: jwt",
+		Unauthorized: func(c *gin.Context, code int, message string) {
+			statusCode := errno.AuthErr.ErrCode
+			if message == errno.LoginErr.ErrMsg {
+				statusCode = errno.LoginErr.ErrCode
+			}
+			c.JSON(code, handlers.AuthResponse{
+				StatusCode: statusCode,
+				StatusMsg:  message,
+			})
+		},
+		HTTPStatusMessageFunc: func(e error, c *gin.Context) string {
+			err := errno.ConvertErr(e)
+			return err.ErrMsg
+		},
+		LoginResponse: func(c *gin.Context, code int, tokenString string, time time.Time) {
+			if code != http.StatusOK {
+				c.JSON(code, handlers.AuthResponse{
+					StatusCode: int32(code),
+					StatusMsg:  "登陆失败",
+					UserId:     0,
+					Token:      "",
+				})
+			}
+			c.AddParam("token", tokenString)
+			c.Next()
+		},
+		TokenLookup:   "query: token, param: token",
 		TokenHeadName: "",
 		TimeFunc:      time.Now,
 	})
 
-	r.Static("/static", "./public")
+	r.Static(constants.StaticRelativePath, constants.StaticLocalPath)
 
-	apiRouter := r.Group("/douyin")
+	douyin := r.Group("/douyin")
 
-	// basic apis
-	apiRouter.POST("/user/register/", func(c *gin.Context) {
-		var userVar handlers.UserParam
-		if err := c.BindQuery(&userVar); err != nil {
-			handlers.SendRegisterResponse(c, errno.ConvertErr(err))
-			return
-		}
-		if len(userVar.Username) == 0 || len(userVar.Password) == 0 {
-			handlers.SendRegisterResponse(c, errno.ParamErr)
-			return
-		}
+	// 登录获取token，中间件解析token，UserLogin返回结果
+	douyin.POST("/user/login/", authMiddleware.LoginHandler,
+		authMiddleware.MiddlewareFunc(),
+		handlers.UserLoginResponse,
+	)
 
-		err := rpc.CreateUser(context.Background(), &userrpc.CreateUserRequest{
-			Username: userVar.Username,
-			Password: userVar.Password,
-		})
-		if err != nil {
-			handlers.SendRegisterResponse(c, errno.ConvertErr(err))
-			return
-		}
+	// 注册后登录
+	douyin.POST("/user/register/", handlers.UserRegister,
+		authMiddleware.LoginHandler,
+		authMiddleware.MiddlewareFunc(),
+		handlers.UserLoginResponse,
+	)
 
-		c.Request.URL.Path = "/douyin/user/login"
-		r.HandleContext(c)
-	})
-	apiRouter.GET("/feed/", handlers.Feed)
-	apiRouter.POST("/user/login/", authMiddleware.LoginHandler)
-	//apiRouter.POST("/publish/action/", controller.Publish)
-	//apiRouter.GET("/publish/list/", controller.PublishList)
+	douyin.GET("/feed/", handlers.Feed)
 
-	// extra apis - I
-	//apiRouter.POST("/favorite/action/", controller.FavoriteAction)
-	//apiRouter.GET("/favorite/list/", controller.FavoriteList)
-	apiRouter.POST("/comment/action/", handlers.CommentAction)
-	apiRouter.GET("/comment/list/", handlers.CommentList)
+	// 因为token在body中，要先取出来
+	douyin.POST("/publish/action/", handlers.PublishAction, authMiddleware.MiddlewareFunc())
 
-	// extra apis - II
-
-	apiRouter.GET("/relation/follow/list/", handlers.FollowList)
-	apiRouter.GET("/relation/follower/list/", handlers.FollowerList)
-
-	apiRouter.Use(authMiddleware.MiddlewareFunc())
+	douyin.Use(authMiddleware.MiddlewareFunc())
 	{
-		apiRouter.GET("/user/", handlers.UserInfo)
-		apiRouter.POST("/relation/action/", handlers.RelationAction)
+		douyin.GET("/user/", handlers.UserInfo)
+
+		douyin.POST("/relation/action/", handlers.RelationAction)
+		douyin.GET("/relation/follow/list/", handlers.FollowList)
+		douyin.GET("/relation/follower/list/", handlers.FollowerList)
+
+		douyin.GET("/publish/list/", handlers.PublishList)
+
+		douyin.POST("/comment/action/", handlers.CommentAction)
+		douyin.GET("/comment/list/", handlers.CommentList)
 	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {

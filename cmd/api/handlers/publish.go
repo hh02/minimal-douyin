@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"mime/multipart"
 	"net/http"
 	"os"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
+	uuid "github.com/satori/go.uuid"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
@@ -34,7 +36,7 @@ func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
 		return err
 	}
 
-	err = imaging.Save(img, snapshotPath+".png")
+	err = imaging.Save(img, snapshotPath)
 	if err != nil {
 		return err
 	}
@@ -42,39 +44,55 @@ func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
 }
 
 func PublishAction(c *gin.Context) {
-	// TODO 检查参数是否合法
-	title := c.PostForm("title")
-	token := c.PostForm("token")
-	if len(title) == 0 || len(title) > 100 || len(token) == 0 {
+	type formParam struct {
+		Data  *multipart.FileHeader `form:"data" binding:"required"`
+		Token string                `form:"token" binding:"required"`
+		Title string                `form:"title" binding:"required"`
+	}
+
+	var formParamVar formParam
+	if err := c.ShouldBind(&formParamVar); err != nil {
 		SendStatusResponse(c, errno.ParamErr)
 		return
 	}
 
-	file, err := c.FormFile("data")
-	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+	if len(formParamVar.Title) > 100 {
+		SendStatusResponse(c, errno.ParamErr.WithMessage("标题长度超过100"))
 		return
 	}
 
-	videoPath := constants.VideoFolder + file.Filename
-	snapshotPath := constants.SnapshotFolder + file.Filename
-	c.SaveUploadedFile(file, videoPath)
-	err = getSnapshot(videoPath, snapshotPath, 1)
+	c.AddParam("token", formParamVar.Token)
+	// 调用鉴权
+	c.Next()
+
+	// 鉴权失败则返回
+	if c.IsAborted() {
+		return
+	}
+
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
+
+	videoName := uuid.NewV4().String()
+
+	videoLocalPath := constants.VideoLocalPath + "/" + videoName + ".mp4"
+	coverLocalPath := constants.CoverLocalPath + "/" + videoName + ".png"
+
+	c.SaveUploadedFile(formParamVar.Data, videoLocalPath)
+	err := getSnapshot(videoLocalPath, coverLocalPath, 1)
 	if err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err).WithMessage("获取封面失败"))
 		return
 	}
 
-	clams := jwt.ExtractClaims(c)
-	userId := int64(clams[constants.IdentityKey].(float64))
-	playUrl := constants.FileServer + videoPath
-	coverUrl := constants.FileServer + snapshotPath
+	playUrl := constants.VideoServerPath + "/" + videoName + ".mp4"
+	coverUrl := constants.CoverServerPath + "/" + videoName + ".png"
 
 	err = rpc.CreateVideo(context.Background(), &videorpc.CreateVideoRequest{
 		UserId:   userId,
 		PlayUrl:  playUrl,
 		CoverUrl: coverUrl,
-		Title:    title,
+		Title:    formParamVar.Title,
 	})
 
 	if err != nil {
@@ -86,6 +104,10 @@ func PublishAction(c *gin.Context) {
 }
 
 func PublishList(c *gin.Context) {
+	if c.IsAborted() {
+		return
+	}
+
 	type param struct {
 		Token  string `form:"token"`
 		UserId int64  `form:"user_id"`
@@ -102,7 +124,10 @@ func PublishList(c *gin.Context) {
 		return
 	}
 
-	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: paramVar.UserId})
+	claims := jwt.ExtractClaims(c)
+	userId := int64(claims[constants.IdentityKey].(float64))
+
+	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: userId})
 
 	if err != nil {
 		SendStatusResponse(c, errno.ConvertErr(err))
