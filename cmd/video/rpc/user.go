@@ -52,7 +52,7 @@ func MGetUserMap(ctx context.Context, req *userrpc.MGetUserRequest) (map[int64]*
 	}
 	res := make(map[int64]*userrpc.User)
 	for _, user := range resp.Users {
-		res[user.UserId] = user
+		res[user.Id] = user
 	}
 	return res, nil
 }

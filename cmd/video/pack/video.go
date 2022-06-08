@@ -12,9 +12,9 @@ func Video(video *db.Video) *videorpc.Video {
 		return nil
 	}
 	return &videorpc.Video{
-		VideoId:       int64(video.ID),
+		Id:            video.Id,
 		PlayUrl:       video.PlayUrl,
-		Author:        &userrpc.User{UserId: video.UserId},
+		Author:        &userrpc.User{Id: video.UserId},
 		CoverUrl:      video.CoverUrl,
 		FavoriteCount: video.FavoriteCount,
 		CommentCount:  video.CommentCount,
