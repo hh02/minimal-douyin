@@ -22,6 +22,5 @@ func (s *QueryCommentService) QueryComment(req *commentrpc.QueryCommentByVideoId
 	if err != nil {
 		return nil, err
 	}
-
 	return pack.MComment(s.ctx, comments, req.TokenUserId)
 }
