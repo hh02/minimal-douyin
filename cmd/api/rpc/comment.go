@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"fmt"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
@@ -41,6 +42,8 @@ func initCommentRpc() {
 // CreateComment create comment
 func CreateComment(ctx context.Context, req *commentrpc.CreateCommentRequest) (*commentrpc.Comment, error) {
 	resp, err := commentClient.CreateComment(ctx, req)
+	fmt.Println(req.UserId, req.VideoId, req.CommentText)
+	fmt.Println(resp.Comment, resp.Status)
 	if err != nil {
 		return nil, err
 	}

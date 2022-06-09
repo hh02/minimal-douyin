@@ -10,7 +10,7 @@ import (
 
 // Comment pack db.Comment to commentrpc.Comment
 func Comment(ctx context.Context, c *db.Comment) *commentrpc.Comment {
-	if c != nil {
+	if c == nil {
 		return nil
 	}
 	user, err := rpc.GetUser(ctx, &userrpc.GetUserRequest{
@@ -26,7 +26,7 @@ func Comment(ctx context.Context, c *db.Comment) *commentrpc.Comment {
 		CommentId:  int64(c.ID),
 		Content:    c.Content,
 		User:       user,
-		CreateDate: c.CreatedAt.Format("2006-January-02 03:04:05.999 pm"),
+		CreateDate: c.CreatedAt.Format("January-02"),
 	}
 }
 
@@ -34,11 +34,24 @@ func Comment(ctx context.Context, c *db.Comment) *commentrpc.Comment {
 func MComment(ctx context.Context, comments []*db.Comment, tokenId int64) ([]*commentrpc.Comment, error) {
 	res := make([]*commentrpc.Comment, 0)
 	ids := make([]int64, 0)
+	// 建立 id 对应查询出来的 users 的 id
+	// 因为 MGetUser 函数对重复的 id 只会查询出一个结果
+	// 自带去重功能，因此想要得到重复的  user 就先建立一个去重前 id
+	// 与去重后 id 的对应关系。就是 id2userid
+	id2userid := make([]int64, 0)
+	it := int64(0)
 
-	for _, comment := range comments {
+	for i, comment := range comments {
+		if i != 0 {
+			if comment.UserId != ids[i-1] {
+				it++
+			}
+		}
+		// 得到去重前 id 与去重后 id 对应关系
+
+		id2userid = append(id2userid, it)
 		ids = append(ids, comment.UserId)
 	}
-
 	// 批量查询 user
 	users, err := rpc.MGetUser(ctx, &userrpc.MGetUserRequest{
 		UserIds:        ids,
@@ -53,8 +66,8 @@ func MComment(ctx context.Context, comments []*db.Comment, tokenId int64) ([]*co
 		temp := &commentrpc.Comment{
 			CommentId:  int64(comment.ID),
 			Content:    comment.Content,
-			User:       users[i],
-			CreateDate: comment.CreatedAt.Format("2006-January-02 03:04:05.999 pm"),
+			User:       users[id2userid[i]],
+			CreateDate: comment.CreatedAt.Format("January-02"),
 		}
 		res = append(res, temp)
 	}

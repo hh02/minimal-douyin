@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
@@ -26,11 +27,11 @@ type CommentListResponse struct {
 // CommentAction create comment or delete comment
 func CommentAction(c *gin.Context) {
 	type CommentParam struct {
-		Token       string `json:"token"`
-		VideoId     int64  `json:"video_id"`
-		ActionType  uint8  `json:"action_type"`
-		CommentText string `json:"comment_text"`
-		CommentId   int64  `json:"comment_id"`
+		Token       string `form:"token"`
+		VideoId     int64  `form:"video_id"`
+		ActionType  uint8  `form:"action_type"`
+		CommentText string `form:"comment_text"`
+		CommentId   int64  `form:"comment_id"`
 	}
 
 	var commentVar CommentParam
@@ -38,10 +39,10 @@ func CommentAction(c *gin.Context) {
 		SendStatusResponse(c, err)
 		return
 	}
-
 	clams := jwt.ExtractClaims(c)
 	tokenId := int64(clams[constants.IdentityKey].(float64))
 
+	fmt.Println(commentVar)
 	// 1 create comment ; 2 delete comment
 	if commentVar.ActionType == 1 {
 		req := &commentrpc.CreateCommentRequest{
@@ -82,8 +83,8 @@ func CommentAction(c *gin.Context) {
 // CommentList query comment by video id
 func CommentList(c *gin.Context) {
 	type CommentParam struct {
-		Token   string `json:"token"`
-		VideoId int64  `json:"video_id"`
+		Token   string `form:"token"`
+		VideoId int64  `form:"video_id"`
 	}
 
 	var commentVar CommentParam
@@ -99,7 +100,7 @@ func CommentList(c *gin.Context) {
 		VideoId:     commentVar.VideoId,
 		TokenUserId: tokenId,
 	}
-
+	fmt.Println("???")
 	comments, err := rpc.QueryCommentByVideo(context.Background(), req)
 	if err != nil {
 		SendStatusResponse(c, err)

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -20,25 +21,24 @@ type UserListResponse struct {
 }
 
 func RelationAction(c *gin.Context) {
-	type relationParam struct {
+	type RelationParam struct {
 		Token      string `form:"token" binding:"required"`
 		ToUserId   int64  `form:"to_user_id" binding:"required"`
 		ActionType uint8  `form:"action_type" binding:"required"`
 	}
 
-	var relationVar relationParam
+	var relationVar RelationParam
 	if err := c.ShouldBind(&relationVar); err != nil {
-		SendStatusResponse(c, errno.ParamErr)
+		SendStatusResponse(c, err)
 		return
 	}
-
 	if relationVar.ToUserId <= 0 || (relationVar.ActionType != 1 && relationVar.ActionType != 2) {
 		SendStatusResponse(c, errno.ParamErr)
 		return
 	}
 
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	clams := jwt.ExtractClaims(c)
+	userId := int64(clams[constants.IdentityKey].(float64))
 	// 1 for follow, 2 for unfollow
 	if relationVar.ActionType == 1 {
 		err := rpc.CreateFollow(context.Background(), &followrpc.CreateFollowRequest{
@@ -63,12 +63,20 @@ func RelationAction(c *gin.Context) {
 }
 
 func FollowList(c *gin.Context) {
+	type FollowListParam struct {
+		UserId int64  `form:"user_id"`
+		Token  string `form:"token"`
+	}
 
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	var followListVar FollowListParam
+	if err := c.ShouldBindQuery(&followListVar); err != nil {
+		SendStatusResponse(c, errno.ConvertErr(err))
+		return
+	}
 
+	fmt.Println(followListVar.UserId)
 	users, err := rpc.QueryFollow(context.Background(), &followrpc.QueryFollowRequest{
-		UserId: userId,
+		UserId: followListVar.UserId,
 	})
 
 	if err != nil {
@@ -84,11 +92,19 @@ func FollowList(c *gin.Context) {
 }
 
 func FollowerList(c *gin.Context) {
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	type FollowerListParam struct {
+		UserId int64  `form:"user_id"`
+		Token  string `form:"token"`
+	}
+
+	var followerListVar FollowerListParam
+	if err := c.BindQuery(&followerListVar); err != nil {
+		SendStatusResponse(c, errno.ConvertErr(err))
+		return
+	}
 
 	users, err := rpc.QueryFollower(context.Background(), &followrpc.QueryFollowerRequest{
-		UserId: userId,
+		UserId: followerListVar.UserId,
 	})
 
 	if err != nil {

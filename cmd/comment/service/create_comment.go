@@ -18,17 +18,17 @@ func NewCreateCommentService(ctx context.Context) *CreateCommentService {
 
 // CreateComment 用户服务,返回用户信息，错误
 func (s *CreateCommentService) CreateComment(req *commentrpc.CreateCommentRequest) (*commentrpc.Comment, error) {
-	err := db.CreateComment(s.ctx, &db.Comment{
+
+	comment := &db.Comment{
 		UserId:  req.UserId,
 		VideoId: req.VideoId,
 		Content: req.CommentText,
-	})
+	}
+
+	err := db.CreateComment(s.ctx, comment)
 	if err != nil {
 		return nil, err
 	}
-	return pack.Comment(s.ctx, &db.Comment{
-		UserId:  req.UserId,
-		VideoId: req.VideoId,
-		Content: req.CommentText,
-	}), nil
+
+	return pack.Comment(s.ctx, comment), nil
 }

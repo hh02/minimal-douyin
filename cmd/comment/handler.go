@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/hh02/minimal-douyin/cmd/comment/service"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
@@ -14,7 +15,7 @@ type CommentServiceImpl struct{}
 func (s *CommentServiceImpl) CreateComment(ctx context.Context, req *commentrpc.CreateCommentRequest) (resp *commentrpc.CreateCommentResponse, err error) {
 	// TODO: Your code here...
 	resp = new(commentrpc.CreateCommentResponse)
-
+	fmt.Println(req.UserId, req.VideoId, req.CommentText)
 	if req.UserId == 0 {
 		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
