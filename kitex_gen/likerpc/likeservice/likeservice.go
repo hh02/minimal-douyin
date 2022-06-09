@@ -22,9 +22,9 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "LikeService"
 	handlerType := (*likerpc.LikeService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"CreateLike": kitex.NewMethodInfo(createLikeHandler, newCreateLikeArgs, newCreateLikeResult, false),
-		"GetUser":    kitex.NewMethodInfo(getUserHandler, newGetUserArgs, newGetUserResult, false),
-		"MGetUser":   kitex.NewMethodInfo(mGetUserHandler, newMGetUserArgs, newMGetUserResult, false),
+		"CreateLike":        kitex.NewMethodInfo(createLikeHandler, newCreateLikeArgs, newCreateLikeResult, false),
+		"DeleteLike":        kitex.NewMethodInfo(deleteLikeHandler, newDeleteLikeArgs, newDeleteLikeResult, false),
+		"QueryLikeByUserId": kitex.NewMethodInfo(queryLikeByUserIdHandler, newQueryLikeByUserIdArgs, newQueryLikeByUserIdResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "like",
@@ -143,7 +143,7 @@ func (p *CreateLikeResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func getUserHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func deleteLikeHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
@@ -151,43 +151,43 @@ func getUserHandler(ctx context.Context, handler interface{}, arg, result interf
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(likerpc.LikeService).GetUser(ctx, req)
+		resp, err := handler.(likerpc.LikeService).DeleteLike(ctx, req)
 		if err != nil {
 			return err
 		}
 		if err := st.SendMsg(resp); err != nil {
 			return err
 		}
-	case *GetUserArgs:
-		success, err := handler.(likerpc.LikeService).GetUser(ctx, s.Req)
+	case *DeleteLikeArgs:
+		success, err := handler.(likerpc.LikeService).DeleteLike(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*GetUserResult)
+		realResult := result.(*DeleteLikeResult)
 		realResult.Success = success
 	}
 	return nil
 }
-func newGetUserArgs() interface{} {
-	return &GetUserArgs{}
+func newDeleteLikeArgs() interface{} {
+	return &DeleteLikeArgs{}
 }
 
-func newGetUserResult() interface{} {
-	return &GetUserResult{}
+func newDeleteLikeResult() interface{} {
+	return &DeleteLikeResult{}
 }
 
-type GetUserArgs struct {
+type DeleteLikeArgs struct {
 	Req *likerpc.DeleteLikeRequest
 }
 
-func (p *GetUserArgs) Marshal(out []byte) ([]byte, error) {
+func (p *DeleteLikeArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
-		return out, fmt.Errorf("No req in GetUserArgs")
+		return out, fmt.Errorf("No req in DeleteLikeArgs")
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *GetUserArgs) Unmarshal(in []byte) error {
+func (p *DeleteLikeArgs) Unmarshal(in []byte) error {
 	msg := new(likerpc.DeleteLikeRequest)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -196,33 +196,33 @@ func (p *GetUserArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var GetUserArgs_Req_DEFAULT *likerpc.DeleteLikeRequest
+var DeleteLikeArgs_Req_DEFAULT *likerpc.DeleteLikeRequest
 
-func (p *GetUserArgs) GetReq() *likerpc.DeleteLikeRequest {
+func (p *DeleteLikeArgs) GetReq() *likerpc.DeleteLikeRequest {
 	if !p.IsSetReq() {
-		return GetUserArgs_Req_DEFAULT
+		return DeleteLikeArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *GetUserArgs) IsSetReq() bool {
+func (p *DeleteLikeArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-type GetUserResult struct {
+type DeleteLikeResult struct {
 	Success *likerpc.DeleteLikeResponse
 }
 
-var GetUserResult_Success_DEFAULT *likerpc.DeleteLikeResponse
+var DeleteLikeResult_Success_DEFAULT *likerpc.DeleteLikeResponse
 
-func (p *GetUserResult) Marshal(out []byte) ([]byte, error) {
+func (p *DeleteLikeResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
-		return out, fmt.Errorf("No req in GetUserResult")
+		return out, fmt.Errorf("No req in DeleteLikeResult")
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *GetUserResult) Unmarshal(in []byte) error {
+func (p *DeleteLikeResult) Unmarshal(in []byte) error {
 	msg := new(likerpc.DeleteLikeResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -231,22 +231,22 @@ func (p *GetUserResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *GetUserResult) GetSuccess() *likerpc.DeleteLikeResponse {
+func (p *DeleteLikeResult) GetSuccess() *likerpc.DeleteLikeResponse {
 	if !p.IsSetSuccess() {
-		return GetUserResult_Success_DEFAULT
+		return DeleteLikeResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *GetUserResult) SetSuccess(x interface{}) {
+func (p *DeleteLikeResult) SetSuccess(x interface{}) {
 	p.Success = x.(*likerpc.DeleteLikeResponse)
 }
 
-func (p *GetUserResult) IsSetSuccess() bool {
+func (p *DeleteLikeResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func mGetUserHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func queryLikeByUserIdHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
@@ -254,43 +254,43 @@ func mGetUserHandler(ctx context.Context, handler interface{}, arg, result inter
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(likerpc.LikeService).MGetUser(ctx, req)
+		resp, err := handler.(likerpc.LikeService).QueryLikeByUserId(ctx, req)
 		if err != nil {
 			return err
 		}
 		if err := st.SendMsg(resp); err != nil {
 			return err
 		}
-	case *MGetUserArgs:
-		success, err := handler.(likerpc.LikeService).MGetUser(ctx, s.Req)
+	case *QueryLikeByUserIdArgs:
+		success, err := handler.(likerpc.LikeService).QueryLikeByUserId(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*MGetUserResult)
+		realResult := result.(*QueryLikeByUserIdResult)
 		realResult.Success = success
 	}
 	return nil
 }
-func newMGetUserArgs() interface{} {
-	return &MGetUserArgs{}
+func newQueryLikeByUserIdArgs() interface{} {
+	return &QueryLikeByUserIdArgs{}
 }
 
-func newMGetUserResult() interface{} {
-	return &MGetUserResult{}
+func newQueryLikeByUserIdResult() interface{} {
+	return &QueryLikeByUserIdResult{}
 }
 
-type MGetUserArgs struct {
+type QueryLikeByUserIdArgs struct {
 	Req *likerpc.QueryLikeByUserIdRequest
 }
 
-func (p *MGetUserArgs) Marshal(out []byte) ([]byte, error) {
+func (p *QueryLikeByUserIdArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
-		return out, fmt.Errorf("No req in MGetUserArgs")
+		return out, fmt.Errorf("No req in QueryLikeByUserIdArgs")
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *MGetUserArgs) Unmarshal(in []byte) error {
+func (p *QueryLikeByUserIdArgs) Unmarshal(in []byte) error {
 	msg := new(likerpc.QueryLikeByUserIdRequest)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -299,33 +299,33 @@ func (p *MGetUserArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var MGetUserArgs_Req_DEFAULT *likerpc.QueryLikeByUserIdRequest
+var QueryLikeByUserIdArgs_Req_DEFAULT *likerpc.QueryLikeByUserIdRequest
 
-func (p *MGetUserArgs) GetReq() *likerpc.QueryLikeByUserIdRequest {
+func (p *QueryLikeByUserIdArgs) GetReq() *likerpc.QueryLikeByUserIdRequest {
 	if !p.IsSetReq() {
-		return MGetUserArgs_Req_DEFAULT
+		return QueryLikeByUserIdArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *MGetUserArgs) IsSetReq() bool {
+func (p *QueryLikeByUserIdArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-type MGetUserResult struct {
+type QueryLikeByUserIdResult struct {
 	Success *likerpc.QueryLikeByUserIdResponse
 }
 
-var MGetUserResult_Success_DEFAULT *likerpc.QueryLikeByUserIdResponse
+var QueryLikeByUserIdResult_Success_DEFAULT *likerpc.QueryLikeByUserIdResponse
 
-func (p *MGetUserResult) Marshal(out []byte) ([]byte, error) {
+func (p *QueryLikeByUserIdResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
-		return out, fmt.Errorf("No req in MGetUserResult")
+		return out, fmt.Errorf("No req in QueryLikeByUserIdResult")
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *MGetUserResult) Unmarshal(in []byte) error {
+func (p *QueryLikeByUserIdResult) Unmarshal(in []byte) error {
 	msg := new(likerpc.QueryLikeByUserIdResponse)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -334,18 +334,18 @@ func (p *MGetUserResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *MGetUserResult) GetSuccess() *likerpc.QueryLikeByUserIdResponse {
+func (p *QueryLikeByUserIdResult) GetSuccess() *likerpc.QueryLikeByUserIdResponse {
 	if !p.IsSetSuccess() {
-		return MGetUserResult_Success_DEFAULT
+		return QueryLikeByUserIdResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *MGetUserResult) SetSuccess(x interface{}) {
+func (p *QueryLikeByUserIdResult) SetSuccess(x interface{}) {
 	p.Success = x.(*likerpc.QueryLikeByUserIdResponse)
 }
 
-func (p *MGetUserResult) IsSetSuccess() bool {
+func (p *QueryLikeByUserIdResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
@@ -369,21 +369,21 @@ func (p *kClient) CreateLike(ctx context.Context, Req *likerpc.CreateLikeRequest
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetUser(ctx context.Context, Req *likerpc.DeleteLikeRequest) (r *likerpc.DeleteLikeResponse, err error) {
-	var _args GetUserArgs
+func (p *kClient) DeleteLike(ctx context.Context, Req *likerpc.DeleteLikeRequest) (r *likerpc.DeleteLikeResponse, err error) {
+	var _args DeleteLikeArgs
 	_args.Req = Req
-	var _result GetUserResult
-	if err = p.c.Call(ctx, "GetUser", &_args, &_result); err != nil {
+	var _result DeleteLikeResult
+	if err = p.c.Call(ctx, "DeleteLike", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) MGetUser(ctx context.Context, Req *likerpc.QueryLikeByUserIdRequest) (r *likerpc.QueryLikeByUserIdResponse, err error) {
-	var _args MGetUserArgs
+func (p *kClient) QueryLikeByUserId(ctx context.Context, Req *likerpc.QueryLikeByUserIdRequest) (r *likerpc.QueryLikeByUserIdResponse, err error) {
+	var _args QueryLikeByUserIdArgs
 	_args.Req = Req
-	var _result MGetUserResult
-	if err = p.c.Call(ctx, "MGetUser", &_args, &_result); err != nil {
+	var _result QueryLikeByUserIdResult
+	if err = p.c.Call(ctx, "QueryLikeByUserId", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

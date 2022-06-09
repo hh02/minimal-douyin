@@ -34,6 +34,6 @@ message QueryLikeByUserIdResponse {
 
 service LikeService {
     rpc CreateLike(CreateLikeRequest) returns (CreateLikeResponse) {}
-    rpc GetUser(DeleteLikeRequest) returns (DeleteLikeResponse) {}
-    rpc MGetUser(QueryLikeByUserIdRequest) returns (QueryLikeByUserIdResponse) {}
+    rpc DeleteLike(DeleteLikeRequest) returns (DeleteLikeResponse) {}
+    rpc QueryLikeByUserId(QueryLikeByUserIdRequest) returns (QueryLikeByUserIdResponse) {}
 }
