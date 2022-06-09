@@ -19,12 +19,15 @@ func (s *CreateLikeService) CreateLike(req *likerpc.CreateLikeRequest) error {
 		UserId:  req.UserId,
 		VideoId: req.VideoId,
 	}
-	rowsAffected, err := db.CreateLike(s.ctx, likeModel)
+	like, err := db.CreateLike(s.ctx, likeModel)
 	if err != nil {
 		panic(err)
 	}
-	if rowsAffected > 0 {
-		err := rpc.AddLikeCont(s.ctx, &likerpc.CreateLikeRequest{VideoId: req.VideoId})
+	if like == 0 {
+		err = rpc.AddLikeCont(s.ctx, &likerpc.CreateLikeRequest{
+			UserId:  req.UserId,
+			VideoId: req.VideoId,
+		})
 		if err != nil {
 			return err
 		}

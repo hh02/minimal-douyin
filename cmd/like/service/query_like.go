@@ -20,6 +20,9 @@ func (q *QueryLikeService) QueryLike(req *likerpc.QueryLikeByUserIdRequest) ([]*
 	if err != nil {
 		return nil, err
 	}
+	if len(videoIds) == 0 {
+		return nil, nil
+	}
 	rpcRequest := &videorpc.MGetVideoRequest{
 		VideoIds: videoIds,
 	}

@@ -19,12 +19,12 @@ func (d *DeleteLikeService) DeleteLike(req *likerpc.DeleteLikeRequest) error {
 		UserId:  req.UserId,
 		VideoId: req.VideoId,
 	}
-	rowsAffected, err := db.DeleteLike(d.ctx, likeModel)
+	like, err := db.DeleteLike(d.ctx, likeModel)
 	if err != nil {
 		panic(err)
 	}
-	if rowsAffected > 0 {
-		err := rpc.AddLikeCont(d.ctx, &likerpc.CreateLikeRequest{VideoId: req.VideoId, UserId: req.UserId})
+	if like > 0 {
+		err = rpc.AddLikeCont(d.ctx, &likerpc.CreateLikeRequest{VideoId: req.VideoId, UserId: req.UserId})
 		if err != nil {
 			return err
 		}
