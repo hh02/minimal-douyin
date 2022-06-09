@@ -12,8 +12,8 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	CreateLike(ctx context.Context, Req *likerpc.CreateLikeRequest, callOptions ...callopt.Option) (r *likerpc.CreateLikeResponse, err error)
-	GetUser(ctx context.Context, Req *likerpc.DeleteLikeRequest, callOptions ...callopt.Option) (r *likerpc.DeleteLikeResponse, err error)
-	MGetUser(ctx context.Context, Req *likerpc.QueryLikeByUserIdRequest, callOptions ...callopt.Option) (r *likerpc.QueryLikeByUserIdResponse, err error)
+	DeleteLike(ctx context.Context, Req *likerpc.DeleteLikeRequest, callOptions ...callopt.Option) (r *likerpc.DeleteLikeResponse, err error)
+	QueryLikeByUserId(ctx context.Context, Req *likerpc.QueryLikeByUserIdRequest, callOptions ...callopt.Option) (r *likerpc.QueryLikeByUserIdResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -50,12 +50,12 @@ func (p *kLikeServiceClient) CreateLike(ctx context.Context, Req *likerpc.Create
 	return p.kClient.CreateLike(ctx, Req)
 }
 
-func (p *kLikeServiceClient) GetUser(ctx context.Context, Req *likerpc.DeleteLikeRequest, callOptions ...callopt.Option) (r *likerpc.DeleteLikeResponse, err error) {
+func (p *kLikeServiceClient) DeleteLike(ctx context.Context, Req *likerpc.DeleteLikeRequest, callOptions ...callopt.Option) (r *likerpc.DeleteLikeResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.GetUser(ctx, Req)
+	return p.kClient.DeleteLike(ctx, Req)
 }
 
-func (p *kLikeServiceClient) MGetUser(ctx context.Context, Req *likerpc.QueryLikeByUserIdRequest, callOptions ...callopt.Option) (r *likerpc.QueryLikeByUserIdResponse, err error) {
+func (p *kLikeServiceClient) QueryLikeByUserId(ctx context.Context, Req *likerpc.QueryLikeByUserIdRequest, callOptions ...callopt.Option) (r *likerpc.QueryLikeByUserIdResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.MGetUser(ctx, Req)
+	return p.kClient.QueryLikeByUserId(ctx, Req)
 }
