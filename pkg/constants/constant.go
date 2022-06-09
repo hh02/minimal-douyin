@@ -22,7 +22,7 @@ const (
 	VideoServerAddress   = "0.0.0.0:8889"
 	FollowServerAddress  = "0.0.0.0:8890"
 	CommentServerAddress = "0.0.0.0:8891"
-	LikeServerAdress     = "0.0.0.0:8892"
+	LikeServerAddress    = "0.0.0.0:8892"
 
 	MySQLDefaultDSN         = "gorm:gorm@tcp(120.46.179.205:9910)/gorm?charset=utf8&parseTime=True&loc=Local"
 	EtcdAddress             = "120.46.179.205:2379"

@@ -16,16 +16,19 @@ func NewQueryLikeService(ctx context.Context) *QueryLikeService {
 	return &QueryLikeService{ctx: ctx}
 }
 func (q *QueryLikeService) QueryLike(req *likerpc.QueryLikeByUserIdRequest) ([]*videorpc.Video, error) {
-	videoIds, err := db.QueryLike(q.ctx, req.UserId)
+	// 查询用户点赞的所以视频 id
+	videoIds, err := db.QueryLikeList(q.ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}
+	// 根据 videoIds , userId 远程调用 video 服务获取 video 列表
 	rpcRequest := &videorpc.MGetVideoRequest{
-		VideoIds: videoIds,
+		TokenUserId: req.UserId,
+		VideoIds:    videoIds,
 	}
-	videoID, err := rpc.MGetUser(q.ctx, rpcRequest)
+	videos, err := rpc.MGetVideo(q.ctx, rpcRequest)
 	if err != nil {
 		return nil, err
 	}
-	return videoID, nil
+	return videos, nil
 }
