@@ -67,7 +67,6 @@ func QueryFavorite(ctx context.Context, req *favoriterpc.QueryFavoriteByUserIdRe
 	if err != nil {
 		return nil, err
 	}
-
 	if resp.Status.StatusCode != errno.SuccessCode {
 		return nil, errno.Status2ErrorNo(resp.Status)
 	}

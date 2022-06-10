@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -43,6 +44,7 @@ func FavoriteAction(c *gin.Context) {
 		})
 		if err != nil {
 			SendStatusResponse(c, errno.ConvertErr(err))
+			return
 		}
 	}
 	SendStatusResponse(c, errno.Success)
@@ -62,7 +64,7 @@ func FavoriteList(c *gin.Context) {
 
 	claims := jwt.ExtractClaims(c)
 	userId := int64(claims[constants.IdentityKey].(float64))
-
+	fmt.Println(param)
 	videos, err := rpc.QueryFavorite(context.Background(), &favoriterpc.QueryFavoriteByUserIdRequest{
 		UserId: userId,
 	})
