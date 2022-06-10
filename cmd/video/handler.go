@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-
 	"github.com/hh02/minimal-douyin/cmd/video/service"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"

@@ -32,7 +32,7 @@ func main() {
 	}
 	Init()
 	svr := videorpc.NewServer(new(VideoServiceImpl),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.FollowServiceName}), // server name
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.VideoServiceName}), // server name
 		// server.WithMiddleware(middleware.CommonMiddleware),                                             // middleWare
 		// server.WithMiddleware(middleware.ServerMiddleware),
 		server.WithServiceAddr(addr),                                       // address

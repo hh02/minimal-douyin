@@ -17,7 +17,7 @@ import (
 )
 
 func Init() {
-	tracer2.InitJaeger(constants.FollowServiceName)
+	tracer2.InitJaeger(constants.FavoriteServiceName)
 	rpc.InitRPC()
 	dal.Init()
 
