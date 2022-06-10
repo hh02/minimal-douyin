@@ -7,9 +7,9 @@ import (
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"github.com/hh02/minimal-douyin/cmd/like/dal"
-	"github.com/hh02/minimal-douyin/cmd/like/rpc"
-	likerpc "github.com/hh02/minimal-douyin/kitex_gen/likerpc/likeservice"
+	"github.com/hh02/minimal-douyin/cmd/favorite/dal"
+	"github.com/hh02/minimal-douyin/cmd/favorite/rpc"
+	favoriterpc "github.com/hh02/minimal-douyin/kitex_gen/favoriterpc/favoriteservice"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	tracer2 "github.com/hh02/minimal-douyin/pkg/tracer"
 	etcd "github.com/kitex-contrib/registry-etcd"
@@ -28,13 +28,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	addr, err := net.ResolveTCPAddr("tcp", constants.LikeServerAddress)
+	addr, err := net.ResolveTCPAddr("tcp", constants.FavoriteServerAddress)
 	if err != nil {
 		panic(err)
 	}
 	Init()
-	svr := likerpc.NewServer(new(LikeServiceImpl),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.LikeServiceName}), // server name
+	svr := favoriterpc.NewServer(new(FavoriteServiceImpl),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.FavoriteServiceName}), // server name
 		// server.WithMiddleware(middleware.CommonMiddleware),                                             // middleWare
 		// server.WithMiddleware(middleware.ServerMiddleware),
 		server.WithServiceAddr(addr),                                       // address

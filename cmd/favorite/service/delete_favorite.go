@@ -3,7 +3,9 @@ package service
 import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/favorite/dal/db"
+	"github.com/hh02/minimal-douyin/cmd/favorite/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/favoriterpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
@@ -25,7 +27,12 @@ func (d *DeleteFavoriteService) DeleteFavorite(req *favoriterpc.DeleteFavoriteRe
 		return err
 	}
 	if rowsAffected > 0 {
-		return nil
+		// 取消点赞让 video 点赞数减一
+		err = rpc.AddFavoriteCount(d.ctx, &videorpc.AddFavoriteCountRequest{
+			VideoId: req.VideoId,
+			Count:   -1,
+		})
+		return err
 	} else {
 		return errno.DeleteErr
 	}
