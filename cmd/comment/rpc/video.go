@@ -41,21 +41,9 @@ func initVideoRpc() {
 	videoClient = c
 }
 
-// MGetVideo 远程调用 video 服务，批量获取 video
-func MGetVideo(ctx context.Context, req *videorpc.MGetVideoRequest) ([]*videorpc.Video, error) {
-	resp, err := videoClient.MGetVideo(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	if resp.Status.StatusCode != errno.SuccessCode {
-		return nil, errno.Status2ErrorNo(resp.Status)
-	}
-	return resp.Videos, nil
-}
-
-// AddFavoriteCount 在 video 中让点赞数加一减一
-func AddFavoriteCount(ctx context.Context, req *videorpc.AddFavoriteCountRequest) error {
-	resp, err := videoClient.AddFavoriteCount(ctx, req)
+// AddCommentCount 在 video 中让点赞数加一减一
+func AddCommentCount(ctx context.Context, req *videorpc.AddCommentCountRequest) error {
+	resp, err := videoClient.AddCommentCount(ctx, req)
 	if err != nil {
 		return err
 	}

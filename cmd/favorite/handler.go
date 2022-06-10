@@ -2,24 +2,24 @@ package main
 
 import (
 	"context"
-	"github.com/hh02/minimal-douyin/cmd/like/service"
-	"github.com/hh02/minimal-douyin/kitex_gen/likerpc"
+	"github.com/hh02/minimal-douyin/cmd/favorite/service"
+	"github.com/hh02/minimal-douyin/kitex_gen/favoriterpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
-// LikeServiceImpl implements the last service interface defined in the IDL.
-type LikeServiceImpl struct{}
+// FavoriteServiceImpl implements the last service interface defined in the IDL.
+type FavoriteServiceImpl struct{}
 
-// CreateLike implements the UserServiceImpl interface.
-func (s *LikeServiceImpl) CreateLike(ctx context.Context, req *likerpc.CreateLikeRequest) (resp *likerpc.CreateLikeResponse, err error) {
+// CreateFavorite implements the UserServiceImpl interface.
+func (s *FavoriteServiceImpl) CreateFavorite(ctx context.Context, req *favoriterpc.CreateFavoriteRequest) (resp *favoriterpc.CreateFavoriteResponse, err error) {
 	// TODO: Your code here...
-	resp = new(likerpc.CreateLikeResponse)
+	resp = new(favoriterpc.CreateFavoriteResponse)
 	if req.UserId <= 0 || req.VideoId <= 0 {
 		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
-	err = service.NewCreateLikeService(ctx).CreateLike(req)
+	err = service.NewCreateFavoriteService(ctx).CreateFavorite(req)
 
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
@@ -29,16 +29,16 @@ func (s *LikeServiceImpl) CreateLike(ctx context.Context, req *likerpc.CreateLik
 	return resp, nil
 }
 
-// DeleteLike implements the LikeServiceImpl interface.
-func (s *LikeServiceImpl) DeleteLike(ctx context.Context, req *likerpc.DeleteLikeRequest) (resp *likerpc.DeleteLikeResponse, err error) {
+// DeleteFavorite implements the FavoriteServiceImpl interface.
+func (s *FavoriteServiceImpl) DeleteFavorite(ctx context.Context, req *favoriterpc.DeleteFavoriteRequest) (resp *favoriterpc.DeleteFavoriteResponse, err error) {
 	// TODO: Your code here...
-	resp = new(likerpc.DeleteLikeResponse)
+	resp = new(favoriterpc.DeleteFavoriteResponse)
 	if req.UserId <= 0 || req.VideoId <= 0 {
 		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
 
-	err = service.NewDeleteLikeService(ctx).DeleteLike(req)
+	err = service.NewDeleteFavoriteService(ctx).DeleteFavorite(req)
 
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
@@ -48,15 +48,15 @@ func (s *LikeServiceImpl) DeleteLike(ctx context.Context, req *likerpc.DeleteLik
 	return resp, nil
 }
 
-// QueryLikeByUserId implements the LikeServiceImpl interface.
-func (s *LikeServiceImpl) QueryLikeByUserId(ctx context.Context, req *likerpc.QueryLikeByUserIdRequest) (resp *likerpc.QueryLikeByUserIdResponse, err error) {
+// QueryFavoriteByUserId implements the FavoriteServiceImpl interface.
+func (s *FavoriteServiceImpl) QueryFavoriteByUserId(ctx context.Context, req *favoriterpc.QueryFavoriteByUserIdRequest) (resp *favoriterpc.QueryFavoriteByUserIdResponse, err error) {
 	// TODO: Your code here...
-	resp = new(likerpc.QueryLikeByUserIdResponse)
+	resp = new(favoriterpc.QueryFavoriteByUserIdResponse)
 	if req.UserId <= 0 {
 		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}
-	videos, err := service.NewQueryLikeService(ctx).QueryLike(req)
+	videos, err := service.NewQueryFavoriteService(ctx).QueryFavorite(req)
 	if err != nil {
 		resp.Status = errno.BuildStatus(err)
 		return resp, nil

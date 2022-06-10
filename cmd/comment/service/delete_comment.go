@@ -3,7 +3,9 @@ package service
 import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/comment/dal/db"
+	"github.com/hh02/minimal-douyin/cmd/comment/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
@@ -30,5 +32,16 @@ func (s *DeleteCommentService) DeleteComment(req *commentrpc.DeleteCommentReques
 		return errno.PermissionErr
 	}
 
-	return db.DeleteComment(s.ctx, req.CommentId)
+	err = db.DeleteComment(s.ctx, req.CommentId)
+	if err != nil {
+		return err
+	}
+	err = rpc.AddCommentCount(s.ctx, &videorpc.AddCommentCountRequest{
+		VideoId: comment.VideoId,
+		Count:   -1,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

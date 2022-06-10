@@ -4,7 +4,9 @@ import (
 	"context"
 	"github.com/hh02/minimal-douyin/cmd/comment/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/comment/pack"
+	"github.com/hh02/minimal-douyin/cmd/comment/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 )
 
 type CreateCommentService struct {
@@ -29,6 +31,12 @@ func (s *CreateCommentService) CreateComment(req *commentrpc.CreateCommentReques
 	if err != nil {
 		return nil, err
 	}
-
+	err = rpc.AddCommentCount(s.ctx, &videorpc.AddCommentCountRequest{
+		VideoId: req.VideoId,
+		Count:   1,
+	})
+	if err != nil {
+		return nil, err
+	}
 	return pack.Comment(s.ctx, comment), nil
 }
