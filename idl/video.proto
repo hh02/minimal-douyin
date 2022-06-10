@@ -59,10 +59,29 @@ message QueryVideoByTimeResponse {
 
 }
 
+message AddFavoriteCountRequest {
+    int64 video_id = 1;
+    sint32 count = 2;
+}
+
+message AddFavoriteCountResponse {
+    common.Status status = 1;
+}
+
+message AddCommentCountRequest {
+    int64 video_id = 1;
+    sint32 count = 2;
+}
+
+message AddCommentCountResponse {
+    common.Status status = 1;
+}
 
 service VideoService {
     rpc CreateVideo (CreateVideoRequest) returns (CreateVideoResponse) {}
     rpc MGetVideo( MGetVideoRequest) returns (MGetVideoResponse) {}
     rpc QueryVideoByUserId (QueryVideoByUserIdRequest) returns (QueryVideoByUserIdResponse) {}
     rpc QueryVideoByTime(QueryVideoByTimeRequest) returns (QueryVideoByTimeResponse) {}
+    rpc AddFavoriteCount(AddFavoriteCountRequest) returns (AddFavoriteCountResponse) {}
+    rpc AddCommentCount(AddCommentCountRequest) returns (AddCommentCountResponse) {}
 }
