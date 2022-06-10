@@ -15,6 +15,8 @@ type Client interface {
 	MGetVideo(ctx context.Context, Req *videorpc.MGetVideoRequest, callOptions ...callopt.Option) (r *videorpc.MGetVideoResponse, err error)
 	QueryVideoByUserId(ctx context.Context, Req *videorpc.QueryVideoByUserIdRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByUserIdResponse, err error)
 	QueryVideoByTime(ctx context.Context, Req *videorpc.QueryVideoByTimeRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByTimeResponse, err error)
+	AddFavoriteCount(ctx context.Context, Req *videorpc.AddFavoriteCountRequest, callOptions ...callopt.Option) (r *videorpc.AddFavoriteCountResponse, err error)
+	AddCommentCount(ctx context.Context, Req *videorpc.AddCommentCountRequest, callOptions ...callopt.Option) (r *videorpc.AddCommentCountResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -64,4 +66,14 @@ func (p *kVideoServiceClient) QueryVideoByUserId(ctx context.Context, Req *video
 func (p *kVideoServiceClient) QueryVideoByTime(ctx context.Context, Req *videorpc.QueryVideoByTimeRequest, callOptions ...callopt.Option) (r *videorpc.QueryVideoByTimeResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.QueryVideoByTime(ctx, Req)
+}
+
+func (p *kVideoServiceClient) AddFavoriteCount(ctx context.Context, Req *videorpc.AddFavoriteCountRequest, callOptions ...callopt.Option) (r *videorpc.AddFavoriteCountResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.AddFavoriteCount(ctx, Req)
+}
+
+func (p *kVideoServiceClient) AddCommentCount(ctx context.Context, Req *videorpc.AddCommentCountRequest, callOptions ...callopt.Option) (r *videorpc.AddCommentCountResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.AddCommentCount(ctx, Req)
 }

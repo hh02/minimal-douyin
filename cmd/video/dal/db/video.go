@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hh02/minimal-douyin/pkg/constants"
+	"gorm.io/gorm"
 )
 
 type Video struct {
@@ -53,4 +54,12 @@ func MgetVideo(ctx context.Context, videoIds []int64) ([]*Video, error) {
 	}
 
 	return res, nil
+}
+
+func AddFavoriteCount(ctx context.Context, videoId int64, count int32) error {
+	return DB.WithContext(ctx).Table(constants.VideoTableName).Where("id = ?", videoId).Update("favorite_count", gorm.Expr("favorite_count + ?", count)).Error
+}
+
+func AddCommentCount(ctx context.Context, videoId int64, count int32) error {
+	return DB.WithContext(ctx).Table(constants.VideoTableName).Where("id = ?", videoId).Update("comment_count", gorm.Expr("comment_count + ?", count)).Error
 }

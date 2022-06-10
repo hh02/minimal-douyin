@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"mime/multipart"
-	"net/http"
 	"os"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -104,23 +103,14 @@ func PublishAction(c *gin.Context) {
 }
 
 func PublishList(c *gin.Context) {
-	if c.IsAborted() {
-		return
-	}
-
 	type param struct {
 		Token  string `form:"token"`
 		UserId int64  `form:"user_id"`
 	}
-	type videoListResponse struct {
-		StatusCode int32             `json:"status_code"` // 状态码，0-成功，其他值-失败
-		StatusMsg  string            `json:"status_msg"`  // 返回状态描述
-		VideoList  []*videorpc.Video `json:"video_list"`  // 用户信息列表
-	}
 
 	var paramVar param
 	if err := c.ShouldBind(&paramVar); err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+		SendVideoListResponse(c, err, nil)
 		return
 	}
 
@@ -130,14 +120,8 @@ func PublishList(c *gin.Context) {
 	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: userId})
 
 	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+		SendVideoListResponse(c, err, nil)
 		return
 	}
-
-	c.JSON(http.StatusOK, videoListResponse{
-		StatusCode: errno.Success.ErrCode,
-		StatusMsg:  errno.Success.ErrMsg,
-		VideoList:  videos,
-	})
-
+	SendVideoListResponse(c, errno.Success, videos)
 }

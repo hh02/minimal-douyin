@@ -24,11 +24,11 @@ func init() {
 		panic(err)
 	}
 	m := DB.Migrator()
-	if m.HasTable(&Like{}) {
+	if m.HasTable(&Favorite{}) {
 		return
 	}
 
-	if err = m.CreateTable(&Like{}); err != nil {
+	if err = m.CreateTable(&Favorite{}); err != nil {
 		panic(err)
 	}
 }

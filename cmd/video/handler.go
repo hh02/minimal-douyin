@@ -74,3 +74,35 @@ func (s *VideoServiceImpl) QueryVideoByTime(ctx context.Context, req *videorpc.Q
 	resp.Videos = videos
 	return resp, nil
 }
+
+func (s *VideoServiceImpl) AddFavoriteCount(ctx context.Context, req *videorpc.AddFavoriteCountRequest) (resp *videorpc.AddFavoriteCountResponse, err error) {
+	resp = new(videorpc.AddFavoriteCountResponse)
+	if req.VideoId <= 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	err = service.NewAddFavoriteCountService(ctx).AddFavoriteCount(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	return resp, nil
+}
+
+func (s *VideoServiceImpl) AddCommentCount(ctx context.Context, req *videorpc.AddCommentCountRequest) (resp *videorpc.AddCommentCountResponse, err error) {
+	resp = new(videorpc.AddCommentCountResponse)
+	if req.VideoId <= 0 {
+		resp.Status = errno.BuildStatus(errno.ParamErr)
+		return resp, nil
+	}
+
+	err = service.NewAddCommentCountService(ctx).AddCommentCount(req)
+	if err != nil {
+		resp.Status = errno.BuildStatus(err)
+		return resp, nil
+	}
+	resp.Status = errno.BuildStatus(errno.Success)
+	return resp, nil
+}

@@ -10,19 +10,19 @@ const (
 	VideoServiceName   = "videoservice"
 	FollowServiceName  = "followservice"
 	CommentServiceName = "commentservice"
-	LikeServiceName    = "likeservice"
+	FavoriteServiceName    = "favoriteservice"
 
 	UserTableName    = "users"
 	VideoTableName   = "videos"
 	FollowTableName  = "follows"
 	CommentTableName = "comments"
-	LikeTableName    = "likes"
+	FavoriteTableName    = "favorites"
 
 	UserServerAddress    = "0.0.0.0:8888"
 	VideoServerAddress   = "0.0.0.0:8889"
 	FollowServerAddress  = "0.0.0.0:8890"
 	CommentServerAddress = "0.0.0.0:8891"
-	LikeServerAddress    = "0.0.0.0:8892"
+	FavoriteServerAddress    = "0.0.0.0:8892"
 
 	MySQLDefaultDSN         = "gorm:gorm@tcp(120.46.179.205:9910)/gorm?charset=utf8&parseTime=True&loc=Local"
 	EtcdAddress             = "120.46.179.205:2379"

@@ -6,4 +6,5 @@ func InitRPC() {
 	initFollowRpc()
 	initCommentRpc()
 	initVideoRpc()
+	initFavoriteRpc()
 }

@@ -1,8 +1,8 @@
 gen_path = ../..
-package_name = likerpc
-service_name = likeservice
+package_name = favoriterpc
+service_name = favoriteservice
 import_path = github.com/hh02/minimal-douyin
-idl_file = like.proto
+idl_file = favorite.proto
 
 server:
 	rm -rf ./script ./build.sh ./handler.go ./main.go && kitex -module $(import_path) -I ../../idl/ -type protobuf -service $(service_name) -use $(import_path)/kitex_gen $(idl_file)
