@@ -113,6 +113,9 @@ func main() {
 
 		douyin.POST("/comment/action/", handlers.CommentAction)
 		douyin.GET("/comment/list/", handlers.CommentList)
+
+		douyin.POST("/favorite/action/", handlers.FavoriteAction)
+		douyin.GET("/favorite/list/", handlers.FavoriteList)
 	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {

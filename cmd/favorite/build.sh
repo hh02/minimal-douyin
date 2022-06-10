@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-RUN_NAME="likeservice"
+RUN_NAME="favoriteservice"
 
 mkdir -p output/bin
 cp script/* output/
