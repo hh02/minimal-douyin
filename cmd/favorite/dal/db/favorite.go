@@ -44,8 +44,8 @@ func QueryFavoriteList(ctx context.Context, userId int64) ([]int64, error) {
 func GetFavorite(ctx context.Context, favorite *Favorite) (*Favorite, error) {
 	var res Favorite
 	if err := DB.WithContext(ctx).Where(map[string]interface{}{
-		"user_id":   favorite.UserId,
-		"follow_id": favorite.VideoId,
+		"user_id":  favorite.UserId,
+		"video_id": favorite.VideoId,
 	}).First(&res).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil

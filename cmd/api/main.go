@@ -105,6 +105,9 @@ func main() {
 	{
 		douyin.GET("/user/", handlers.UserInfo)
 
+		douyin.POST("/favorite/action/", handlers.FavoriteAction)
+		douyin.GET("/favorite/list/", handlers.FavoriteList)
+
 		douyin.POST("/relation/action/", handlers.RelationAction)
 		douyin.GET("/relation/follow/list/", handlers.FollowList)
 		douyin.GET("/relation/follower/list/", handlers.FollowerList)

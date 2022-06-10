@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/hh02/minimal-douyin/cmd/video/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/video/pack"
 	"github.com/hh02/minimal-douyin/cmd/video/rpc"
@@ -27,7 +26,7 @@ func (s *MGetVideoService) MGetVideo(req *videorpc.MGetVideoRequest) ([]*videorp
 
 	// 提取出所有用户ID并去重
 	userIds := pack.UserIds(videoModels)
-
+	// fmt.Println(userIds)
 	userMap, err := rpc.MGetUserMap(s.ctx, &userrpc.MGetUserRequest{
 		UserIds:        userIds,
 		TokenUserId:    req.TokenUserId,

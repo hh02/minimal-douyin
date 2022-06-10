@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/hh02/minimal-douyin/cmd/favorite/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/favorite/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/favoriterpc"
@@ -17,7 +16,7 @@ func NewQueryFavoriteService(ctx context.Context) *QueryFavoriteService {
 	return &QueryFavoriteService{ctx: ctx}
 }
 func (q *QueryFavoriteService) QueryFavorite(req *favoriterpc.QueryFavoriteByUserIdRequest) ([]*videorpc.Video, error) {
-	// 查询用户点赞的所以视频 id
+	// 查询用户点赞的所有视频 id
 	videoIds, err := db.QueryFavoriteList(q.ctx, req.UserId)
 	if err != nil {
 		return nil, err
