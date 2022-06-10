@@ -26,6 +26,8 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"MGetVideo":          kitex.NewMethodInfo(mGetVideoHandler, newMGetVideoArgs, newMGetVideoResult, false),
 		"QueryVideoByUserId": kitex.NewMethodInfo(queryVideoByUserIdHandler, newQueryVideoByUserIdArgs, newQueryVideoByUserIdResult, false),
 		"QueryVideoByTime":   kitex.NewMethodInfo(queryVideoByTimeHandler, newQueryVideoByTimeArgs, newQueryVideoByTimeResult, false),
+		"AddFavoriteCount":   kitex.NewMethodInfo(addFavoriteCountHandler, newAddFavoriteCountArgs, newAddFavoriteCountResult, false),
+		"AddCommentCount":    kitex.NewMethodInfo(addCommentCountHandler, newAddCommentCountArgs, newAddCommentCountResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "video",
@@ -453,6 +455,212 @@ func (p *QueryVideoByTimeResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
+func addFavoriteCountHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(videorpc.AddFavoriteCountRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(videorpc.VideoService).AddFavoriteCount(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *AddFavoriteCountArgs:
+		success, err := handler.(videorpc.VideoService).AddFavoriteCount(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*AddFavoriteCountResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newAddFavoriteCountArgs() interface{} {
+	return &AddFavoriteCountArgs{}
+}
+
+func newAddFavoriteCountResult() interface{} {
+	return &AddFavoriteCountResult{}
+}
+
+type AddFavoriteCountArgs struct {
+	Req *videorpc.AddFavoriteCountRequest
+}
+
+func (p *AddFavoriteCountArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in AddFavoriteCountArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *AddFavoriteCountArgs) Unmarshal(in []byte) error {
+	msg := new(videorpc.AddFavoriteCountRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var AddFavoriteCountArgs_Req_DEFAULT *videorpc.AddFavoriteCountRequest
+
+func (p *AddFavoriteCountArgs) GetReq() *videorpc.AddFavoriteCountRequest {
+	if !p.IsSetReq() {
+		return AddFavoriteCountArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *AddFavoriteCountArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type AddFavoriteCountResult struct {
+	Success *videorpc.AddFavoriteCountResponse
+}
+
+var AddFavoriteCountResult_Success_DEFAULT *videorpc.AddFavoriteCountResponse
+
+func (p *AddFavoriteCountResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in AddFavoriteCountResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *AddFavoriteCountResult) Unmarshal(in []byte) error {
+	msg := new(videorpc.AddFavoriteCountResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *AddFavoriteCountResult) GetSuccess() *videorpc.AddFavoriteCountResponse {
+	if !p.IsSetSuccess() {
+		return AddFavoriteCountResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *AddFavoriteCountResult) SetSuccess(x interface{}) {
+	p.Success = x.(*videorpc.AddFavoriteCountResponse)
+}
+
+func (p *AddFavoriteCountResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func addCommentCountHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(videorpc.AddCommentCountRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(videorpc.VideoService).AddCommentCount(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *AddCommentCountArgs:
+		success, err := handler.(videorpc.VideoService).AddCommentCount(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*AddCommentCountResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newAddCommentCountArgs() interface{} {
+	return &AddCommentCountArgs{}
+}
+
+func newAddCommentCountResult() interface{} {
+	return &AddCommentCountResult{}
+}
+
+type AddCommentCountArgs struct {
+	Req *videorpc.AddCommentCountRequest
+}
+
+func (p *AddCommentCountArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in AddCommentCountArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *AddCommentCountArgs) Unmarshal(in []byte) error {
+	msg := new(videorpc.AddCommentCountRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var AddCommentCountArgs_Req_DEFAULT *videorpc.AddCommentCountRequest
+
+func (p *AddCommentCountArgs) GetReq() *videorpc.AddCommentCountRequest {
+	if !p.IsSetReq() {
+		return AddCommentCountArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *AddCommentCountArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type AddCommentCountResult struct {
+	Success *videorpc.AddCommentCountResponse
+}
+
+var AddCommentCountResult_Success_DEFAULT *videorpc.AddCommentCountResponse
+
+func (p *AddCommentCountResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in AddCommentCountResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *AddCommentCountResult) Unmarshal(in []byte) error {
+	msg := new(videorpc.AddCommentCountResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *AddCommentCountResult) GetSuccess() *videorpc.AddCommentCountResponse {
+	if !p.IsSetSuccess() {
+		return AddCommentCountResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *AddCommentCountResult) SetSuccess(x interface{}) {
+	p.Success = x.(*videorpc.AddCommentCountResponse)
+}
+
+func (p *AddCommentCountResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -498,6 +706,26 @@ func (p *kClient) QueryVideoByTime(ctx context.Context, Req *videorpc.QueryVideo
 	_args.Req = Req
 	var _result QueryVideoByTimeResult
 	if err = p.c.Call(ctx, "QueryVideoByTime", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) AddFavoriteCount(ctx context.Context, Req *videorpc.AddFavoriteCountRequest) (r *videorpc.AddFavoriteCountResponse, err error) {
+	var _args AddFavoriteCountArgs
+	_args.Req = Req
+	var _result AddFavoriteCountResult
+	if err = p.c.Call(ctx, "AddFavoriteCount", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) AddCommentCount(ctx context.Context, Req *videorpc.AddCommentCountRequest) (r *videorpc.AddCommentCountResponse, err error) {
+	var _args AddCommentCountArgs
+	_args.Req = Req
+	var _result AddCommentCountResult
+	if err = p.c.Call(ctx, "AddCommentCount", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
