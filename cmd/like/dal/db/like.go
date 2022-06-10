@@ -3,44 +3,49 @@ package db
 import (
 	"context"
 	"errors"
+
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"gorm.io/gorm"
 )
 
 type Like struct {
-	//点赞id
+	// 用户ID
 	UserId int64 `gorm:"primaryKey;autoIncrement:false"`
-
-	VideoId    int64          `gorm:"primaryKey;autoIncrement:false"`
-	CreateTime int64          `gorm:"autoCreateTime:nano"`
-	DeletedAt  gorm.DeletedAt `gorm:"index"`
+	// 视频ID(联合主键的第二个键需要添加索引)
+	VideoId    int64 `gorm:"primaryKey;index;autoIncrement:false"`
+	CreateTime int64 `gorm:"autoCreateTime:nano"`
 }
 
-func (l *Like) TableName() string {
+func (f *Like) TableName() string {
 	return constants.LikeTableName
 }
-func CreateLike(ctx context.Context, l *Like) (int64, error) {
-	create := DB.WithContext(ctx).Create(l)
-	return create.RowsAffected, create.Error
-}
-func DeleteLike(ctx context.Context, l *Like) (int64, error) {
-	tx := DB.WithContext(ctx).Delete(l)
-	return tx.RowsAffected, tx.Error
+
+// 点赞
+func CreateLike(ctx context.Context, like *Like) error {
+	return DB.WithContext(ctx).Create(like).Error
 }
 
-func QueryLike(ctx context.Context, videoID int64) ([]int64, error) {
+// 取消点赞
+func DeleteLike(ctx context.Context, like *Like) (int64, error) {
+	result := DB.WithContext(ctx).Delete(like)
+	return result.RowsAffected, result.Error
+}
+
+// QueryLikeList 返回点赞视频 id 列表
+func QueryLikeList(ctx context.Context, userId int64) ([]int64, error) {
 	var res []int64
-	if err := DB.WithContext(ctx).Order("create_time desc").Select("user_id").Where("video_id=?", videoID).Find(&res).Error; err != nil {
-		return res, nil
+	if err := DB.WithContext(ctx).Table(constants.LikeTableName).Order("create_time desc").Select("video_id").Where("user_id = ?", userId).Find(&res).Error; err != nil {
+		return nil, err
 	}
 	return res, nil
 }
 
-func Getlike(ctx context.Context, like *Like) (*Like, error) {
+// GetLike 根据复合主键查询记录
+func GetLike(ctx context.Context, like *Like) (*Like, error) {
 	var res Like
 	if err := DB.WithContext(ctx).Where(map[string]interface{}{
-		"userID":  like.UserId,
-		"videoId": like.VideoId,
+		"user_id":   like.UserId,
+		"follow_id": like.VideoId,
 	}).First(&res).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -48,5 +53,4 @@ func Getlike(ctx context.Context, like *Like) (*Like, error) {
 		return nil, err
 	}
 	return &res, nil
-
 }
