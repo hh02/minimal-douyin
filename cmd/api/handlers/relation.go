@@ -50,7 +50,7 @@ func RelationAction(c *gin.Context) {
 			return
 		}
 	} else if relationVar.ActionType == 2 {
-		err := rpc.DeleteFollow(c, &followrpc.DeleteFollowRequest{
+		err := rpc.DeleteFollow(context.Background(), &followrpc.DeleteFollowRequest{
 			UserId:   userId,
 			FollowId: relationVar.ToUserId,
 		})
