@@ -47,6 +47,10 @@ func SendRelationFollowerListResponse(c *gin.Context, err error, users []*userrp
 }
 
 func RelationAction(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendRelationActionResponse(c, err)
+		return
+	}
 	type RelationParam struct {
 		Token      string `form:"token" binding:"required"`
 		ToUserId   int64  `form:"to_user_id" binding:"required"`
@@ -93,6 +97,10 @@ func RelationAction(c *gin.Context) {
 }
 
 func FollowList(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendRelationFollowListResponse(c, err, nil)
+		return
+	}
 	type FollowListParam struct {
 		UserId int64  `form:"user_id"`
 		Token  string `form:"token"`
@@ -118,6 +126,10 @@ func FollowList(c *gin.Context) {
 }
 
 func FollowerList(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendRelationFollowerListResponse(c, err, nil)
+		return
+	}
 	type FollowerListParam struct {
 		UserId int64  `form:"user_id"`
 		Token  string `form:"token"`

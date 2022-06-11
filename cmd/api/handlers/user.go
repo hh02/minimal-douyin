@@ -57,6 +57,10 @@ func SendUserRegisterResponse(c *gin.Context, err error, userId int64, token str
 
 // UserInfo query user info
 func UserInfo(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendUserResponse(c, err, nil)
+		return
+	}
 	tokenID := utils.GetIdFromClaims(c)
 	if tokenID == 0 {
 		SendUserResponse(c, errno.AuthErr, nil)

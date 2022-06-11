@@ -126,6 +126,10 @@ func PublishAction(c *gin.Context) {
 }
 
 func PublishList(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendPublishListResponse(c, err, nil)
+		return
+	}
 	type param struct {
 		Token  string `form:"token"`
 		UserId int64  `form:"user_id"`
