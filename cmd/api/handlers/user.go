@@ -5,12 +5,10 @@ import (
 
 	"net/http"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
-	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 
 	"github.com/gin-gonic/gin"
@@ -59,8 +57,11 @@ func SendUserRegisterResponse(c *gin.Context, err error, userId int64, token str
 
 // UserInfo query user info
 func UserInfo(c *gin.Context) {
-	claims := jwt.ExtractClaims(c)
-	tokenID := int64(claims[constants.IdentityKey].(float64))
+	tokenID := utils.GetIdFromClaims(c)
+	if tokenID == 0 {
+		SendUserResponse(c, errno.AuthErr, nil)
+		return
+	}
 	var queryVar struct {
 		UserId int64 `json:"user_id" form:"user_id"`
 	}

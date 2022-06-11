@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
-	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
@@ -65,16 +63,16 @@ func RelationAction(c *gin.Context) {
 		return
 	}
 
-	clams := jwt.ExtractClaims(c)
-	userId := int64(clams[constants.IdentityKey].(float64))
-	if userId == 0 {
-
+	tokenId := utils.GetIdFromClaims(c)
+	if tokenId == 0 {
+		SendUserResponse(c, errno.AuthErr, nil)
+		return
 	}
 
 	// 1 for follow, 2 for unfollow
 	if relationVar.ActionType == 1 {
 		err := rpc.CreateFollow(context.Background(), &followrpc.CreateFollowRequest{
-			UserId:   userId,
+			UserId:   tokenId,
 			FollowId: relationVar.ToUserId,
 		})
 		if err != nil {
@@ -83,7 +81,7 @@ func RelationAction(c *gin.Context) {
 		}
 	} else if relationVar.ActionType == 2 {
 		err := rpc.DeleteFollow(context.Background(), &followrpc.DeleteFollowRequest{
-			UserId:   userId,
+			UserId:   tokenId,
 			FollowId: relationVar.ToUserId,
 		})
 		if err != nil {
