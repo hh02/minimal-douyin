@@ -39,6 +39,10 @@ func RelationAction(c *gin.Context) {
 
 	clams := jwt.ExtractClaims(c)
 	userId := int64(clams[constants.IdentityKey].(float64))
+	if userId == 0 {
+
+	}
+
 	// 1 for follow, 2 for unfollow
 	if relationVar.ActionType == 1 {
 		err := rpc.CreateFollow(context.Background(), &followrpc.CreateFollowRequest{
