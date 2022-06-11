@@ -2,6 +2,7 @@ package pack
 
 import (
 	"context"
+
 	"github.com/hh02/minimal-douyin/cmd/comment/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/comment/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
@@ -32,6 +33,9 @@ func Comment(ctx context.Context, c *db.Comment) *commentrpc.Comment {
 
 // MComment pack many db.Comment to commentrpc.Comment
 func MComment(ctx context.Context, comments []*db.Comment, tokenId int64) ([]*commentrpc.Comment, error) {
+	if len(comments) == 0 {
+		return nil, nil
+	}
 	res := make([]*commentrpc.Comment, 0)
 	ids := make([]int64, 0)
 	// 建立 id 对应查询出来的 users 的 id

@@ -8,7 +8,9 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/followrpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
@@ -20,6 +22,32 @@ type UserListResponse struct {
 	UserList   []*userrpc.User `json:"user_list"`   // 用户信息列表
 }
 
+func SendRelationActionResponse(c *gin.Context, err error) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.RelationActionResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+	})
+}
+
+func SendRelationFollowListResponse(c *gin.Context, err error, users []*userrpc.User) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.RelationFollowListResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		UserList:   users,
+	})
+}
+
+func SendRelationFollowerListResponse(c *gin.Context, err error, users []*userrpc.User) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.RelationFollowerListResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		UserList:   users,
+	})
+}
+
 func RelationAction(c *gin.Context) {
 	type RelationParam struct {
 		Token      string `form:"token" binding:"required"`
@@ -29,11 +57,11 @@ func RelationAction(c *gin.Context) {
 
 	var relationVar RelationParam
 	if err := c.ShouldBind(&relationVar); err != nil {
-		SendStatusResponse(c, err)
+		SendRelationActionResponse(c, err)
 		return
 	}
 	if relationVar.ToUserId <= 0 || (relationVar.ActionType != 1 && relationVar.ActionType != 2) {
-		SendStatusResponse(c, errno.ParamErr)
+		SendRelationActionResponse(c, errno.ParamErr)
 		return
 	}
 
@@ -46,7 +74,7 @@ func RelationAction(c *gin.Context) {
 			FollowId: relationVar.ToUserId,
 		})
 		if err != nil {
-			SendStatusResponse(c, errno.ConvertErr(err))
+			SendRelationActionResponse(c, err)
 			return
 		}
 	} else if relationVar.ActionType == 2 {
@@ -55,11 +83,11 @@ func RelationAction(c *gin.Context) {
 			FollowId: relationVar.ToUserId,
 		})
 		if err != nil {
-			SendStatusResponse(c, errno.ConvertErr(err))
+			SendRelationActionResponse(c, err)
 			return
 		}
 	}
-	SendStatusResponse(c, errno.Success)
+	SendRelationActionResponse(c, errno.Success)
 }
 
 func FollowList(c *gin.Context) {
@@ -70,7 +98,7 @@ func FollowList(c *gin.Context) {
 
 	var followListVar FollowListParam
 	if err := c.ShouldBindQuery(&followListVar); err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+		SendRelationFollowListResponse(c, err, nil)
 		return
 	}
 
@@ -80,15 +108,11 @@ func FollowList(c *gin.Context) {
 	})
 
 	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+		SendRelationFollowListResponse(c, err, nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, UserListResponse{
-		StatusCode: errno.Success.ErrCode,
-		StatusMsg:  errno.Success.ErrMsg,
-		UserList:   users,
-	})
+	SendRelationFollowListResponse(c, errno.Success, users)
 }
 
 func FollowerList(c *gin.Context) {
@@ -99,22 +123,17 @@ func FollowerList(c *gin.Context) {
 
 	var followerListVar FollowerListParam
 	if err := c.BindQuery(&followerListVar); err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+		SendRelationFollowerListResponse(c, err, nil)
 		return
 	}
 
 	users, err := rpc.QueryFollower(context.Background(), &followrpc.QueryFollowerRequest{
 		UserId: followerListVar.UserId,
 	})
-
 	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err))
+		SendRelationFollowerListResponse(c, err, nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, UserListResponse{
-		StatusCode: errno.Success.ErrCode,
-		StatusMsg:  errno.Success.ErrMsg,
-		UserList:   users,
-	})
+	SendRelationFollowerListResponse(c, errno.Success, users)
 }

@@ -1,0 +1,91 @@
+syntax = "proto3";
+package response;
+option go_package = "response";
+
+import "video.proto";
+import "user.proto";
+import "comment.proto";
+
+
+message FeedResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    int64 next_time = 3;
+    repeated video.Video video_list = 4;
+
+}
+
+
+message UserRegisterResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    int64 user_id = 3;
+    string token = 4;
+}
+
+message UserLoginResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    int64 user_id = 3;
+    string token = 4;
+}
+
+message UserResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    user.User user = 3;
+}
+
+message PublishActionResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+}
+
+message PublishListResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    repeated video.Video video_list = 3;
+}
+
+message FavoriteActionResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+}
+
+message FavoriteListResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    repeated video.Video video_list = 3;
+}
+
+message CommentActionResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    comment.Comment comment = 3;
+}
+
+message CommentListResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    repeated comment.Comment comment_list = 3;
+}
+
+message RelationActionResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+}
+
+message RelationFollowListResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    repeated user.User user_list = 3;
+}
+
+message RelationFollowerListResponse {
+    int32 status_code = 1;
+    string status_msg = 2;
+    repeated user.User user_list = 3;
+}
+
+
+

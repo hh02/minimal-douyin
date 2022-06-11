@@ -23,7 +23,7 @@ func initVideoRpc() {
 	}
 
 	c, err := videoservice.NewClient(
-		constants.FollowServiceName,
+		constants.VideoServiceName,
 		//client.WithMiddleware(middleware.CommonMiddleware),
 		//client.WithInstanceMW(middleware.ClientMiddleware),
 		client.WithMuxConnection(1),                       // mux

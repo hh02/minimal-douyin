@@ -5,24 +5,24 @@ const (
 	Total       = "total"
 	User        = "user"
 
-	ApiServiceName     = "demoapi"
-	UserServiceName    = "userservice"
-	VideoServiceName   = "videoservice"
-	FollowServiceName  = "followservice"
-	CommentServiceName = "commentservice"
-	FavoriteServiceName    = "favoriteservice"
+	ApiServiceName      = "demoapi"
+	UserServiceName     = "userservice"
+	VideoServiceName    = "videoservice"
+	FollowServiceName   = "followservice"
+	CommentServiceName  = "commentservice"
+	FavoriteServiceName = "favoriteservice"
 
-	UserTableName    = "users"
-	VideoTableName   = "videos"
-	FollowTableName  = "follows"
-	CommentTableName = "comments"
-	FavoriteTableName    = "favorites"
+	UserTableName     = "users"
+	VideoTableName    = "videos"
+	FollowTableName   = "follows"
+	CommentTableName  = "comments"
+	FavoriteTableName = "favorites"
 
-	UserServerAddress    = "0.0.0.0:8888"
-	VideoServerAddress   = "0.0.0.0:8889"
-	FollowServerAddress  = "0.0.0.0:8890"
-	CommentServerAddress = "0.0.0.0:8891"
-	FavoriteServerAddress    = "0.0.0.0:8892"
+	UserServerAddress     = "0.0.0.0:8888"
+	VideoServerAddress    = "0.0.0.0:8889"
+	FollowServerAddress   = "0.0.0.0:8890"
+	CommentServerAddress  = "0.0.0.0:8891"
+	FavoriteServerAddress = "0.0.0.0:8892"
 
 	MySQLDefaultDSN         = "gorm:gorm@tcp(120.46.179.205:9910)/gorm?charset=utf8&parseTime=True&loc=Local"
 	EtcdAddress             = "120.46.179.205:2379"
@@ -30,7 +30,7 @@ const (
 	DefaultLimit            = 10
 
 	StaticRelativePath = "/static"
-	StaticServerPath   = "120.46.179.205" + StaticRelativePath
+	StaticServerPath   = "http://120.46.179.205" + StaticRelativePath
 	StaticLocalPath    = "./static"
 	VideoLocalPath     = StaticLocalPath + "/video"
 	CoverLocalPath     = StaticLocalPath + "/cover"

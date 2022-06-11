@@ -3,25 +3,32 @@ package handlers
 import (
 	"context"
 	"fmt"
-	jwt "github.com/appleboy/gin-jwt/v2"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
-	"github.com/hh02/minimal-douyin/pkg/constants"
+	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/pkg/errno"
-	"net/http"
 )
 
-type CommentActionResponse struct {
-	StatusCode int32               `json:"status_code"`
-	StatusMsg  string              `json:"status_msg"`
-	Comment    *commentrpc.Comment `json:"comment"`
+func SendCommentActionResponse(c *gin.Context, err error, comment *commentrpc.Comment) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.CommentActionResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		Comment:    comment,
+	})
 }
 
-type CommentListResponse struct {
-	StatusCode  int32                 `json:"status_code"`
-	StatusMsg   string                `json:"status_msg"`
-	CommentList []*commentrpc.Comment `json:"comment_list"`
+func SendCommentListResponse(c *gin.Context, err error, comments []*commentrpc.Comment) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.CommentListResponse{
+		StatusCode:  Err.ErrCode,
+		StatusMsg:   Err.ErrMsg,
+		CommentList: comments,
+	})
 }
 
 // CommentAction create comment or delete comment
@@ -36,11 +43,15 @@ func CommentAction(c *gin.Context) {
 
 	var commentVar CommentParam
 	if err := c.ShouldBind(&commentVar); err != nil {
-		SendStatusResponse(c, err)
+		SendCommentActionResponse(c, err, nil)
 		return
 	}
-	clams := jwt.ExtractClaims(c)
-	tokenId := int64(clams[constants.IdentityKey].(float64))
+
+	tokenId := utils.GetIdFromClaims(c)
+	if tokenId == 0 {
+		SendCommentActionResponse(c, errno.AuthErr, nil)
+		return
+	}
 
 	fmt.Println(commentVar)
 	// 1 create comment ; 2 delete comment
@@ -52,14 +63,10 @@ func CommentAction(c *gin.Context) {
 		}
 		comment, err := rpc.CreateComment(context.Background(), req)
 		if err != nil {
-			SendStatusResponse(c, err)
+			SendCommentActionResponse(c, err, nil)
 			return
 		}
-		c.JSON(http.StatusOK, CommentActionResponse{
-			StatusCode: errno.Success.ErrCode,
-			StatusMsg:  errno.Success.ErrMsg,
-			Comment:    comment,
-		})
+		SendCommentActionResponse(c, errno.Success, comment)
 	} else if commentVar.ActionType == 2 {
 		req := &commentrpc.DeleteCommentRequest{
 			UserId:    tokenId,
@@ -67,16 +74,13 @@ func CommentAction(c *gin.Context) {
 		}
 		err := rpc.DeleteComment(context.Background(), req)
 		if err != nil {
-			SendStatusResponse(c, err)
+			SendCommentActionResponse(c, err, nil)
 			return
 		}
-		c.JSON(http.StatusOK, CommentActionResponse{
-			StatusCode: errno.Success.ErrCode,
-			StatusMsg:  errno.Success.ErrMsg,
-			Comment:    nil,
-		})
+		SendCommentActionResponse(c, errno.Success, nil)
+
 	} else {
-		SendStatusResponse(c, errno.ParamErr)
+		SendCommentActionResponse(c, errno.ParamErr, nil)
 	}
 }
 
@@ -89,27 +93,25 @@ func CommentList(c *gin.Context) {
 
 	var commentVar CommentParam
 	if err := c.ShouldBind(&commentVar); err != nil {
-		SendStatusResponse(c, err)
+		SendCommentListResponse(c, err, nil)
 		return
 	}
 
-	clams := jwt.ExtractClaims(c)
-	tokenId := int64(clams[constants.IdentityKey].(float64))
+	tokenId := utils.GetIdFromClaims(c)
+	if tokenId == 0 {
+		SendCommentListResponse(c, errno.AuthErr, nil)
+		return
+	}
 
 	req := &commentrpc.QueryCommentByVideoIdRequest{
 		VideoId:     commentVar.VideoId,
 		TokenUserId: tokenId,
 	}
-	fmt.Println("???")
 	comments, err := rpc.QueryCommentByVideo(context.Background(), req)
 	if err != nil {
-		SendStatusResponse(c, err)
+		SendCommentListResponse(c, err, nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, &CommentListResponse{
-		StatusCode:  errno.Success.ErrCode,
-		StatusMsg:   errno.Success.ErrMsg,
-		CommentList: comments,
-	})
+	SendCommentListResponse(c, errno.Success, comments)
 }
