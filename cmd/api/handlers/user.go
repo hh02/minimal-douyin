@@ -63,7 +63,7 @@ func UserInfo(c *gin.Context) {
 	}
 	tokenID := utils.GetIdFromClaims(c)
 	if tokenID == 0 {
-		SendUserResponse(c, errno.AuthErr, nil)
+		SendUserResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 	var queryVar struct {

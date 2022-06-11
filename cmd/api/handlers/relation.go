@@ -69,7 +69,7 @@ func RelationAction(c *gin.Context) {
 
 	tokenId := utils.GetIdFromClaims(c)
 	if tokenId == 0 {
-		SendUserResponse(c, errno.AuthErr, nil)
+		SendUserResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 

@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
@@ -91,7 +90,7 @@ func PublishAction(c *gin.Context) {
 
 	userId := utils.GetIdFromClaims(c)
 	if userId == 0 {
-		SendPublishActionResponse(c, errno.AuthErr)
+		SendPublishActionResponse(c, errno.GetIdFromClaimsErr)
 		return
 	}
 
@@ -141,8 +140,11 @@ func PublishList(c *gin.Context) {
 		return
 	}
 
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	userId := utils.GetIdFromClaims(c)
+	if userId == 0 {
+		SendPublishListResponse(c, errno.GetIdFromClaimsErr, nil)
+		return
+	}
 
 	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: userId})
 

@@ -49,7 +49,7 @@ func FavoriteAction(c *gin.Context) {
 
 	userId := utils.GetIdFromClaims(c)
 	if userId == 0 {
-		SendFavoriteActionResponse(c, errno.AuthErr)
+		SendFavoriteActionResponse(c, errno.GetIdFromClaimsErr)
 		return
 	}
 
@@ -96,7 +96,7 @@ func FavoriteList(c *gin.Context) {
 
 	userId := utils.GetIdFromClaims(c)
 	if userId == 0 {
-		SendFavoriteListResponse(c, errno.AuthErr, nil)
+		SendFavoriteListResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 

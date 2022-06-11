@@ -53,7 +53,7 @@ func CommentAction(c *gin.Context) {
 
 	tokenId := utils.GetIdFromClaims(c)
 	if tokenId == 0 {
-		SendCommentActionResponse(c, errno.AuthErr, nil)
+		SendCommentActionResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 
@@ -107,7 +107,7 @@ func CommentList(c *gin.Context) {
 
 	tokenId := utils.GetIdFromClaims(c)
 	if tokenId == 0 {
-		SendCommentListResponse(c, errno.AuthErr, nil)
+		SendCommentListResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 

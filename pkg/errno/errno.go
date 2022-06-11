@@ -21,6 +21,7 @@ const (
 	DeleteErrCode               = 10010
 	GetVideoErrCode             = 10011
 	GetCoverErrCode             = 10012
+	GetIdFromClaimsErrCode      = 10013
 )
 
 type ErrNo struct {
@@ -55,6 +56,7 @@ var (
 	DeleteErr               = NewErrNo(DeleteErrCode, "Delete has Wrong")
 	GetVideoErr             = NewErrNo(GetVideoErrCode, "No more videos")
 	GetCoverErr             = NewErrNo(GetCoverErrCode, "Get cover failed")
+	GetIdFromClaimsErr      = NewErrNo(GetIdFromClaimsErrCode, "Failed to get ID from claims")
 )
 
 // BuildStatus build baseResp from error
