@@ -20,7 +20,7 @@ func Init() {
 
 func main() {
 	Init()
-	r := gin.New()
+	r := gin.Default()
 
 	r.Static(constants.StaticRelativePath, constants.StaticLocalPath)
 

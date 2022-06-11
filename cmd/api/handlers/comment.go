@@ -50,7 +50,7 @@ func CommentAction(c *gin.Context) {
 		SendCommentActionResponse(c, err, nil)
 		return
 	}
-
+	
 	tokenId := utils.GetIdFromClaims(c)
 	if tokenId == 0 {
 		SendCommentActionResponse(c, errno.GetIdFromClaimsErr, nil)
