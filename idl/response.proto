@@ -10,8 +10,9 @@ import "comment.proto";
 message FeedResponse {
     int32 status_code = 1;
     string status_msg = 2;
-    repeated video.Video video_list = 3;
-    int64 next_time = 4;
+    int64 next_time = 3;
+    repeated video.Video video_list = 4;
+
 }
 
 
@@ -80,9 +81,11 @@ message RelationFollowListResponse {
     repeated user.User user_list = 3;
 }
 
-message RelationFollwerListResponse {
+message RelationFollowerListResponse {
     int32 status_code = 1;
     string status_msg = 2;
     repeated user.User user_list = 3;
 }
+
+
 

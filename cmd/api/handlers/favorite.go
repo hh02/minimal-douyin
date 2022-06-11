@@ -2,15 +2,35 @@ package handlers
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/favoriterpc"
+	"github.com/hh02/minimal-douyin/kitex_gen/response"
+	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
+
+func SendFavoriteActionResponse(c *gin.Context, err error) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.FavoriteActionResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+	})
+}
+
+func SendFavoriteListResponse(c *gin.Context, err error, videos []*videorpc.Video) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.FavoriteListResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		VideoList:  videos,
+	})
+}
 
 func FavoriteAction(c *gin.Context) {
 	type formParam struct {
@@ -21,7 +41,7 @@ func FavoriteAction(c *gin.Context) {
 
 	var param formParam
 	if err := c.ShouldBind(&param); err != nil {
-		SendStatusResponse(c, errno.ParamErr)
+		SendFavoriteActionResponse(c, err)
 		return
 	}
 
@@ -34,7 +54,7 @@ func FavoriteAction(c *gin.Context) {
 			VideoId: param.VideoId,
 		})
 		if err != nil {
-			SendStatusResponse(c, errno.ConvertErr(err))
+			SendFavoriteActionResponse(c, err)
 			return
 		}
 	} else if param.ActionType == 2 {
@@ -43,11 +63,14 @@ func FavoriteAction(c *gin.Context) {
 			VideoId: param.VideoId,
 		})
 		if err != nil {
-			SendStatusResponse(c, errno.ConvertErr(err))
+			SendFavoriteActionResponse(c, err)
 			return
 		}
+	} else {
+		SendFavoriteActionResponse(c, errno.ParamErr)
+		return
 	}
-	SendStatusResponse(c, errno.Success)
+	SendFavoriteActionResponse(c, errno.Success)
 }
 
 func FavoriteList(c *gin.Context) {
@@ -58,19 +81,19 @@ func FavoriteList(c *gin.Context) {
 
 	var param formParam
 	if err := c.ShouldBind(&param); err != nil {
-		SendVideoListResponse(c, err, nil)
+		SendFavoriteListResponse(c, err, nil)
 		return
 	}
 
 	claims := jwt.ExtractClaims(c)
 	userId := int64(claims[constants.IdentityKey].(float64))
-	fmt.Println(param)
+
 	videos, err := rpc.QueryFavorite(context.Background(), &favoriterpc.QueryFavoriteByUserIdRequest{
 		UserId: userId,
 	})
 	if err != nil {
-		SendVideoListResponse(c, err, nil)
+		SendFavoriteListResponse(c, err, nil)
 		return
 	}
-	SendVideoListResponse(c, errno.Success, videos)
+	SendFavoriteListResponse(c, errno.Success, videos)
 }

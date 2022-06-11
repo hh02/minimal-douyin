@@ -5,18 +5,37 @@ import (
 	"context"
 	"fmt"
 	"mime/multipart"
+	"net/http"
 	"os"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/utils"
+	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	uuid "github.com/satori/go.uuid"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
+
+func SendPublishActionResponse(c *gin.Context, err error) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.PublishActionResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+	})
+}
+func SendPublishListResponse(c *gin.Context, err error, videos []*videorpc.Video) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.PublishListResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		VideoList:  videos,
+	})
+}
 
 // 获取视频封面
 func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
@@ -51,12 +70,12 @@ func PublishAction(c *gin.Context) {
 
 	var formParamVar formParam
 	if err := c.ShouldBind(&formParamVar); err != nil {
-		SendStatusResponse(c, errno.ParamErr)
+		SendPublishActionResponse(c, err)
 		return
 	}
 
 	if len(formParamVar.Title) > 100 {
-		SendStatusResponse(c, errno.ParamErr.WithMessage("标题长度超过100"))
+		SendPublishActionResponse(c, errno.ParamErr.WithMessage("标题长度超过100"))
 		return
 	}
 
@@ -66,6 +85,7 @@ func PublishAction(c *gin.Context) {
 
 	// 鉴权失败则返回
 	if c.IsAborted() {
+		SendPublishActionResponse(c, errno.AuthErr)
 		return
 	}
 
@@ -80,7 +100,7 @@ func PublishAction(c *gin.Context) {
 	c.SaveUploadedFile(formParamVar.Data, videoLocalPath)
 	err := getSnapshot(videoLocalPath, coverLocalPath, 1)
 	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err).WithMessage("获取封面失败"))
+		SendPublishActionResponse(c, errno.GetCoverErr)
 		return
 	}
 
@@ -95,10 +115,10 @@ func PublishAction(c *gin.Context) {
 	})
 
 	if err != nil {
-		SendStatusResponse(c, errno.ConvertErr(err).WithMessage("创建视频失败"))
+		SendPublishActionResponse(c, err)
 		return
 	}
-	SendStatusResponse(c, errno.Success)
+	SendPublishActionResponse(c, errno.Success)
 
 }
 
@@ -110,7 +130,7 @@ func PublishList(c *gin.Context) {
 
 	var paramVar param
 	if err := c.ShouldBind(&paramVar); err != nil {
-		SendVideoListResponse(c, err, nil)
+		SendPublishListResponse(c, err, nil)
 		return
 	}
 
@@ -120,8 +140,8 @@ func PublishList(c *gin.Context) {
 	videos, err := rpc.QueryVideoByUserId(context.Background(), &videorpc.QueryVideoByUserIdRequest{UserId: userId})
 
 	if err != nil {
-		SendVideoListResponse(c, err, nil)
+		SendPublishListResponse(c, err, nil)
 		return
 	}
-	SendVideoListResponse(c, errno.Success, videos)
+	SendPublishListResponse(c, errno.Success, videos)
 }

@@ -20,6 +20,7 @@ const (
 	FavoriteAlreadyExistErrCode = 10009
 	DeleteErrCode               = 10010
 	GetVideoErrCode             = 10011
+	GetCoverErrCode             = 10012
 )
 
 type ErrNo struct {
@@ -53,6 +54,7 @@ var (
 	FavoriteAlreadyExistErr = NewErrNo(FavoriteAlreadyExistErrCode, "Favorite already exist")
 	DeleteErr               = NewErrNo(DeleteErrCode, "Delete has Wrong")
 	GetVideoErr             = NewErrNo(GetVideoErrCode, "No more videos")
+	GetCoverErr             = NewErrNo(GetCoverErrCode, "Get cover failed")
 )
 
 // BuildStatus build baseResp from error
