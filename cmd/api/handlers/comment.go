@@ -46,6 +46,7 @@ func CommentAction(c *gin.Context) {
 	}
 
 	var commentVar CommentParam
+	//fmt.Println(c.Query("comment_id"))
 	if err := c.ShouldBind(&commentVar); err != nil {
 		SendCommentActionResponse(c, err, nil)
 		return
@@ -77,6 +78,7 @@ func CommentAction(c *gin.Context) {
 			CommentId: commentVar.CommentId,
 		}
 		err := rpc.DeleteComment(context.Background(), req)
+		fmt.Println(err)
 		if err != nil {
 			SendCommentActionResponse(c, err, nil)
 			return
