@@ -39,6 +39,6 @@ func DeleteComment(ctx context.Context, commentId int64) error {
 // QueryCommentByVideoId 根据 VideoId 查询评论
 func QueryCommentByVideoId(ctx context.Context, videoId int64) ([]*Comment, error) {
 	res := make([]*Comment, 0)
-	err := DB.WithContext(ctx).Where("video_id = ?", videoId).Find(&res).Error
+	err := DB.WithContext(ctx).Where("video_id = ?", videoId).Order("created_at asc").Find(&res).Error
 	return res, err
 }
