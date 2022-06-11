@@ -30,14 +30,14 @@ func main() {
 	// 注册后登录
 	douyin.POST("/user/register/", handlers.UserRegister)
 
-	// 要根据是否有token来决定是否调用鉴权
-	douyin.GET("/feed", handlers.Feed, middleware.AuthMiddleware.MiddlewareFunc())
-
 	// 因为token在body中，要先取出来
 	douyin.POST("/publish/action/", handlers.PublishAction, middleware.AuthMiddleware.MiddlewareFunc())
 
+	// 鉴权失败，后面的handler也会执行
 	douyin.Use(middleware.AuthMiddleware.MiddlewareFunc())
 	{
+		douyin.GET("/feed", handlers.Feed) // 要根据是否有token来决定是否调用鉴权
+
 		douyin.GET("/user/", handlers.UserInfo)
 
 		douyin.POST("/favorite/action/", handlers.FavoriteAction)

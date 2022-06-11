@@ -63,7 +63,7 @@ func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
 
 func PublishAction(c *gin.Context) {
 	type formParam struct {
-		Data  *multipart.FileHeader `form:"data" ding:"requirebind"`
+		Data  *multipart.FileHeader `form:"data" binding:"required"`
 		Token string                `form:"token" binding:"required"`
 		Title string                `form:"title" binding:"required"`
 	}
@@ -89,11 +89,14 @@ func PublishAction(c *gin.Context) {
 		return
 	}
 
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	userId := utils.GetIdFromClaims(c)
+	if userId == 0 {
+		SendPublishActionResponse(c, errno.AuthErr)
+		return
+	}
 
+	// 使用 uuid 作为上传文件的名称，防止冲突
 	videoName := uuid.NewV4().String()
-
 	videoLocalPath := constants.VideoLocalPath + "/" + videoName + ".mp4"
 	coverLocalPath := constants.CoverLocalPath + "/" + videoName + ".png"
 
