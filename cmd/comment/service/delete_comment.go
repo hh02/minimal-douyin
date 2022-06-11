@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/hh02/minimal-douyin/cmd/comment/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/comment/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
@@ -26,7 +27,7 @@ func (s *DeleteCommentService) DeleteComment(req *commentrpc.DeleteCommentReques
 	if err != nil {
 		return err
 	}
-
+	fmt.Println(comment, req.UserId)
 	// 判断用户有没有权限删除改评论
 	if comment.UserId != req.UserId {
 		return errno.PermissionErr
