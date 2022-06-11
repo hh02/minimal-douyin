@@ -7,12 +7,19 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/utils"
+	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 
 	"github.com/gin-gonic/gin"
 )
+
+type UserParam struct {
+	Username string `form:"username" binding:"required"`
+	Password string `form:"password" binding:"required"`
+}
 
 type AuthResponse struct {
 	StatusCode int32  `json:"status_code"`
@@ -21,19 +28,33 @@ type AuthResponse struct {
 	Token      string `json:"token"`
 }
 
-func UserLoginResponse(c *gin.Context) {
-
-	claims := jwt.ExtractClaims(c)
-	tokenId := int64(claims[constants.IdentityKey].(float64))
-	tokenString := jwt.GetToken(c)
-
-	c.JSON(http.StatusOK, AuthResponse{
-		StatusCode: errno.Success.ErrCode,
-		StatusMsg:  errno.Success.ErrMsg,
-		UserId:     tokenId,
-		Token:      tokenString,
+func SendUserLoginResponse(c *gin.Context, err error, userId int64, token string) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.UserLoginResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		UserId:     userId,
+		Token:      token,
 	})
+}
 
+func SendUserResponse(c *gin.Context, err error, user *userrpc.User) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.UserResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		User:       user,
+	})
+}
+
+func SendUserRegisterResponse(c *gin.Context, err error, userId int64, token string) {
+	Err := errno.ConvertErr(err)
+	utils.PbJSONResponse(c, http.StatusOK, &response.UserLoginResponse{
+		StatusCode: Err.ErrCode,
+		StatusMsg:  Err.ErrMsg,
+		UserId:     userId,
+		Token:      token,
+	})
 }
 
 // UserInfo query user info
@@ -44,12 +65,12 @@ func UserInfo(c *gin.Context) {
 		UserId int64 `json:"user_id" form:"user_id"`
 	}
 	if err := c.BindQuery(&queryVar); err != nil {
-		SendUserInfoResponse(c, errno.ConvertErr(err), nil)
+		SendUserResponse(c, err, nil)
 		return
 	}
 
 	if queryVar.UserId <= 0 {
-		SendUserInfoResponse(c, errno.ParamErr, nil)
+		SendUserResponse(c, errno.ParamErr, nil)
 		return
 	}
 
@@ -61,31 +82,57 @@ func UserInfo(c *gin.Context) {
 
 	user, err := rpc.GetUser(context.Background(), req)
 	if err != nil {
-		SendUserInfoResponse(c, errno.ConvertErr(err), nil)
+		SendUserResponse(c, err, nil)
 		return
 	}
-	SendUserInfoResponse(c, errno.Success, user)
+	SendUserResponse(c, errno.Success, user)
 }
 
 func UserRegister(c *gin.Context) {
-	var userVar UserParam
-	if err := c.ShouldBind(&userVar); err != nil {
-		SendRegisterResponse(c, errno.ConvertErr(err))
-		return
-	}
-	if len(userVar.Username) == 0 || len(userVar.Password) == 0 {
-		SendRegisterResponse(c, errno.ParamErr)
+	var param UserParam
+	if err := c.ShouldBind(&param); err != nil {
+		SendUserRegisterResponse(c, err, 0, "")
 		return
 	}
 
-	err := rpc.CreateUser(context.Background(), &userrpc.CreateUserRequest{
-		Username: userVar.Username,
-		Password: userVar.Password,
+	userId, err := rpc.CreateUser(context.Background(), &userrpc.CreateUserRequest{
+		Username: param.Username,
+		Password: param.Password,
 	})
-
 	if err != nil {
-		SendRegisterResponse(c, errno.ConvertErr(err))
+		SendUserRegisterResponse(c, err, 0, "")
 		return
 	}
-	c.Next()
+
+	tokenString, err := utils.GenerateTokenString(userId)
+	if err != nil {
+		SendUserRegisterResponse(c, err, 0, "")
+		return
+	}
+	SendUserRegisterResponse(c, errno.Success, userId, tokenString)
+}
+
+func UserLogin(c *gin.Context) {
+
+	var param UserParam
+	if err := c.ShouldBind(&param); err != nil {
+		SendUserLoginResponse(c, err, 0, "")
+	}
+
+	userId, err := rpc.CheckUser(context.Background(), &userrpc.CheckUserRequest{
+		Username: param.Username,
+		Password: param.Password,
+	})
+	if err != nil {
+		SendUserLoginResponse(c, err, 0, "")
+		return
+	}
+
+	tokenString, err := utils.GenerateTokenString(userId)
+	if err != nil {
+		SendUserLoginResponse(c, err, 0, "")
+		return
+	}
+
+	SendUserLoginResponse(c, errno.Success, userId, tokenString)
 }

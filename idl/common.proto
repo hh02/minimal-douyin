@@ -6,3 +6,4 @@ message Status {
     int32 status_code = 1;
     string status_message = 2; 
 }
+
