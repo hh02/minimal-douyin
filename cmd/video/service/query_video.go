@@ -2,13 +2,14 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/hh02/minimal-douyin/cmd/video/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/video/pack"
 	"github.com/hh02/minimal-douyin/cmd/video/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
-	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
 type QueryVideoService struct {
@@ -37,12 +38,13 @@ func (s *QueryVideoService) QueryVideoByUserId(req *videorpc.QueryVideoByUserIdR
 }
 
 func (s *QueryVideoService) QueryVideoByTime(req *videorpc.QueryVideoByTimeRequest) (nextTime int64, videos []*videorpc.Video, err error) {
+	fmt.Println(req.LatestTime)
 	videoModels, err := db.QueryVideoByTime(s.ctx, req.LatestTime)
 	if err != nil {
 		return 0, nil, err
 	}
 	if len(videoModels) == 0 {
-		return 0, nil, errno.ServiceErr.WithMessage("no more videos")
+		return time.Now().Unix(), nil, nil
 	}
 
 	returnIsFollow := (req.TokenUserId > 0)
@@ -62,6 +64,7 @@ func (s *QueryVideoService) QueryVideoByTime(req *videorpc.QueryVideoByTimeReque
 	for i := 0; i < len(videos); i++ {
 		if user, ok := userMap[videos[i].Author.Id]; ok {
 			videos[i].Author = user
+			videos[i].Author.IsFollow = false
 		}
 	}
 

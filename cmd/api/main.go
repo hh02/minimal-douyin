@@ -96,7 +96,8 @@ func main() {
 		handlers.UserLoginResponse,
 	)
 
-	douyin.GET("/feed/", handlers.Feed)
+	// 要根据是否有token来决定是否调用鉴权
+	douyin.GET("/feed", handlers.Feed, authMiddleware.MiddlewareFunc())
 
 	// 因为token在body中，要先取出来
 	douyin.POST("/publish/action/", handlers.PublishAction, authMiddleware.MiddlewareFunc())
@@ -116,9 +117,6 @@ func main() {
 
 		douyin.POST("/comment/action/", handlers.CommentAction)
 		douyin.GET("/comment/list/", handlers.CommentList)
-
-		douyin.POST("/favorite/action/", handlers.FavoriteAction)
-		douyin.GET("/favorite/list/", handlers.FavoriteList)
 	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/hh02/minimal-douyin/cmd/user/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/user/pack"
 	"github.com/hh02/minimal-douyin/cmd/user/rpc"
@@ -42,7 +43,7 @@ func (s *MGetUserService) MGetUser(req *userrpc.MGetUserRequest) ([]*userrpc.Use
 			FollowIds: req.UserIds,
 		})
 		if err != nil {
-			return nil, errno.FollowNotExistErr
+			return nil, err
 		}
 	}
 

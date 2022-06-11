@@ -1,13 +1,36 @@
 package handlers
 
 import (
+	"bytes"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gogo/protobuf/jsonpb"
 	"github.com/hh02/minimal-douyin/kitex_gen/userrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"
+	"google.golang.org/protobuf/proto"
 )
+
+type PbJSON struct {
+	Data interface{}
+}
+
+func WritePbJSON(w http.ResponseWriter, obj *) error {
+	writecontenttype()
+	var buffer bytes.Buffer
+	jsonpbMarshaler.Marshal(&buffer, &obj)
+}
+func (r PbJSON) Render(w http.ResponseWriter) (err error) {
+	if err = WritePbJSON(w, r.Data); err != nil {
+		panic(err)
+	}
+	return
+}
+var jsonpbMarshaler = &jsonpb.Marshaler {
+	EnumsAsInts: true,
+	EmitDefaults: true,
+}
 
 type VideoListResponse struct {
 	StatusCode int32             `json:"status_code"` // 状态码，0-成功，其他值-失败
@@ -73,4 +96,23 @@ func SendStatusResponse(c *gin.Context, err error) {
 		StatusCode: status.StatusCode,
 		StatusMsg:  status.StatusMessage,
 	})
+}
+
+type FeedResponse struct {
+	StatusCode int32             `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string            `json:"status_msg"`  // 返回状态描述
+	NextTime   int64             `json:"next_time"`
+	VideoList  []*videorpc.Video `json:"video_list"` // 用户信息列表
+}
+
+func SendFeedResponse(c *gin.Context, err error, nextTime int64, videos []*videorpc.Video) {
+	status := errno.BuildStatus(err)
+	c.JSON(http.StatusOK, FeedResponse{
+		StatusCode: status.StatusCode,
+		StatusMsg:  status.StatusMessage,
+		NextTime:   nextTime,
+		VideoList:  videos,
+	})
+	// 防止继续运行鉴权中间件
+	c.Abort()
 }

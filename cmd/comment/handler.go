@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/hh02/minimal-douyin/cmd/comment/service"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
 	"github.com/hh02/minimal-douyin/pkg/errno"

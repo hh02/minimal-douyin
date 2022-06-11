@@ -8,17 +8,18 @@ import (
 )
 
 const (
-	SuccessCode             = 0
-	ServiceErrCode          = 10001
-	ParamErrCode            = 10002
-	LoginErrCode            = 10003
-	UserNotExistErrCode     = 10004
-	UserAlreadyExistErrCode = 10005
-	FollowNotExistErrCode   = 10006
-	PermissionErrCode       = 10007
-	AuthErrCode             = 10008 //鉴权失败
+	SuccessCode                 = 0
+	ServiceErrCode              = 10001
+	ParamErrCode                = 10002
+	LoginErrCode                = 10003
+	UserNotExistErrCode         = 10004
+	UserAlreadyExistErrCode     = 10005
+	FollowNotExistErrCode       = 10006
+	PermissionErrCode           = 10007
+	AuthErrCode                 = 10008 //鉴权失败
 	FavoriteAlreadyExistErrCode = 10009
-	DeleteErrCode           = 10010
+	DeleteErrCode               = 10010
+	GetVideoErrCode             = 10011
 )
 
 type ErrNo struct {
@@ -40,17 +41,18 @@ func (e ErrNo) WithMessage(msg string) ErrNo {
 }
 
 var (
-	Success             = NewErrNo(SuccessCode, "Success")
-	ServiceErr          = NewErrNo(ServiceErrCode, "Service is unable to start successfully")
-	ParamErr            = NewErrNo(ParamErrCode, "Wrong Parameter has been given")
-	LoginErr            = NewErrNo(LoginErrCode, "Wrong username or password")
-	UserNotExistErr     = NewErrNo(UserNotExistErrCode, "User does not exists")
-	UserAlreadyExistErr = NewErrNo(UserAlreadyExistErrCode, "User already exists")
-	FollowNotExistErr   = NewErrNo(FollowNotExistErrCode, "Follow does not exist")
-	PermissionErr       = NewErrNo(PermissionErrCode, "User does not have permission")
-	AuthErr             = NewErrNo(AuthErrCode, "Authentication failed")
+	Success                 = NewErrNo(SuccessCode, "Success")
+	ServiceErr              = NewErrNo(ServiceErrCode, "Service is unable to start successfully")
+	ParamErr                = NewErrNo(ParamErrCode, "Wrong Parameter has been given")
+	LoginErr                = NewErrNo(LoginErrCode, "Wrong username or password")
+	UserNotExistErr         = NewErrNo(UserNotExistErrCode, "User does not exists")
+	UserAlreadyExistErr     = NewErrNo(UserAlreadyExistErrCode, "User already exists")
+	FollowNotExistErr       = NewErrNo(FollowNotExistErrCode, "Follow does not exist")
+	PermissionErr           = NewErrNo(PermissionErrCode, "User does not have permission")
+	AuthErr                 = NewErrNo(AuthErrCode, "Authentication failed")
 	FavoriteAlreadyExistErr = NewErrNo(FavoriteAlreadyExistErrCode, "Favorite already exist")
-	DeleteErr           = NewErrNo(DeleteErrCode, "Delete has Wrong")
+	DeleteErr               = NewErrNo(DeleteErrCode, "Delete has Wrong")
+	GetVideoErr             = NewErrNo(GetVideoErrCode, "No more videos")
 )
 
 // BuildStatus build baseResp from error

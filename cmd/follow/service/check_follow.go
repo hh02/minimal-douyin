@@ -16,6 +16,10 @@ func NewCheckFollowService(ctx context.Context) *CheckFollowService {
 }
 
 func (s *CheckFollowService) CheckFollow(req *followrpc.CheckFollowRequest) (bool, error) {
+	// 自己不能关注自己
+	if req.UserId == req.FollowId {
+		return true, nil
+	}
 	followModel := &db.Follow{
 		UserId:   req.UserId,
 		FollowId: req.FollowId,
