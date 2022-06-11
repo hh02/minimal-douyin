@@ -4,14 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/favoriterpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
-	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
@@ -45,8 +43,11 @@ func FavoriteAction(c *gin.Context) {
 		return
 	}
 
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	userId := utils.GetIdFromClaims(c)
+	if userId == 0 {
+		SendFavoriteActionResponse(c, errno.AuthErr)
+		return
+	}
 
 	if param.ActionType == 1 {
 		err := rpc.CreateFavorite(context.Background(), &favoriterpc.CreateFavoriteRequest{
@@ -85,8 +86,11 @@ func FavoriteList(c *gin.Context) {
 		return
 	}
 
-	claims := jwt.ExtractClaims(c)
-	userId := int64(claims[constants.IdentityKey].(float64))
+	userId := utils.GetIdFromClaims(c)
+	if userId == 0 {
+		SendFavoriteListResponse(c, errno.AuthErr, nil)
+		return
+	}
 
 	videos, err := rpc.QueryFavorite(context.Background(), &favoriterpc.QueryFavoriteByUserIdRequest{
 		UserId: userId,

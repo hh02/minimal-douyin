@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
 	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/response"
-	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 )
 
@@ -48,8 +46,12 @@ func CommentAction(c *gin.Context) {
 		SendCommentActionResponse(c, err, nil)
 		return
 	}
-	clams := jwt.ExtractClaims(c)
-	tokenId := int64(clams[constants.IdentityKey].(float64))
+
+	tokenId := utils.GetIdFromClaims(c)
+	if tokenId == 0 {
+		SendCommentActionResponse(c, errno.AuthErr, nil)
+		return
+	}
 
 	fmt.Println(commentVar)
 	// 1 create comment ; 2 delete comment
@@ -95,8 +97,11 @@ func CommentList(c *gin.Context) {
 		return
 	}
 
-	clams := jwt.ExtractClaims(c)
-	tokenId := int64(clams[constants.IdentityKey].(float64))
+	tokenId := utils.GetIdFromClaims(c)
+	if tokenId == 0 {
+		SendCommentListResponse(c, errno.AuthErr, nil)
+		return
+	}
 
 	req := &commentrpc.QueryCommentByVideoIdRequest{
 		VideoId:     commentVar.VideoId,

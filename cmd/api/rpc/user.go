@@ -40,15 +40,15 @@ func initUserRpc() {
 }
 
 // CreateUser create user info
-func CreateUser(ctx context.Context, req *userrpc.CreateUserRequest) error {
+func CreateUser(ctx context.Context, req *userrpc.CreateUserRequest) (userId int64, err error) {
 	resp, err := userClient.CreateUser(ctx, req)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if resp.Status.StatusCode != 0 {
-		return errno.NewErrNo(resp.Status.StatusCode, resp.Status.StatusMessage)
+		return 0, errno.Status2ErrorNo(resp.Status)
 	}
-	return nil
+	return resp.UserId, nil
 }
 
 // CheckUser check user info

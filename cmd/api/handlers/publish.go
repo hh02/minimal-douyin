@@ -63,7 +63,7 @@ func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
 
 func PublishAction(c *gin.Context) {
 	type formParam struct {
-		Data  *multipart.FileHeader `form:"data" binding:"required"`
+		Data  *multipart.FileHeader `form:"data" ding:"requirebind"`
 		Token string                `form:"token" binding:"required"`
 		Title string                `form:"title" binding:"required"`
 	}
