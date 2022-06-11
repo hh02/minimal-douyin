@@ -33,6 +33,10 @@ func SendCommentListResponse(c *gin.Context, err error, comments []*commentrpc.C
 
 // CommentAction create comment or delete comment
 func CommentAction(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendCommentActionResponse(c, err, nil)
+		return
+	}
 	type CommentParam struct {
 		Token       string `form:"token"`
 		VideoId     int64  `form:"video_id"`
@@ -49,7 +53,7 @@ func CommentAction(c *gin.Context) {
 
 	tokenId := utils.GetIdFromClaims(c)
 	if tokenId == 0 {
-		SendCommentActionResponse(c, errno.AuthErr, nil)
+		SendCommentActionResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 
@@ -86,6 +90,10 @@ func CommentAction(c *gin.Context) {
 
 // CommentList query comment by video id
 func CommentList(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendCommentListResponse(c, err, nil)
+		return
+	}
 	type CommentParam struct {
 		Token   string `form:"token"`
 		VideoId int64  `form:"video_id"`
@@ -99,7 +107,7 @@ func CommentList(c *gin.Context) {
 
 	tokenId := utils.GetIdFromClaims(c)
 	if tokenId == 0 {
-		SendCommentListResponse(c, errno.AuthErr, nil)
+		SendCommentListResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 

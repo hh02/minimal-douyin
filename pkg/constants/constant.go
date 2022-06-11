@@ -2,6 +2,7 @@ package constants
 
 const (
 	IdentityKey = "id"
+	AuthErrKey  = "AuthErr"
 	Total       = "total"
 	User        = "user"
 

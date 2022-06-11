@@ -31,6 +31,10 @@ func SendFavoriteListResponse(c *gin.Context, err error, videos []*videorpc.Vide
 }
 
 func FavoriteAction(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendFavoriteActionResponse(c, err)
+	}
+
 	type formParam struct {
 		Token      string `form:"token" binding:"required"`
 		VideoId    int64  `form:"video_id" binding:"required"`
@@ -45,7 +49,7 @@ func FavoriteAction(c *gin.Context) {
 
 	userId := utils.GetIdFromClaims(c)
 	if userId == 0 {
-		SendFavoriteActionResponse(c, errno.AuthErr)
+		SendFavoriteActionResponse(c, errno.GetIdFromClaimsErr)
 		return
 	}
 
@@ -75,6 +79,10 @@ func FavoriteAction(c *gin.Context) {
 }
 
 func FavoriteList(c *gin.Context) {
+	if err := utils.CheckAuth(c); err != nil {
+		SendFavoriteListResponse(c, err, nil)
+		return
+	}
 	type formParam struct {
 		UserId int64  `form:"user_id" binding:"required"`
 		Token  string `form:"token" binding:"required"`
@@ -88,7 +96,7 @@ func FavoriteList(c *gin.Context) {
 
 	userId := utils.GetIdFromClaims(c)
 	if userId == 0 {
-		SendFavoriteListResponse(c, errno.AuthErr, nil)
+		SendFavoriteListResponse(c, errno.GetIdFromClaimsErr, nil)
 		return
 	}
 
