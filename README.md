@@ -95,7 +95,7 @@ sh build.sh
 sh output/bootstrap.sh
 ```
 
-### 2.Run Favorite RPC Server
+### 4.Run Favorite RPC Server
 
 ```
 cd cmd/favorite
@@ -103,7 +103,7 @@ sh build.sh
 sh output/bootstrap.sh
 ```
 
-### 2.Run Comment RPC Server
+### 5.Run Comment RPC Server
 
 ```
 cd cmd/comment
@@ -111,7 +111,7 @@ sh build.sh
 sh output/bootstrap.sh
 ```
 
-### 2.Run Follow RPC Server
+### 6.Run Follow RPC Server
 
 ```
 cd cmd/follow
@@ -119,7 +119,7 @@ sh build.sh
 sh output/bootstrap.sh
 ```
 
-### 4.Run API Server
+### 7.Run API Server
 
 ```
 cd cmd/api
