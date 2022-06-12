@@ -41,7 +41,7 @@ func initVideoRpc() {
 	videoClient = c
 }
 
-// AddCommentCount 在 video 中让点赞数加一减一
+// AddCommentCount 在 video 中让评论数加一减一
 func AddCommentCount(ctx context.Context, req *videorpc.AddCommentCountRequest) error {
 	resp, err := videoClient.AddCommentCount(ctx, req)
 	if err != nil {
