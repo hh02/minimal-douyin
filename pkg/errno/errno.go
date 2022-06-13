@@ -22,6 +22,9 @@ const (
 	GetVideoErrCode             = 10011
 	GetCoverErrCode             = 10012
 	GetIdFromClaimsErrCode      = 10013
+	OpenVideoFileErrCode        = 10014
+	SaveVideoErrCode            = 10015
+	OssPutObjectErrCode         = 10016
 )
 
 type ErrNo struct {
@@ -57,6 +60,9 @@ var (
 	GetVideoErr             = NewErrNo(GetVideoErrCode, "No more videos")
 	GetCoverErr             = NewErrNo(GetCoverErrCode, "Get cover failed")
 	GetIdFromClaimsErr      = NewErrNo(GetIdFromClaimsErrCode, "Failed to get ID from claims")
+	OpenVideoFileErr        = NewErrNo(OpenVideoFileErrCode, "Can not open the upload video")
+	SaveVideoErr            = NewErrNo(SaveVideoErrCode, "Failed to save video")
+	OssPutObjectErr         = NewErrNo(OssPutObjectErrCode, "Failed to Put object to OSS")
 )
 
 // BuildStatus build baseResp from error

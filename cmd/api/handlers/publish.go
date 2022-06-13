@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/storage"
 	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
@@ -64,25 +65,40 @@ func PublishAction(c *gin.Context) {
 		SendPublishActionResponse(c, errno.GetIdFromClaimsErr)
 		return
 	}
-
+	videoFile, err := formParamVar.Data.Open()
+	if err != nil {
+		SendPublishActionResponse(c, errno.OpenVideoFileErr.WithMessage(err.Error()))
+		return
+	}
 	// 使用 uuid 作为上传文件的名称，防止冲突
 	videoName := uuid.NewV4().String()
-	videoLocalPath := constants.VideoLocalPath + "/" + videoName + ".mp4"
-	coverLocalPath := constants.CoverLocalPath + "/" + videoName + ".png"
+	videoFilename := videoName + ".mp4"
+	coverFilename := videoName + ".png"
+	videoLocalPath := constants.TempFoler + videoFilename
+	if err := c.SaveUploadedFile(formParamVar.Data, videoLocalPath); err != nil {
 
-	c.SaveUploadedFile(formParamVar.Data, videoLocalPath)
-	err := utils.GetSnapshot(videoLocalPath, coverLocalPath, 1)
+	}
+
+	cover, err := utils.GetSnapshot(videoLocalPath, 1)
 	if err != nil {
 		SendPublishActionResponse(c, errno.GetCoverErr)
 		return
 	}
 
-	playUrl := constants.VideoServerPath + "/" + videoName + ".mp4"
-	coverUrl := constants.CoverServerPath + "/" + videoName + ".png"
+	videoUrl := constants.OssUrlPrefix + videoFilename
+	coverUrl := constants.OssUrlPrefix + coverFilename
+	if err := storage.PutObject(videoFilename, videoFile); err != nil {
+		SendPublishActionResponse(c, errno.OssPutObjectErr.WithMessage(err.Error()))
+		return
+	}
+	if err := storage.PutObject(coverFilename, cover); err != nil {
+		SendPublishActionResponse(c, errno.OssPutObjectErr.WithMessage(err.Error()))
+		return
+	}
 
 	err = rpc.CreateVideo(context.Background(), &videorpc.CreateVideoRequest{
 		UserId:   userId,
-		PlayUrl:  playUrl,
+		PlayUrl:  videoUrl,
 		CoverUrl: coverUrl,
 		Title:    formParamVar.Title,
 	})

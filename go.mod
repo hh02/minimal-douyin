@@ -19,12 +19,14 @@ require (
 )
 
 require (
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible // indirect
 	github.com/aws/aws-sdk-go v1.38.20 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd // indirect
+	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 )
 
 require (
