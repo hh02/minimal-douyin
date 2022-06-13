@@ -3,6 +3,8 @@ package rpc
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
@@ -11,7 +13,6 @@ import (
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	trace "github.com/kitex-contrib/tracer-opentracing"
-	"time"
 )
 
 var commentClient commentservice.Client
@@ -72,7 +73,7 @@ func QueryCommentByVideo(ctx context.Context, req *commentrpc.QueryCommentByVide
 		return nil, err
 	}
 	if resp.Status.StatusCode != 0 {
-		return nil, errno.NewErrNo(resp.Status.StatusCode, resp.Status.StatusMessage)
+		return nil, errno.Status2ErrorNo(resp.Status)
 	}
 	return resp.CommentList, nil
 }

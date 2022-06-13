@@ -8,6 +8,7 @@ import (
 	"github.com/hh02/minimal-douyin/cmd/api/handlers"
 	"github.com/hh02/minimal-douyin/cmd/api/middleware"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/storage"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/tracer"
 )
@@ -16,11 +17,12 @@ func Init() {
 	middleware.InitMiddleware()
 	rpc.InitRPC()
 	tracer.InitJaeger(constants.ApiServiceName)
+	storage.Init()
 }
 
 func main() {
 	Init()
-	r := gin.New()
+	r := gin.Default()
 
 	r.Static(constants.StaticRelativePath, constants.StaticLocalPath)
 

@@ -1,23 +1,19 @@
 package handlers
 
 import (
-	"bytes"
 	"context"
-	"fmt"
 	"mime/multipart"
 	"net/http"
-	"os"
 
-	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/hh02/minimal-douyin/cmd/api/rpc"
+	"github.com/hh02/minimal-douyin/cmd/api/storage"
 	"github.com/hh02/minimal-douyin/cmd/api/utils"
 	"github.com/hh02/minimal-douyin/kitex_gen/response"
 	"github.com/hh02/minimal-douyin/kitex_gen/videorpc"
 	"github.com/hh02/minimal-douyin/pkg/constants"
 	"github.com/hh02/minimal-douyin/pkg/errno"
 	uuid "github.com/satori/go.uuid"
-	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
 func SendPublishActionResponse(c *gin.Context, err error) {
@@ -34,30 +30,6 @@ func SendPublishListResponse(c *gin.Context, err error, videos []*videorpc.Video
 		StatusMsg:  Err.ErrMsg,
 		VideoList:  videos,
 	})
-}
-
-// 获取视频封面
-func getSnapshot(videoPath, snapshotPath string, frameNum int) (err error) {
-	buf := bytes.NewBuffer(nil)
-	err = ffmpeg.Input(videoPath).
-		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
-		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
-		WithOutput(buf, os.Stdout).
-		Run()
-	if err != nil {
-		return err
-	}
-
-	img, err := imaging.Decode(buf)
-	if err != nil {
-		return err
-	}
-
-	err = imaging.Save(img, snapshotPath)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func PublishAction(c *gin.Context) {
@@ -83,8 +55,8 @@ func PublishAction(c *gin.Context) {
 	c.Next()
 
 	// 鉴权失败则返回
-	if c.IsAborted() {
-		SendPublishActionResponse(c, errno.AuthErr)
+	if err := utils.CheckAuth(c); err != nil {
+		SendPublishActionResponse(c, err)
 		return
 	}
 
@@ -93,25 +65,40 @@ func PublishAction(c *gin.Context) {
 		SendPublishActionResponse(c, errno.GetIdFromClaimsErr)
 		return
 	}
-
+	videoFile, err := formParamVar.Data.Open()
+	if err != nil {
+		SendPublishActionResponse(c, errno.OpenVideoFileErr.WithMessage(err.Error()))
+		return
+	}
 	// 使用 uuid 作为上传文件的名称，防止冲突
 	videoName := uuid.NewV4().String()
-	videoLocalPath := constants.VideoLocalPath + "/" + videoName + ".mp4"
-	coverLocalPath := constants.CoverLocalPath + "/" + videoName + ".png"
+	videoFilename := videoName + ".mp4"
+	coverFilename := videoName + ".png"
+	videoLocalPath := constants.TempFoler + videoFilename
+	if err := c.SaveUploadedFile(formParamVar.Data, videoLocalPath); err != nil {
 
-	c.SaveUploadedFile(formParamVar.Data, videoLocalPath)
-	err := getSnapshot(videoLocalPath, coverLocalPath, 1)
+	}
+
+	cover, err := utils.GetSnapshot(videoLocalPath, 1)
 	if err != nil {
 		SendPublishActionResponse(c, errno.GetCoverErr)
 		return
 	}
 
-	playUrl := constants.VideoServerPath + "/" + videoName + ".mp4"
-	coverUrl := constants.CoverServerPath + "/" + videoName + ".png"
+	videoUrl := constants.OssUrlPrefix + videoFilename
+	coverUrl := constants.OssUrlPrefix + coverFilename
+	if err := storage.PutObject(videoFilename, videoFile); err != nil {
+		SendPublishActionResponse(c, errno.OssPutObjectErr.WithMessage(err.Error()))
+		return
+	}
+	if err := storage.PutObject(coverFilename, cover); err != nil {
+		SendPublishActionResponse(c, errno.OssPutObjectErr.WithMessage(err.Error()))
+		return
+	}
 
 	err = rpc.CreateVideo(context.Background(), &videorpc.CreateVideoRequest{
 		UserId:   userId,
-		PlayUrl:  playUrl,
+		PlayUrl:  videoUrl,
 		CoverUrl: coverUrl,
 		Title:    formParamVar.Title,
 	})

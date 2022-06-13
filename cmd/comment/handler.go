@@ -56,7 +56,7 @@ func (s *CommentServiceImpl) QueryCommentByVideo(ctx context.Context, req *comme
 	// TODO: Your code here...
 	resp = new(commentrpc.QueryCommentByVideoIdResponse)
 
-	if req.VideoId == 0 || req.TokenUserId == 0 {
+	if req.VideoId == 0 {
 		resp.Status = errno.BuildStatus(errno.ParamErr)
 		return resp, nil
 	}

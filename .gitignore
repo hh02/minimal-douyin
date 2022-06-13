@@ -2,3 +2,5 @@
 .vscode/
 cmd/*/output/
 cmd/api/static
+cmd/api/static/*
+cmd/api/temp

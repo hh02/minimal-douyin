@@ -3,6 +3,7 @@ package pack
 import (
 	"context"
 	"fmt"
+
 	"github.com/hh02/minimal-douyin/cmd/comment/dal/db"
 	"github.com/hh02/minimal-douyin/cmd/comment/rpc"
 	"github.com/hh02/minimal-douyin/kitex_gen/commentrpc"
@@ -48,10 +49,11 @@ func MComment(ctx context.Context, comments []*db.Comment, tokenId int64) ([]*co
 		ids = append(ids, comment.UserId)
 	}
 	// 批量查询 user
+	returnIsFollow := (tokenId > 0)
 	users, err := rpc.MGetUser(ctx, &userrpc.MGetUserRequest{
 		UserIds:        ids,
 		TokenUserId:    tokenId,
-		ReturnIsFollow: true,
+		ReturnIsFollow: returnIsFollow,
 	})
 	// 获取 id 对应 user 的 map
 	for _, user := range users {

@@ -5,6 +5,7 @@ option go_package = "followrpc";
 import "user.proto";
 import "common.proto";
 
+// 创建关注
 message CreateFollowRequest {
     int64 user_id = 1; // 用户id
     int64 follow_id = 2; // 关注用户的id
@@ -14,6 +15,7 @@ message CreateFollowResponse {
     common.Status status = 1;
 }
 
+// 删除关注
 message DeleteFollowRequest {
     int64 user_id = 1;
     int64 follow_id = 2;
@@ -23,6 +25,7 @@ message DeleteFollowResponse {
     common.Status status = 1;
 }
 
+// 查询关注
 message QueryFollowRequest {
     int64 user_id = 1;
 }
@@ -32,6 +35,7 @@ message QueryFollowResponse {
     repeated user.User users = 2;
 }
 
+// 查询粉丝
 message QueryFollowerRequest {
     int64 user_id = 1;
 }
@@ -41,6 +45,7 @@ message QueryFollowerResponse {
     repeated user.User users = 2;
 }
 
+// 判断user_id是否关注follow_id
 message CheckFollowRequest {
     int64 user_id = 1;
     int64 follow_id = 2;
@@ -51,6 +56,7 @@ message CheckFollowResponse {
     bool is_follow = 2;
 }
 
+// 判断user_id是否关注follow_ids
 message MCheckFollowRequest {
     int64 user_id = 1;
     repeated int64 follow_ids = 2;

@@ -38,6 +38,12 @@ const (
 	VideoServerPath    = StaticServerPath + "/video"
 	CoverServerPath    = StaticServerPath + "/cover"
 
-	TotalFeedNumber = 20
-	SecretKey       = "secret key"
+	OssEndpoint        = "http://oss-cn-beijing.aliyuncs.com"
+	OssAccessKeyId     = "LTAI5t9ceDjAisE3Rc6YDXLQ"
+	OssAccessKeySecret = "4EKkDRLeTYcMeY3CtdSnw0CUnmAcrg"
+	OssBucketName      = "minimal-douyin"
+	OssUrlPrefix       = "https://minimal-douyin.oss-cn-beijing.aliyuncs.com/"
+	TempFoler          = "./temp/" // 用来存放临时文件
+	TotalFeedNumber    = 20
+	SecretKey          = "secret key"
 )
