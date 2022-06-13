@@ -20,12 +20,12 @@ func (f *Favorite) TableName() string {
 	return constants.FavoriteTableName
 }
 
-// 点赞
+// CreateFavorite 创建点赞信息
 func CreateFavorite(ctx context.Context, favorite *Favorite) error {
 	return DB.WithContext(ctx).Create(favorite).Error
 }
 
-// 取消点赞
+// DeleteFavorite 删除点赞信息
 func DeleteFavorite(ctx context.Context, favorite *Favorite) (int64, error) {
 	result := DB.WithContext(ctx).Delete(favorite)
 	return result.RowsAffected, result.Error

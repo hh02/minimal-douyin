@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Comment 用户服务
+// Comment 评论服务
 type Comment struct {
 	gorm.Model
 
@@ -36,7 +36,7 @@ func DeleteComment(ctx context.Context, commentId int64) error {
 	return DB.WithContext(ctx).Delete(&Comment{}, commentId).Error
 }
 
-// QueryCommentByVideoId 根据 VideoId 查询评论
+// QueryCommentByVideoId 根据 VideoId 查询评论列表
 func QueryCommentByVideoId(ctx context.Context, videoId int64) ([]*Comment, error) {
 	res := make([]*Comment, 0)
 	err := DB.WithContext(ctx).Where("video_id = ?", videoId).Order("created_at asc").Find(&res).Error
