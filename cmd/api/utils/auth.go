@@ -13,5 +13,4 @@ func CheckAuth(c *gin.Context) error {
 		return errno.AuthErr.WithMessage(authErr)
 	}
 	return nil
-
 }

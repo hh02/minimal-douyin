@@ -25,6 +25,10 @@ func (r PbJSON) Render(w http.ResponseWriter) (err error) {
 	return nil
 }
 
+func (r PbJSON) WriteContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func WritePbJSON(w http.ResponseWriter, m proto.Message) error {
 	var bf bytes.Buffer
 	if err := jsonpbMarshaler.Marshal(&bf, m); err != nil {
@@ -33,10 +37,6 @@ func WritePbJSON(w http.ResponseWriter, m proto.Message) error {
 	w.Header().Set("Content-Type", "application/json")
 	_, err := w.Write(bf.Bytes())
 	return err
-}
-
-func (r PbJSON) WriteContentType(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
 }
 
 func PbJSONResponse(c *gin.Context, code int, m proto.Message) {
