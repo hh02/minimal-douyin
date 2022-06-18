@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,8 +32,10 @@ func SendFavoriteListResponse(c *gin.Context, err error, videos []*videorpc.Vide
 }
 
 func FavoriteAction(c *gin.Context) {
+	fmt.Println("yes")
 	if err := utils.CheckAuth(c); err != nil {
 		SendFavoriteActionResponse(c, err)
+		return
 	}
 
 	type formParam struct {
