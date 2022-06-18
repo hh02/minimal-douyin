@@ -6,4 +6,5 @@ export JAEGER_SAMPLER_PARAM=1
 export JAEGER_REPORTER_LOG_SPANS=true
 export JAEGER_AGENT_HOST="120.46.179.205"
 export JAEGER_AGENT_PORT=6831
+export GIN_MODE=release
 go run ./main.go

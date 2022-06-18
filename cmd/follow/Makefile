@@ -9,3 +9,6 @@ server:
 
 client:
 	rm -rf $(gen_path)/kitex_gen/$(package_name) && cd $(gen_path) && kitex -module $(import_path) -I ./idl/ -type protobuf $(idl_file)
+
+nohup:
+	sh build.sh && nohup sh output/bootstrap.sh &

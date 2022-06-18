@@ -76,7 +76,7 @@ func PublishAction(c *gin.Context) {
 	coverFilename := videoName + ".png"
 	videoLocalPath := constants.TempFoler + videoFilename
 	if err := c.SaveUploadedFile(formParamVar.Data, videoLocalPath); err != nil {
-
+		SendPublishActionResponse(c, err)
 	}
 
 	cover, err := utils.GetSnapshot(videoLocalPath, 1)
