@@ -1,5 +1,7 @@
 # Minimal-douyin
 
+Project documentation: https://ntp0va1sf4.feishu.cn/docx/doxcnGUuDyP5k19AWPsf9yPPe5d
+
 ## Introduction
 
 Minimal-douyin service is divided into six main sections.
@@ -13,42 +15,6 @@ Minimal-douyin service is divided into six main sections.
 | commentservice  | comment data management  | kitex/gorm | protobuf | minimal-douyin/cmd/comment  | minimal-douyin/idl/comment.proto  |
 | followservice   | follow data management   | kitex/gorm | protobuf | minimal-douyin/cmd/follow   | minimal-douyin/idl/follow.proto   |
 
-### call relations
-
-```
-                                    http
-                           ┌────────────────────────┐
- ┌─────────────────────────┤                        ├───────────────────────────────┐
- │                         │         demoapi        │                               │
- │      ┌──────────────────►                        │◄──────────────────────┐       │
- │      │                  └───────────▲────────────┘                       │       │
- │      │                              │                                    │       │
- │      │                              │                                    │       │
- │      │                              │                                    │       │
- │      │                           resolve                                 │       │
- │      │                              │                                    │       │
-req    resp                            │                                   resp    req
- │      │                              │                                    │       │
- │      │                              │                                    │       │
- │      │                              │                                    │       │
- │      │                   ┌──────────▼─────────┐                          │       │
- │      │                   │                    │                          │       │
- │      │       ┌───────────►       Etcd         ◄─────────────────┐        │       │
- │      │       │           │                    │                 │        │       │
- │      │       │           └────────────────────┘                 │        │       │
- │      │       │                                                  │        │       │
- │      │     register                                           register   │       │
- │      │       │                                                  │        │       │
- │      │       │                                                  │        │       │
- │      │       │                                                  │        │       │
- │      │       │                                                  │        │       │
-┌▼──────┴───────┴───┐                                           ┌──┴────────┴───────▼─┐
-│                   │───────────────── req ────────────────────►│                     │
-│       demonote    │                                           │        demouser     │
-│                   │◄──────────────── resp ────────────────────│                     │
-└───────────────────┘                                           └─────────────────────┘
-      thrift                                                           protobuf
-```
 
 ### Use Basic Features
 
